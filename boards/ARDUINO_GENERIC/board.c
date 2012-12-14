@@ -88,7 +88,9 @@ void boardInit(void) {
    * External interrupts setup, all disabled initially.
    */
   EICRA  = 0x00;
+#ifdef EICRB
   EICRB  = 0x00;
+#endif
   EIMSK  = 0x00;
 
   /*
