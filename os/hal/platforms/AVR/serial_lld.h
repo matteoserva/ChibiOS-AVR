@@ -35,6 +35,15 @@
 /* Driver constants.                                                         */
 /*===========================================================================*/
 
+#if !defined(USART0_RX_vect) && defined(USART_RX_vect)
+	#define USART0_RX_vect USART_RX_vect
+#endif
+
+#if !defined(USART0_UDRE_vect) && defined(USART_UDRE_vect)
+	#define USART0_UDRE_vect USART_UDRE_vect
+#endif
+
+
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/
