@@ -45,6 +45,7 @@ PWMDriver PWMD1;
 #if USE_AVR_PWM2 || defined(__DOXYGEN__)
 PWMDriver PWMD2;
 #endif
+PWMDriver PWMD1;
 /*===========================================================================*/
 /* Driver local variables.                                                   */
 /*===========================================================================*/

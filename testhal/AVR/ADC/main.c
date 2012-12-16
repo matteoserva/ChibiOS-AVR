@@ -22,40 +22,6 @@
 #include "hal.h"
 #include "chprintf.h"
 
-static WORKING_AREA(waThread1, 256);
-static msg_t Thread1(void *arg) {
-  TCCR1A = (1<<WGM11) | (1<<WGM10)|   //fast pwm 10 bit
-	    (1<<COM1A1) | (0<<COM1A0); //non inverting mode
-  
-  TCCR1B = (1<<WGM12) | (0<<WGM13);  //fast pwm 10 bit
-  OCR1A = 0x0008; //valore a cui resettarsi;	    
-	    
-	    
-	    
-  TCCR1B |= (0<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
-  
-  
-  
-  
-  
-  
-  while(1)
-  {
-    uint16_t val = OCR1A;
-    
-    val += val/16;
-    
-    if(val>0x3ff)
-      val = 8;
-    OCR1A = val;
-      chThdSleepMilliseconds(50);
-    
-  }
-
-  
-  return 0;
-}
-
 /*
  * Application entry point.
  */
@@ -81,11 +47,6 @@ int main(void) {
   
 	
   sdStart(&SD1, NULL);
-
-  /*
-   * Starts the LED blinker thread.
-   */
-  chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
 
   #define ADC_GRP1_NUM_CHANNELS   3
   #define ADC_GRP1_BUF_DEPTH      10
