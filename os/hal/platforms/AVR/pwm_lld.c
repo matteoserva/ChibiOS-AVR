@@ -67,10 +67,18 @@ PWMDriver PWMD2;
  * @notapi
  */
 void pwm_lld_init(void) {
+  
+#if USE_AVR_PWM1 || defined(__DOXYGEN__)
   TCCR1A = (1<<WGM11) | (1<<WGM10)|   //fast pwm 10 bit
 	    (1<<COM1A1) | (0<<COM1A0); //non inverting mode
   
   TCCR1B = (1<<WGM12) | (0<<WGM13);  //fast pwm 10 bit
+#endif
+  #if USE_AVR_PWM1 || defined(__DOXYGEN__)
+  //TODO I don't remember  the registers' names
+  #endif
+  
+  
 }
 
 /**
@@ -97,8 +105,18 @@ void pwm_lld_start(PWMDriver *pwmp) {
  * @notapi
  */
 void pwm_lld_stop(PWMDriver *pwmp) {
-        TCCR1B &= ~((1<<CS12) |(1<<CS11) | (1<<CS10)); //parti col no prescaling
-
+	#if USE_AVR_PWM1 || defined(__DOXYGEN__)
+	if(pwmp == &PWMD1)
+	{
+	  TCCR1B &= ~((1<<CS12) |(1<<CS11) | (1<<CS10)); //parti col no prescaling
+	}
+#endif
+	#if USE_AVR_PWM2 || defined(__DOXYGEN__)
+	if(pwmp == &PWMD2)
+	{
+	    //TODO da riempire
+	}
+#endif
 }
 
 /**
