@@ -57,6 +57,15 @@ PWMDriver PWMD2;
 /* Driver interrupt handlers.                                                */
 /*===========================================================================*/
 
+/*
+ * interrupt for compare1&2 and clock overflow. pwmd1 & pwmd2
+ * 
+ * 
+ */
+
+
+
+
 /*===========================================================================*/
 /* Driver exported functions.                                                */
 /*===========================================================================*/
@@ -69,13 +78,16 @@ PWMDriver PWMD2;
 void pwm_lld_init(void) {
   
 #if USE_AVR_PWM1 || defined(__DOXYGEN__)
-  TCCR1A = (1<<WGM11) | (1<<WGM10)|   //fast pwm 10 bit
-	    (1<<COM1A1) | (0<<COM1A0); //non inverting mode
+  TCCR1A = (0<<WGM11) | (1<<WGM10);   //fast pwm 8 bit
+	    //(1<<COM1A1) | (0<<COM1A0); //non inverting mode
   
-  TCCR1B = (1<<WGM12) | (0<<WGM13);  //fast pwm 10 bit
+  TCCR1B = (1<<WGM12) | (0<<WGM13);  //fast pwm 8 bit
 #endif
   #if USE_AVR_PWM1 || defined(__DOXYGEN__)
-  //TODO I don't remember  the registers' names
+    TCCR2A = (1<<WGM21) | (1<<WGM20);   //fast pwm 8 bit
+	    //(1<<COM1A1) | (0<<COM1A0); //non inverting mode
+  
+  TCCR2B = (0<<WGM22);  //fast pwm 8 bit
   #endif
   
   
@@ -89,12 +101,51 @@ void pwm_lld_init(void) {
  * @notapi
  */
 void pwm_lld_start(PWMDriver *pwmp) {
-
+  
   if (pwmp->state == PWM_STOP) {
     /* Clock activation.*/
-      TCCR1B |= (0<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
+#if USE_AVR_PWM1 || defined(__DOXYGEN__)
+      if(pwmp == &PWMD1)
+      {
+	  TCCR1B |= (0<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
+      }
+#endif
+      
+#if USE_AVR_PWM2 || defined(__DOXYGEN__)
+      if(pwmp == &PWMD2)
+      {
+	      TCCR2B |= (0<<CS22) |(0<<CS21) | (1<<CS20); //parti col no prescaling
+      }
+#endif
   }
   /* Configuration.*/
+  
+  
+  for(pwmchannel_t currentChannel=0; currentChannel <PWM_CHANNELS;currentChannel++)
+  {
+      switch(pwmp->config->channels[currentChannel].mode)
+      {
+	
+	
+      }
+    
+    
+    
+  }
+  
+  #if USE_AVR_PWM1 || defined(__DOXYGEN__)
+  if(pwmp == &PWMD1)
+      {
+      TCCR1B |= (0<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
+      }
+#endif
+      
+#if USE_AVR_PWM2 || defined(__DOXYGEN__)
+      if(pwmp == &PWMD2)
+      {
+      TCCR2B |= (0<<CS22) |(0<<CS21) | (1<<CS20); //parti col no prescaling
+      }
+#endif
 }
 
 /**
@@ -114,7 +165,7 @@ void pwm_lld_stop(PWMDriver *pwmp) {
 	#if USE_AVR_PWM2 || defined(__DOXYGEN__)
 	if(pwmp == &PWMD2)
 	{
-	    //TODO da riempire
+	    TCCR1B &= ~((1<<CS22) |(1<<CS21) | (1<<CS20)); //parti col no prescaling
 	}
 #endif
 }
@@ -156,6 +207,21 @@ void pwm_lld_change_period(PWMDriver *pwmp, pwmcnt_t period) {
 void pwm_lld_enable_channel(PWMDriver *pwmp,
                             pwmchannel_t channel,
                             pwmcnt_t width) {
+  #if USE_AVR_PWM1 || defined(__DOXYGEN__)
+  if(pwmp == &PWMD1)
+      {
+	
+      }
+  
+  #endif
+  #if USE_AVR_PWM2 || defined(__DOXYGEN__)
+  if(pwmp == &PWMD2)
+      {
+	
+      }
+  
+#endif
+  
 
 }
 

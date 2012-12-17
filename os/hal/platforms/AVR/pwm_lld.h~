@@ -151,6 +151,13 @@ struct PWMDriver {
 /* External declarations.                                                    */
 /*===========================================================================*/
 
+#if USE_AVR_PWM1 || defined(__DOXYGEN__)
+extern PWMDriver PWMD1;
+#endif
+#if USE_AVR_PWM2 || defined(__DOXYGEN__)
+extern PWMDriver PWMD2;
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
