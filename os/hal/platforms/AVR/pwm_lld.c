@@ -59,7 +59,6 @@ static void pwm_configure_hw_channel(volatile uint8_t * TCCRnA, uint8_t COMnx1,u
 	    *TCCRnA |=  ((1<<COMnx1) | (0<<COMnx0)); //non inverting mode
 	  if(PWM_OUTPUT_ACTIVE_LOW ==mode)
 	    *TCCRnA |= (1<<COMnx1) | (1<<COMnx0); //inverting mode 
-  
 }
 /*===========================================================================*/
 /* Driver interrupt handlers.                                                */
@@ -89,18 +88,13 @@ void pwm_lld_init(void) {
   
 #if USE_AVR_PWM1 || defined(__DOXYGEN__)
   pwmObjectInit(&PWMD1);
-  TCCR1A = (0<<WGM11) | (1<<WGM10);   //fast pwm 8 bit
-	    //(1<<COM1A1) | (0<<COM1A0); //non inverting mode
-  
+  TCCR1A = (0<<WGM11) | (1<<WGM10);   //fast pwm 8 bit  
   TCCR1B = (1<<WGM12) | (0<<WGM13);  //fast pwm 8 bit
 #endif
   #if USE_AVR_PWM2 || defined(__DOXYGEN__)
     pwmObjectInit(&PWMD2);
-
     TCCR2A = (1<<WGM21) | (1<<WGM20);   //fast pwm 8 bit
-	    //(1<<COM1A1) | (0<<COM1A0); //non inverting mode
-  
-  TCCR2B = (0<<WGM22);  //fast pwm 8 bit
+    TCCR2B = (0<<WGM22);  //fast pwm 8 bit
   #endif
   
   
@@ -205,48 +199,45 @@ void pwm_lld_enable_channel(PWMDriver *pwmp,
    * if(callback) enable interrupts
    * 
    */
-  uint32_t val = (uint32_t)width * (uint32_t)256;
+  uint32_t val = width;
+  
+  val *= 256;
   val /= (uint32_t)pwmp->period;
- 
+  if(val > 0x00FF)
+    val = 0xFF;
   
-  
-  
+
   #if USE_AVR_PWM1 || defined(__DOXYGEN__)
   if(pwmp == &PWMD1)
       {   
 	if(channel == 0)
 	{
 	  pwm_configure_hw_channel(&TCCR1A,COM1A1,COM1A0,pwmp->config->channels[0].mode);
-
 	    OCR1AH = 0;
 	    OCR1AL = val;
-	    /* TODO
-	     * if callback
-	     * enable interrupts
-	     * 
-	     * 
-	     * 
-	     */
 	}
 	else
 	{ //channel == 1
-	  TCCR1A &= ~((1<<COM1B1) | (1<<COM1B0)); 
-	  if(pwmp->config->channels[1].mode ==PWM_OUTPUT_ACTIVE_HIGH )
-	    TCCR1A |= (1<<COM1B1) | (0<<COM1B0); //non inverting mode
-	  if(pwmp->config->channels[1].mode ==PWM_OUTPUT_ACTIVE_LOW )
-	    TCCR1A |= (1<<COM1B1) | (1<<COM1B0); //inverting mode
-	   OCR1BH = 0;
+	  pwm_configure_hw_channel(&TCCR1A,COM1B1,COM1B0,pwmp->config->channels[1].mode);
+	    OCR1BH = 0;
 	    OCR1BL = val;
-	}
-	    
-	  
+	}	  
       }
   
   #endif
   #if USE_AVR_PWM2 || defined(__DOXYGEN__)
   if(pwmp == &PWMD2)
       {
-	//TODO all
+	if(channel == 0)
+	{
+	  pwm_configure_hw_channel(&TCCR2A,COM2A1,COM2A0,pwmp->config->channels[0].mode);
+	    OCR2A = val;
+	}
+	else
+	{ //channel == 1
+	  pwm_configure_hw_channel(&TCCR2A,COM2B1,COM2B0,pwmp->config->channels[1].mode);
+	    OCR2B = val;
+	}
       }
   
 #endif
@@ -269,7 +260,35 @@ void pwm_lld_enable_channel(PWMDriver *pwmp,
  * @notapi
  */
 void pwm_lld_disable_channel(PWMDriver *pwmp, pwmchannel_t channel) {
-
+  //TODO disable interrupts
+#if USE_AVR_PWM1 || defined(__DOXYGEN__)
+  if(pwmp == &PWMD1)
+      {   
+	if(channel == 0)
+	{
+	  pwm_configure_hw_channel(&TCCR1A,COM1A1,COM1A0,PWM_OUTPUT_DISABLED);
+	}
+	else
+	{
+	  pwm_configure_hw_channel(&TCCR1A,COM1B1,COM1B0,PWM_OUTPUT_DISABLED);
+	  
+	}
+      }
+#endif
+#if USE_AVR_PWM2 || defined(__DOXYGEN__)
+  if(pwmp == &PWMD2)
+      {   
+	if(channel == 0)
+	{
+	  pwm_configure_hw_channel(&TCCR2A,COM2A1,COM2A0,pwmp->config->channels[0].mode);
+	}
+	else
+	{
+	  pwm_configure_hw_channel(&TCCR2A,COM2B1,COM2B0,pwmp->config->channels[0].mode);
+	  
+	}
+      }
+#endif
 }
 
 #endif /* HAL_USE_PWM */
