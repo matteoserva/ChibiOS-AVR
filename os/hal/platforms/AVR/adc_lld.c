@@ -17,7 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+//TODO callback
+//TODO vref
 /**
  * @file    templates/adc_lld.c
  * @brief   ADC Driver subsystem low level driver source template.
@@ -105,15 +106,7 @@ CH_IRQ_HANDLER(ADC_vect) {
 	  setAdcChannel(getAdcChannelNumberFromMask(ADCD1.grpp->channelsMask,currentChannel));
 	  ADCSRA |= 1<<ADSC;
 	}
-	
-	//size_t currentChannel =
-	
-	
-  
-  
-
-    
-  
+ 
   CH_IRQ_EPILOGUE();
 }
 
@@ -149,19 +142,10 @@ void adc_lld_start(ADCDriver *adcp) {
     ADCSRA |= (1<<ADEN);
   }
   
-  if (adcp->config != NULL)
-    
+  if (adcp->config != NULL)    
   {
       ADMUX = adcp->config->tempADMUX;
-    
-    
   }
-  
- 
-   /* Configuration.*/
-    //PORTB |= _BV(PORTB5);
-  
- 
 }
 
 /**
@@ -190,8 +174,6 @@ void adc_lld_start_conversion(ADCDriver *adcp) {
 	adcp->currentBufferPosition=0;
 	
 	setAdcChannel(getAdcChannelNumberFromMask(adcp->grpp->channelsMask,0));
-	
-	
 	ADCSRA |= 1<<ADSC;
 }
 
