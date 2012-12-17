@@ -76,14 +76,19 @@ PWMDriver PWMD2;
  * @notapi
  */
 void pwm_lld_init(void) {
+  DDRD|=_BV(DDD5);
+   PORTD|=_BV(PORTD5);
   
 #if USE_AVR_PWM1 || defined(__DOXYGEN__)
+  pwmObjectInit(&PWMD1);
   TCCR1A = (0<<WGM11) | (1<<WGM10);   //fast pwm 8 bit
 	    //(1<<COM1A1) | (0<<COM1A0); //non inverting mode
   
   TCCR1B = (1<<WGM12) | (0<<WGM13);  //fast pwm 8 bit
 #endif
-  #if USE_AVR_PWM1 || defined(__DOXYGEN__)
+  #if USE_AVR_PWM2 || defined(__DOXYGEN__)
+    pwmObjectInit(&PWMD2);
+
     TCCR2A = (1<<WGM21) | (1<<WGM20);   //fast pwm 8 bit
 	    //(1<<COM1A1) | (0<<COM1A0); //non inverting mode
   
@@ -102,12 +107,14 @@ void pwm_lld_init(void) {
  */
 void pwm_lld_start(PWMDriver *pwmp) {
   
-  if (pwmp->state == PWM_STOP) {
+  if ( pwmp->state == PWM_STOP) {
     /* Clock activation.*/
+    
+    
 #if USE_AVR_PWM1 || defined(__DOXYGEN__)
       if(pwmp == &PWMD1)
-      {
-	  TCCR1B |= (0<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
+      {//TODO frequency
+	  TCCR1B |= (1<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
       }
 #endif
       
@@ -119,33 +126,10 @@ void pwm_lld_start(PWMDriver *pwmp) {
 #endif
   }
   /* Configuration.*/
-  
-  
-  for(pwmchannel_t currentChannel=0; currentChannel <PWM_CHANNELS;currentChannel++)
-  {
-      switch(pwmp->config->channels[currentChannel].mode)
-      {
-	
-	
-      }
-    
-    
-    
-  }
-  
-  #if USE_AVR_PWM1 || defined(__DOXYGEN__)
-  if(pwmp == &PWMD1)
-      {
-      TCCR1B |= (0<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
-      }
-#endif
-      
-#if USE_AVR_PWM2 || defined(__DOXYGEN__)
-      if(pwmp == &PWMD2)
-      {
-      TCCR2B |= (0<<CS22) |(0<<CS21) | (1<<CS20); //parti col no prescaling
-      }
-#endif
+
+
+
+
 }
 
 /**
@@ -165,7 +149,7 @@ void pwm_lld_stop(PWMDriver *pwmp) {
 	#if USE_AVR_PWM2 || defined(__DOXYGEN__)
 	if(pwmp == &PWMD2)
 	{
-	    TCCR1B &= ~((1<<CS22) |(1<<CS21) | (1<<CS20)); //parti col no prescaling
+	    TCCR2B &= ~((1<<CS22) |(1<<CS21) | (1<<CS20)); //parti col no prescaling
 	}
 #endif
 }
@@ -207,17 +191,57 @@ void pwm_lld_change_period(PWMDriver *pwmp, pwmcnt_t period) {
 void pwm_lld_enable_channel(PWMDriver *pwmp,
                             pwmchannel_t channel,
                             pwmcnt_t width) {
+  /* TODO copypaste
+   * 
+   * 
+   * if(callback) enable interrupts
+   * 
+   */
+  uint32_t val = (uint32_t)width * (uint32_t)256;
+  val /= (uint32_t)pwmp->period;
+ 
+  
+  
+  
   #if USE_AVR_PWM1 || defined(__DOXYGEN__)
   if(pwmp == &PWMD1)
-      {
-	
+      {   
+	if(channel == 0)
+	{
+	  TCCR1A &= ~((1<<COM1A1) | (1<<COM1A0)); 
+	  if(pwmp->config->channels[0].mode ==PWM_OUTPUT_ACTIVE_HIGH )
+	    TCCR1A |=  ((1<<COM1A1) | (0<<COM1A0)); //non inverting mode
+	  if(pwmp->config->channels[0].mode ==PWM_OUTPUT_ACTIVE_LOW )
+	    TCCR1A |= (1<<COM1A1) | (1<<COM1A0); //inverting mode
+	    OCR1AH = 0;
+	    OCR1AL = val;
+	    /* TODO
+	     * if callback
+	     * enable interrupts
+	     * 
+	     * 
+	     * 
+	     */
+	}
+	else
+	{ //channel == 1
+	  TCCR1A &= ~((1<<COM1B1) | (1<<COM1B0)); 
+	  if(pwmp->config->channels[1].mode ==PWM_OUTPUT_ACTIVE_HIGH )
+	    TCCR1A |= (1<<COM1B1) | (0<<COM1B0); //non inverting mode
+	  if(pwmp->config->channels[1].mode ==PWM_OUTPUT_ACTIVE_LOW )
+	    TCCR1A |= (1<<COM1B1) | (1<<COM1B0); //inverting mode
+	   OCR1BH = 0;
+	    OCR1BL = val;
+	}
+	    
+	  
       }
   
   #endif
   #if USE_AVR_PWM2 || defined(__DOXYGEN__)
   if(pwmp == &PWMD2)
       {
-	
+	//TODO all
       }
   
 #endif
