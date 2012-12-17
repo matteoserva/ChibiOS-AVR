@@ -52,7 +52,15 @@ PWMDriver PWMD2;
 /*===========================================================================*/
 /* Driver local functions.                                                   */
 /*===========================================================================*/
-
+static void pwm_configure_hw_channel(volatile uint8_t * TCCRnA, uint8_t COMnx1,uint8_t COMnx0, pwmmode_t mode)
+{
+	  *TCCRnA &= ~((1<<COMnx1) | (1<<COMnx0)); 
+	  if(PWM_OUTPUT_ACTIVE_HIGH ==mode )
+	    *TCCRnA |=  ((1<<COMnx1) | (0<<COMnx0)); //non inverting mode
+	  if(PWM_OUTPUT_ACTIVE_LOW ==mode)
+	    *TCCRnA |= (1<<COMnx1) | (1<<COMnx0); //inverting mode 
+  
+}
 /*===========================================================================*/
 /* Driver interrupt handlers.                                                */
 /*===========================================================================*/
@@ -208,11 +216,8 @@ void pwm_lld_enable_channel(PWMDriver *pwmp,
       {   
 	if(channel == 0)
 	{
-	  TCCR1A &= ~((1<<COM1A1) | (1<<COM1A0)); 
-	  if(pwmp->config->channels[0].mode ==PWM_OUTPUT_ACTIVE_HIGH )
-	    TCCR1A |=  ((1<<COM1A1) | (0<<COM1A0)); //non inverting mode
-	  if(pwmp->config->channels[0].mode ==PWM_OUTPUT_ACTIVE_LOW )
-	    TCCR1A |= (1<<COM1A1) | (1<<COM1A0); //inverting mode
+	  pwm_configure_hw_channel(&TCCR1A,COM1A1,COM1A0,pwmp->config->channels[0].mode);
+
 	    OCR1AH = 0;
 	    OCR1AL = val;
 	    /* TODO
