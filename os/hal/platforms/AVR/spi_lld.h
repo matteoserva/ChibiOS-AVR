@@ -117,6 +117,14 @@ struct SPIDriver {
 /* External declarations.                                                    */
 /*===========================================================================*/
 
+#if USE_AVR_SPI1 || defined(__DOXYGEN__)
+extern SPIDriver SPID1;
+#endif
+#if USE_AVR_SPI2 || defined(__DOXYGEN__)
+extern SPIDriver SPID2;
+#endif
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
