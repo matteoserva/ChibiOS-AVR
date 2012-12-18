@@ -66,11 +66,14 @@ SPIDriver SPID2;
  * @notapi
  */
 void spi_lld_init(void) {
-void SPI_MasterInit(void)
-{
+
 /* Set MOSI and SCK output, all others input */
-DDR_SPI = (1<<DD_MOSI)|(1<<DD_SCK);
-}
+ #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+//TODO fix this line
+spiObjectInit(&PWMD1);
+DDRB=(1<<4)|(1<<5)|(1<<6);
+#endif
+
 
 
 }
@@ -86,7 +89,13 @@ void spi_lld_start(SPIDriver *spip) {
 
   if (spip->state == SPI_STOP) {
     /* Clock activation.*/
-    SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
+        #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+    if(spip == &SPID1)
+    {
+      SPCR = (1<<SPE)|(1<<MSTR)|
+	    (1<<SPR1)|(1<<SPR0); //Clk/128
+    }
+#endif
 
   }
   /* Configuration.*/
@@ -100,7 +109,7 @@ void spi_lld_start(SPIDriver *spip) {
  * @notapi
  */
 void spi_lld_stop(SPIDriver *spip) {
-
+    SPCR &=~(1<<SPE);
 }
 
 /**
@@ -111,7 +120,14 @@ void spi_lld_stop(SPIDriver *spip) {
  * @notapi
  */
 void spi_lld_select(SPIDriver *spip) {
-
+    
+    #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+    if(spip == &SPID1)
+    {
+    SPI1_DDR |= _BV(SPI1_SS);
+    SPI1_PORT &= ~_BV(SPI1_SS);
+    }
+#endif
 }
 
 /**
@@ -123,7 +139,14 @@ void spi_lld_select(SPIDriver *spip) {
  * @notapi
  */
 void spi_lld_unselect(SPIDriver *spip) {
-
+  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+    if(spip == &SPID1)
+    {
+      SPI1_PORT |= _BV(SPI1_SS);   
+      SPI1_DDR &= ~_BV(SPI1_SS);
+    }
+#endif
+    
 }
 
 /**
@@ -158,7 +181,7 @@ void spi_lld_ignore(SPIDriver *spip, size_t n) {
  */
 void spi_lld_exchange(SPIDriver *spip, size_t n,
                       const void *txbuf, void *rxbuf) {
-  SPDR = cData;
+  //SPDR = data;
 
 }
 
