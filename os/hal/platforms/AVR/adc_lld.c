@@ -144,7 +144,7 @@ void adc_lld_start(ADCDriver *adcp) {
   
   if (adcp->config != NULL)    
   {
-      ADMUX = adcp->config->tempADMUX;
+      ADMUX = (adcp->config->analog_reference << REFS0);
   }
 }
 

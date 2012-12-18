@@ -65,7 +65,7 @@ int main(void) {
 #endif
   
   ADCConfig configurazioneBreadboard = {
-    (0<<REFS1)| (1<<REFS0) //condensatore su aref. riferimento avcc
+    ANALOG_REFERENCE_AVCC //condensatore su aref. riferimento avcc
   };
 
   adcStart(&ADCD1, &configurazioneBreadboard);

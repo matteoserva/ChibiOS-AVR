@@ -35,6 +35,12 @@
 /* Driver constants.                                                         */
 /*===========================================================================*/
 
+#define ANALOG_REFERENCE_AREF	0
+#define ANALOG_REFERENCE_AVCC	1
+#define ANALOG_REFERENCE_1V1	2
+#define ANALOG_REFERENCE_2V56	3
+
+
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/
@@ -109,7 +115,7 @@ typedef struct {
  * @note    It could be empty on some architectures.
  */
 typedef struct {
-   uint8_t tempADMUX;
+   uint8_t analog_reference;
 } ADCConfig;
 
 /**
