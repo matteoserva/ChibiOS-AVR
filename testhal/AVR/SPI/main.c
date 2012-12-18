@@ -1,0 +1,77 @@
+/*
+    ChibiOS/RT - Copyright (C) 2006,2007,2008,2009,2010,
+                 2011,2012 Giovanni Di Sirio.
+
+    This file is part of ChibiOS/RT.
+
+    ChibiOS/RT is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or
+    (at your option) any later version.
+
+    ChibiOS/RT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "ch.h"
+#include "hal.h"
+
+#include "chprintf.h"
+
+void spicallback(SPIDriver *spip){
+  chprintf(&SD1,"spicallback\n");
+  
+}
+/*
+ * Application entry point.
+ */
+int main(void) {
+
+  /*
+   * System initializations.
+   * - HAL initialization, this also initializes the configured device drivers
+   *   and performs the board-specific initializations.
+   * - Kernel initialization, the main() function becomes a thread and the
+   *   RTOS is active.
+   */
+
+
+  halInit();
+  chSysInit();
+  
+
+   
+
+    static SPIConfig spicfg= {spicallback};
+  
+   
+
+  spiStart(&SPID1,&spicfg);
+  sdStart(&SD1, NULL);
+
+  
+  
+  pwmcnt_t val = 0;
+  while(1){
+      uint8_t temp;
+      spi_lld_select(&SPID1);
+      chThdSleepMilliseconds(50);
+      spi_lld_unselect(&SPID1);
+      chThdSleepMilliseconds(50);
+       
+      temp = spiPolledExchange(&SPID1, 0xAC);
+      chprintf(&SD1,"temp1: %x\n",temp);
+      temp = spiPolledExchange(&SPID1, 0x53);
+      chprintf(&SD1,"temp2: %x\n",temp);
+      temp = spiPolledExchange(&SPID1, 0x00);
+      chprintf(&SD1,"temp3: %x\n",temp);
+      temp = spiPolledExchange(&SPID1, 0x00);
+      chprintf(&SD1,"temp4: %x\n",temp);
+      chThdSleepMilliseconds(500);
+  }
+}
