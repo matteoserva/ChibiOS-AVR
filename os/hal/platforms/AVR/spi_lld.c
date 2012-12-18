@@ -122,7 +122,7 @@ void spi_lld_init(void) {
  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
 //TODO fix this line
 spiObjectInit(&SPID1);
-DDRB=(1<<4)|(1<<5)|(1<<6);
+DDRB=(1<<4)|(1<<5)|(1<<7);
 #endif
 
 
@@ -181,6 +181,7 @@ void spi_lld_select(SPIDriver *spip) {
     #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
+      
       SPI1_PORT &= ~_BV(SPI1_SS);
     SPI1_DDR |= _BV(SPI1_SS);
     
@@ -202,6 +203,7 @@ void spi_lld_unselect(SPIDriver *spip) {
     {
       SPI1_PORT |= _BV(SPI1_SS);   
       SPI1_DDR &= ~_BV(SPI1_SS);
+      
     }
 #endif
     
@@ -219,7 +221,8 @@ void spi_lld_unselect(SPIDriver *spip) {
  * @notapi
  */
 void spi_lld_ignore(SPIDriver *spip, size_t n) {
-
+     spi_setup_transmission(spip, n, NULL,NULL);
+  spi_start_transmission(spip);
 }
 
 /**
@@ -292,17 +295,19 @@ void spi_lld_receive(SPIDriver *spip, size_t n, void *rxbuf) {
  * @return              The received data frame from the SPI bus.
  */
 uint16_t spi_lld_polled_exchange(SPIDriver *spip, uint16_t frame) {
+  
   #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
       SPCR &= ~(1<<SPIE);
       SPDR = frame;
+      
       while(!(SPSR & (1<<SPIF)))
 	;
       uint8_t retval = SPDR; //this is needed to clear spif
       SPCR |= (1<<SPIE);
       return retval;
-      
+
     }
 #endif
 }
