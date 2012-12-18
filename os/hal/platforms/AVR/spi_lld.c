@@ -51,11 +51,62 @@ SPIDriver SPID2;
 /*===========================================================================*/
 /* Driver local functions.                                                   */
 /*===========================================================================*/
+static void spi_start_transmission(SPIDriver *spip)
+{
+   #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+   if(spip->untransmitted_bytes> 0)
+   {
+     if(spip->tx_buffer != NULL)
+     {
+      SPDR =  *spip->tx_buffer;
+      spip->tx_buffer++;
+     }
+     else
+     {
+       SPDR = 0xFF;
+     }
+     spip->untransmitted_bytes--;
+   }
+   
+  #endif
+  
+  
+}
 
+static void spi_setup_transmission(SPIDriver *spip,size_t n, const uint8_t *txbuf, uint8_t *rxbuf)
+{
+  spip->tx_buffer= txbuf;
+  spip->rx_buffer= rxbuf;
+  spip->untransmitted_bytes= n;
+  
+}
 /*===========================================================================*/
 /* Driver interrupt handlers.                                                */
 /*===========================================================================*/
-
+ #if USE_AVR_SPI1 || defined(__DOXYGEN_)
+CH_IRQ_HANDLER(SPI_STC_vect) { //SPI1 interrupt
+ 
+  CH_IRQ_PROLOGUE();
+     
+  
+      if(SPID1.rx_buffer != NULL)
+      {
+	      *SPID1.rx_buffer=SPDR;
+	      SPID1.rx_buffer++;
+      }
+      if(SPID1.untransmitted_bytes> 0)
+      {
+	spi_start_transmission(&SPID1);
+      }
+      else
+      {
+	_spi_isr_code(&SPID1);
+	
+      }
+ 
+  CH_IRQ_EPILOGUE();
+}
+#endif
 /*===========================================================================*/
 /* Driver exported functions.                                                */
 /*===========================================================================*/
@@ -70,7 +121,7 @@ void spi_lld_init(void) {
 /* Set MOSI and SCK output, all others input */
  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
 //TODO fix this line
-spiObjectInit(&PWMD1);
+spiObjectInit(&SPID1);
 DDRB=(1<<4)|(1<<5)|(1<<6);
 #endif
 
@@ -93,6 +144,7 @@ void spi_lld_start(SPIDriver *spip) {
     if(spip == &SPID1)
     {
       SPCR = (1<<SPE)|(1<<MSTR)|
+	    (1<<SPIE)| //enable interrupt
 	    (1<<SPR1)|(1<<SPR0); //Clk/128
     }
 #endif
@@ -109,7 +161,12 @@ void spi_lld_start(SPIDriver *spip) {
  * @notapi
  */
 void spi_lld_stop(SPIDriver *spip) {
-    SPCR &=~(1<<SPE);
+  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+    if(spip == &SPID1)
+    {
+	SPCR &=~(1<<SPE);
+    }
+#endif
 }
 
 /**
@@ -124,8 +181,9 @@ void spi_lld_select(SPIDriver *spip) {
     #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
+      SPI1_PORT &= ~_BV(SPI1_SS);
     SPI1_DDR |= _BV(SPI1_SS);
-    SPI1_PORT &= ~_BV(SPI1_SS);
+    
     }
 #endif
 }
@@ -181,8 +239,8 @@ void spi_lld_ignore(SPIDriver *spip, size_t n) {
  */
 void spi_lld_exchange(SPIDriver *spip, size_t n,
                       const void *txbuf, void *rxbuf) {
-  //SPDR = data;
-
+  spi_setup_transmission(spip, n, txbuf, rxbuf);
+  spi_start_transmission(spip);
 }
 
 /**
@@ -199,7 +257,8 @@ void spi_lld_exchange(SPIDriver *spip, size_t n,
  * @notapi
  */
 void spi_lld_send(SPIDriver *spip, size_t n, const void *txbuf) {
-
+    spi_setup_transmission(spip, n, txbuf, NULL);
+    spi_start_transmission(spip);
 }
 
 /**
@@ -216,7 +275,8 @@ void spi_lld_send(SPIDriver *spip, size_t n, const void *txbuf) {
  * @notapi
  */
 void spi_lld_receive(SPIDriver *spip, size_t n, void *rxbuf) {
-
+      spi_setup_transmission(spip, n, NULL, rxbuf);
+      spi_start_transmission(spip);
 }
 
 /**
@@ -232,7 +292,19 @@ void spi_lld_receive(SPIDriver *spip, size_t n, void *rxbuf) {
  * @return              The received data frame from the SPI bus.
  */
 uint16_t spi_lld_polled_exchange(SPIDriver *spip, uint16_t frame) {
-
+  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+    if(spip == &SPID1)
+    {
+      SPCR &= ~(1<<SPIE);
+      SPDR = frame;
+      while(!(SPSR & (1<<SPIF)))
+	;
+      uint8_t retval = SPDR; //this is needed to clear spif
+      SPCR |= (1<<SPIE);
+      return retval;
+      
+    }
+#endif
 }
 
 #endif /* HAL_USE_SPI */

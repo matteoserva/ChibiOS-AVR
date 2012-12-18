@@ -114,6 +114,10 @@ struct SPIDriver {
   SPI_DRIVER_EXT_FIELDS
 #endif
   /* End of the mandatory fields.*/
+  
+  int untransmitted_bytes;
+  uint8_t *tx_buffer;
+  uint8_t *rx_buffer;
 };
 
 /*===========================================================================*/
