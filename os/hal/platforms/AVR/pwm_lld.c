@@ -83,9 +83,7 @@ static void pwm_configure_hw_channel(volatile uint8_t * TCCRnA, uint8_t COMnx1,u
  * @notapi
  */
 void pwm_lld_init(void) {
-  DDRD|=_BV(DDD5);
-   PORTD|=_BV(PORTD5);
-  
+
 #if USE_AVR_PWM1 || defined(__DOXYGEN__)
   pwmObjectInit(&PWMD1);
   TCCR1A = (0<<WGM11) | (1<<WGM10);   //fast pwm 8 bit  
