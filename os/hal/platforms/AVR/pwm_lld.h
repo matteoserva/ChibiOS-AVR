@@ -31,10 +31,6 @@
 
 #if HAL_USE_PWM || defined(__DOXYGEN__)
 
-/*TODO handle channel modes, easy
- * 
- * 
- */
 
 
 /*===========================================================================*/
