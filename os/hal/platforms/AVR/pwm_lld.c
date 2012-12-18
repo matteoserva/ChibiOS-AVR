@@ -282,7 +282,7 @@ void pwm_lld_disable_channel(PWMDriver *pwmp, pwmchannel_t channel) {
 	}
 	else
 	{
-	  pwm_configure_hw_channel(&TCCR2A,COM2B1,COM2B0,pwmp->config->channels[0].mode);
+	  pwm_configure_hw_channel(&TCCR2A,COM2B1,COM2B0,pwmp->config->channels[1].mode);
 	  
 	}
       }
