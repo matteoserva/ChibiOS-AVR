@@ -70,6 +70,51 @@ static void pwm_configure_hw_channel(volatile uint8_t * TCCRnA, uint8_t COMnx1,u
  * 
  */
 
+CH_IRQ_HANDLER(TIMER1_OVF_vect) {
+ 
+    CH_IRQ_PROLOGUE();
+      PWMD1.config->callback(&PWMD1);
+  
+    CH_IRQ_EPILOGUE();
+}
+CH_IRQ_HANDLER(TIMER1_COMPA_vect) {
+ 
+    CH_IRQ_PROLOGUE();
+      PWMD1.config->channels[0].callback(&PWMD1);
+  
+    CH_IRQ_EPILOGUE();
+}
+CH_IRQ_HANDLER(TIMER1_COMPB_vect) {
+ 
+    CH_IRQ_PROLOGUE();
+      PWMD1.config->channels[1].callback(&PWMD1);
+  
+    CH_IRQ_EPILOGUE();
+}
+
+
+CH_IRQ_HANDLER(TIMER2_OVF_vect) {
+ 
+    CH_IRQ_PROLOGUE();
+      PWMD2.config->callback(&PWMD2);
+  
+    CH_IRQ_EPILOGUE();
+}
+
+CH_IRQ_HANDLER(TIMER2_COMPA_vect) {
+ 
+    CH_IRQ_PROLOGUE();
+      PWMD2.config->channels[0].callback(&PWMD2);
+  
+    CH_IRQ_EPILOGUE();
+}
+CH_IRQ_HANDLER(TIMER2_COMPB_vect) {
+ 
+    CH_IRQ_PROLOGUE();
+      PWMD2.config->channels[1].callback(&PWMD2);
+  
+    CH_IRQ_EPILOGUE();
+}
 
 
 
@@ -115,6 +160,8 @@ void pwm_lld_start(PWMDriver *pwmp) {
       if(pwmp == &PWMD1)
       {//TODO frequency
 	  TCCR1B |= (1<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
+	  if(pwmp->config->callback != NULL)
+	    TIMSK1 |= (1<<TOIE1);
       }
 #endif
       
@@ -122,6 +169,8 @@ void pwm_lld_start(PWMDriver *pwmp) {
       if(pwmp == &PWMD2)
       {
 	      TCCR2B |= (0<<CS22) |(0<<CS21) | (1<<CS20); //parti col no prescaling
+	      if(pwmp->config->callback != NULL)
+		TIMSK2 |= (1<<TOIE2);
       }
 #endif
   }
@@ -144,12 +193,14 @@ void pwm_lld_stop(PWMDriver *pwmp) {
 	if(pwmp == &PWMD1)
 	{
 	  TCCR1B &= ~((1<<CS12) |(1<<CS11) | (1<<CS10)); //parti col no prescaling
+	  TIMSK1 = 0;
 	}
 #endif
 	#if USE_AVR_PWM2 || defined(__DOXYGEN__)
 	if(pwmp == &PWMD2)
 	{
 	    TCCR2B &= ~((1<<CS22) |(1<<CS21) | (1<<CS20)); //parti col no prescaling
+	    TIMSK2 = 0;
 	}
 #endif
 }
@@ -191,12 +242,6 @@ void pwm_lld_change_period(PWMDriver *pwmp, pwmcnt_t period) {
 void pwm_lld_enable_channel(PWMDriver *pwmp,
                             pwmchannel_t channel,
                             pwmcnt_t width) {
-  /* TODO copypaste
-   * 
-   * 
-   * if(callback) enable interrupts
-   * 
-   */
   uint32_t val = width;
   
   val *= 256;
@@ -211,12 +256,16 @@ void pwm_lld_enable_channel(PWMDriver *pwmp,
 	if(channel == 0)
 	{
 	  pwm_configure_hw_channel(&TCCR1A,COM1A1,COM1A0,pwmp->config->channels[0].mode);
+	  if(pwmp->config->channels[0].callback != NULL)
+	    TIMSK1 |= (1<< OCIE1A);
 	    OCR1AH = 0;
 	    OCR1AL = val;
 	}
 	else
 	{ //channel == 1
 	  pwm_configure_hw_channel(&TCCR1A,COM1B1,COM1B0,pwmp->config->channels[1].mode);
+	  if(pwmp->config->channels[1].callback != NULL)
+	    TIMSK1 |= (1<<OCIE1B);
 	    OCR1BH = 0;
 	    OCR1BL = val;
 	}	  
@@ -229,11 +278,15 @@ void pwm_lld_enable_channel(PWMDriver *pwmp,
 	if(channel == 0)
 	{
 	  pwm_configure_hw_channel(&TCCR2A,COM2A1,COM2A0,pwmp->config->channels[0].mode);
+	  if(pwmp->config->channels[0].callback != NULL)
+	    TIMSK2 |= (1<<OCIE2A);
 	    OCR2A = val;
 	}
 	else
 	{ //channel == 1
 	  pwm_configure_hw_channel(&TCCR2A,COM2B1,COM2B0,pwmp->config->channels[1].mode);
+	  if(pwmp->config->channels[1].callback != NULL)
+	    TIMSK2 |= (1<<OCIE2B);
 	    OCR2B = val;
 	}
       }
@@ -265,10 +318,12 @@ void pwm_lld_disable_channel(PWMDriver *pwmp, pwmchannel_t channel) {
 	if(channel == 0)
 	{
 	  pwm_configure_hw_channel(&TCCR1A,COM1A1,COM1A0,PWM_OUTPUT_DISABLED);
+	  TIMSK1 &= ~(1<<OCIE1A);
 	}
 	else
 	{
 	  pwm_configure_hw_channel(&TCCR1A,COM1B1,COM1B0,PWM_OUTPUT_DISABLED);
+	  TIMSK1 &= ~(1<<OCIE1B);
 	  
 	}
       }
@@ -279,10 +334,12 @@ void pwm_lld_disable_channel(PWMDriver *pwmp, pwmchannel_t channel) {
 	if(channel == 0)
 	{
 	  pwm_configure_hw_channel(&TCCR2A,COM2A1,COM2A0,pwmp->config->channels[0].mode);
+	  TIMSK2 &= ~(1<<OCIE2A);
 	}
 	else
 	{
 	  pwm_configure_hw_channel(&TCCR2A,COM2B1,COM2B0,pwmp->config->channels[1].mode);
+	  TIMSK2 &= ~(1<<OCIE2B);
 	  
 	}
       }
