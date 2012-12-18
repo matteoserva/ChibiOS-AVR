@@ -294,7 +294,7 @@ void spi_lld_receive(SPIDriver *spip, size_t n, void *rxbuf) {
  * @param[in] frame     the data frame to send over the SPI bus
  * @return              The received data frame from the SPI bus.
  */
-uint16_t spi_lld_polled_exchange(SPIDriver *spip, uint16_t frame) {
+uint8_t spi_lld_polled_exchange(SPIDriver *spip, uint8_t frame) {
   
   #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
