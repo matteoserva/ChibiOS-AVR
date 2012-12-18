@@ -70,7 +70,7 @@ int main(void) {
 
   adcStart(&ADCD1, &configurazioneBreadboard);
   
-  palSetGroupMode(IOPORT1, 0b00000111, 0, PAL_MODE_INPUT_ANALOG);
+  palSetGroupMode(IOPORTADC, 0b00000111, 0, PAL_MODE_INPUT_ANALOG);
   
 
   while(1)

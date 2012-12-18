@@ -40,6 +40,17 @@
 #define ANALOG_REFERENCE_1V1	2
 #define ANALOG_REFERENCE_2V56	3
 
+#ifdef HAL_USE_PAL
+
+  #if defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__)
+    #define IOPORTADC			((volatile avr_gpio_registers_t *)&PINA)
+  #elif defined(__AVR_ATmega328P__)
+    #define IOPORTADC			((volatile avr_gpio_registers_t *)&PINC)
+  #endif
+  
+  
+#endif
+
 
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
