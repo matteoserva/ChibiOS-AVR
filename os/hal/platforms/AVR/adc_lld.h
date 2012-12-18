@@ -46,6 +46,8 @@
     #define IOPORTADC			((volatile avr_gpio_registers_t *)&PINA)
   #elif defined(__AVR_ATmega328P__)
     #define IOPORTADC			((volatile avr_gpio_registers_t *)&PINC)
+  #elif defined(__AVR_ATmega2560__)
+    #define IOPORTADC			((volatile avr_gpio_registers_t *)&PINF)
   #endif
   
   
