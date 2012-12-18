@@ -38,7 +38,12 @@
 /*===========================================================================*/
 /* Driver exported variables.                                                */
 /*===========================================================================*/
-
+#if USE_AVR_SPI1 || defined(__DOXYGEN__)
+SPIDriver SPID1;
+#endif
+#if USE_AVR_SPI2 || defined(__DOXYGEN__)
+SPIDriver SPID2;
+#endif
 /*===========================================================================*/
 /* Driver local variables.                                                   */
 /*===========================================================================*/
@@ -61,6 +66,12 @@
  * @notapi
  */
 void spi_lld_init(void) {
+void SPI_MasterInit(void)
+{
+/* Set MOSI and SCK output, all others input */
+DDR_SPI = (1<<DD_MOSI)|(1<<DD_SCK);
+}
+
 
 }
 
@@ -75,6 +86,8 @@ void spi_lld_start(SPIDriver *spip) {
 
   if (spip->state == SPI_STOP) {
     /* Clock activation.*/
+    SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
+
   }
   /* Configuration.*/
 }
@@ -145,6 +158,7 @@ void spi_lld_ignore(SPIDriver *spip, size_t n) {
  */
 void spi_lld_exchange(SPIDriver *spip, size_t n,
                       const void *txbuf, void *rxbuf) {
+  SPDR = cData;
 
 }
 
