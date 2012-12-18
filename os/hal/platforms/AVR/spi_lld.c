@@ -66,12 +66,6 @@ SPIDriver SPID2;
  * @notapi
  */
 void spi_lld_init(void) {
-void SPI_MasterInit(void)
-{
-/* Set MOSI and SCK output, all others input */
-DDR_SPI = (1<<DD_MOSI)|(1<<DD_SCK);
-}
-
 
 /* Set MOSI and SCK output, all others input */
  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
@@ -95,7 +89,6 @@ void spi_lld_start(SPIDriver *spip) {
 
   if (spip->state == SPI_STOP) {
     /* Clock activation.*/
-<<<<<<< HEAD
         #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
@@ -103,9 +96,6 @@ void spi_lld_start(SPIDriver *spip) {
 	    (1<<SPR1)|(1<<SPR0); //Clk/128
     }
 #endif
-=======
-    SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
->>>>>>> de056a6cb3fd07b00f8897fa97285b8dfb5b3592
 
   }
   /* Configuration.*/
@@ -191,11 +181,7 @@ void spi_lld_ignore(SPIDriver *spip, size_t n) {
  */
 void spi_lld_exchange(SPIDriver *spip, size_t n,
                       const void *txbuf, void *rxbuf) {
-<<<<<<< HEAD
   //SPDR = data;
-=======
-  SPDR = cData;
->>>>>>> de056a6cb3fd07b00f8897fa97285b8dfb5b3592
 
 }
 
