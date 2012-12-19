@@ -89,7 +89,8 @@ CH_IRQ_HANDLER(SPI_STC_vect) { //SPI1 interrupt
  
   CH_IRQ_PROLOGUE();
      
-  
+     if(SPCR & (1<<MSTR))
+     {
       if(SPID1.rx_buffer != NULL)
       {
 	      *SPID1.rx_buffer=SPDR;
@@ -104,7 +105,15 @@ CH_IRQ_HANDLER(SPI_STC_vect) { //SPI1 interrupt
 	_spi_isr_code(&SPID1);
 	
       }
- 
+     }
+     else
+     {
+       if(SPID1.config->slave_cb == NULL)
+	 SPDR = SPID1.config->slave_cb(&SPID1,SPDR);
+       SPCR |=(1<<MSTR);
+       
+     }
+   
   CH_IRQ_EPILOGUE();
 }
 #endif

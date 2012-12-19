@@ -54,6 +54,7 @@
 /* Driver data structures and types.                                         */
 /*===========================================================================*/
 
+
 /**
  * @brief   Type of a structure representing an SPI driver.
  */
@@ -67,6 +68,9 @@ typedef struct SPIDriver SPIDriver;
  */
 typedef void (*spicallback_t)(SPIDriver *spip);
 
+
+typedef uint8_t (*spislavecallback_t)(SPIDriver *spip,uint8_t data);
+
 /**
  * @brief   Driver configuration structure.
  * @note    Implementations may extend this structure to contain more,
@@ -78,6 +82,7 @@ typedef struct {
    */
   spicallback_t         end_cb;
   /* End of the mandatory fields.*/
+  spislavecallback_t         slave_cb;
 } SPIConfig;
 
 /**
