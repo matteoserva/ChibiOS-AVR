@@ -50,7 +50,8 @@ int main(void) {
     static SPIConfig spicfg= {spicallback};
   
    
-
+  DDRB=(1<<4)|(1<<5)|(1<<7);
+  PORTB=0b00010000;
   spiStart(&SPID1,&spicfg);
   sdStart(&SD1, NULL);
 
@@ -60,18 +61,14 @@ int main(void) {
   while(1){
       uint8_t temp;
       spi_lld_select(&SPID1);
-      chThdSleepMilliseconds(50);
+      temp = spiPolledExchange(&SPID1, 'a');
       spi_lld_unselect(&SPID1);
-      chThdSleepMilliseconds(50);
-       
-      temp = spiPolledExchange(&SPID1, 0xAC);
-      chprintf(&SD1,"temp1: %x\n",temp);
-      temp = spiPolledExchange(&SPID1, 0x53);
-      chprintf(&SD1,"temp2: %x\n",temp);
-      temp = spiPolledExchange(&SPID1, 0x00);
-      chprintf(&SD1,"temp3: %x\n",temp);
-      temp = spiPolledExchange(&SPID1, 0x00);
-      chprintf(&SD1,"temp4: %x\n",temp);
+      spi_lld_select(&SPID1);
+      chprintf(&SD1,"temp1: %x SPCR: %x, SPSR: %x, SPDR: %c, PORTB %x, DDRB: %x\n",temp,SPCR,SPSR,SPDR,PORTB, DDRB);
+      
+      temp = spiPolledExchange(&SPID1, 'd');
+      spi_lld_unselect(&SPID1);
+      chprintf(&SD1,"temp1: %x SPCR: %x, SPSR: %x, SPDR: %c\n",temp,SPCR,SPSR,SPDR);
       chThdSleepMilliseconds(500);
   }
 }
