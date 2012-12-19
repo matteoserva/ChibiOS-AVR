@@ -83,6 +83,27 @@ CH_IRQ_HANDLER(TIMER0_COMPA_vect) {
  * Board-specific initialization code.
  */
 
+/* 0 is failure, 1 is success  but probably there is a better choice,
+ * 2 is success and best coice
+ */
+
+
+static uint8_t tryClockPrescaler(uint32_t ratio, uint8_t clock_source)
+{
+  ratio *= CH_FREQUENCY;
+  if(F_CPU / ratio <= 256ULL)
+  {
+     TCCR0B &= ~((1 << CS02)  | (1 << CS01)  | (1 << CS00));
+     TCCR0B |= ((clock_source &0x07) << CS00);
+     OCR0A   = F_CPU / ratio - 1;
+     if(F_CPU % ratio ==0)
+	  return 2;
+     return 1;
+  }
+  return 0;
+  
+}
+
 /* This function chooses the best clock settings to match the requested CH_FREQUENCY
  * Since this is a 8 bit timer special care is needed when setting the values
  * It tries to reduce rounding errors
@@ -91,32 +112,24 @@ CH_IRQ_HANDLER(TIMER0_COMPA_vect) {
  */
 static void setClock()
 {
-  uint32_t divider;
+  uint16_t ratio[]={1024,256,64,8};
+  uint8_t clock_source[]={5,4,3,2};
   
   
-  divider = 256ULL * CH_FREQUENCY ;
-  if(F_CPU / divider <= 256ULL)
+  uint8_t found = 0;
+  uint8_t i;
+  for(i=0;i<sizeof(clock_source)/sizeof(clock_source[0]);i++)
   {
-      TCCR0B &= ~((1 << CS02)  | (1 << CS01)  | (1 << CS00));
-      TCCR0B |=(1 << CS02)  | (0 << CS01)  | (0 << CS00);
-      OCR0A   = F_CPU / divider - 1;
-      if(F_CPU % divider ==0)
-	  return;
-  }
-  
-  divider = 64ULL * CH_FREQUENCY ;
-  if(F_CPU / divider <= 256ULL)
-  {
-    TCCR0B &= ~((1 << CS02)  | (1 << CS01)  | (1 << CS00));
-      TCCR0B |=(0 << CS02)  | (1 << CS01)  | (1 << CS00);
-      OCR0A   = F_CPU / divider - 1;
-      if(F_CPU % divider ==0)
-	  return;
-  }
+    uint8_t result =tryClockPrescaler(ratio[i],clock_source[i]);
+    found += result;
+    if(result == 2)
+      return;
+  };
+  if(found)
+    return;
   /* fallback */
   TCCR0B |=(0 << CS02)  | (1 << CS01)  | (1 << CS00);
   OCR0A   = F_CPU / 64 /CH_FREQUENCY - 1;
-  
 }
 
 void boardInit(void) {
