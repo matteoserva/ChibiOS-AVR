@@ -89,7 +89,7 @@ struct SPIDriver {
   /**
    * @brief Driver state.
    */
-  spistate_t            state;
+  volatile spistate_t            state;
   /**
    * @brief Current configuration data.
    */

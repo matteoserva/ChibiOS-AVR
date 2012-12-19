@@ -295,10 +295,12 @@ void spi_lld_receive(SPIDriver *spip, size_t n, void *rxbuf) {
  * @return              The received data frame from the SPI bus.
  */
 uint8_t spi_lld_polled_exchange(SPIDriver *spip, uint8_t frame) {
-  
+  while(spip->state !=SPI_READY)
+    ;
   #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
+      
       SPCR &= ~(1<<SPIE);
       SPDR = frame;
       
