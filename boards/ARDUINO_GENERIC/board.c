@@ -82,6 +82,43 @@ CH_IRQ_HANDLER(TIMER0_COMPA_vect) {
 /**
  * Board-specific initialization code.
  */
+
+/* This function chooses the best clock settings to match the requested CH_FREQUENCY
+ * Since this is a 8 bit timer special care is needed when setting the values
+ * It tries to reduce rounding errors
+ * 
+ * 
+ */
+static void setClock()
+{
+  uint32_t divider;
+  
+  
+  divider = 256ULL * CH_FREQUENCY ;
+  if(F_CPU / divider <= 256ULL)
+  {
+      TCCR0B &= ~((1 << CS02)  | (1 << CS01)  | (1 << CS00));
+      TCCR0B |=(1 << CS02)  | (0 << CS01)  | (0 << CS00);
+      OCR0A   = F_CPU / divider - 1;
+      if(F_CPU % divider ==0)
+	  return;
+  }
+  
+  divider = 64ULL * CH_FREQUENCY ;
+  if(F_CPU / divider <= 256ULL)
+  {
+    TCCR0B &= ~((1 << CS02)  | (1 << CS01)  | (1 << CS00));
+      TCCR0B |=(0 << CS02)  | (1 << CS01)  | (1 << CS00);
+      OCR0A   = F_CPU / divider - 1;
+      if(F_CPU % divider ==0)
+	  return;
+  }
+  /* fallback */
+  TCCR0B |=(0 << CS02)  | (1 << CS01)  | (1 << CS00);
+  OCR0A   = F_CPU / 64 /CH_FREQUENCY - 1;
+  
+}
+
 void boardInit(void) {
 
   /*
@@ -99,9 +136,9 @@ void boardInit(void) {
   TCCR0A  = (1 << WGM01) | (0 << WGM00) |                /* CTC mode.        */
             (0 << COM0A1) | (0 << COM0A0) |              /* OC0A disabled.   */
             (0 << COM0B1) | (0 << COM0B0);               /* OC0B disabled.   */
-  TCCR0B  = (0 << WGM02) |                               /* CTC mode.        */
-            (0 << CS02)  | (1 << CS01)  | (1 << CS00);   /* CLK/64 clock.    */
-  OCR0A   = F_CPU / 64 / CH_FREQUENCY - 1;
+  TCCR0B  = (0 << WGM02) ;				 /* CTC mode.        */
+             setClock();  			 
+  
   TCNT0   = 0;                                           /* Reset counter.   */
   TIFR0   = (1 << OCF0A);                                /* Reset pending.   */
   TIMSK0  = (1 << OCIE0A);                               /* IRQ on compare.  */
