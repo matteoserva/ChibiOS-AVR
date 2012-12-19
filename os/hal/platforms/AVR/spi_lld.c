@@ -63,7 +63,8 @@ static void spi_start_transmission(SPIDriver *spip)
      }
      else
      {
-       SPDR = 0xFF;
+       volatile uint8_t tempSPDR = SPDR;
+       SPDR = tempSPDR;
      }
      spip->untransmitted_bytes--;
    }
