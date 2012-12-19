@@ -202,8 +202,9 @@ void spi_lld_unselect(SPIDriver *spip) {
   #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
-      SPI1_PORT |= _BV(SPI1_SS);   
       SPI1_DDR &= ~_BV(SPI1_SS);
+      SPI1_PORT |= _BV(SPI1_SS);   
+      
       
     }
 #endif
