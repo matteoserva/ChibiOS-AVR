@@ -20,12 +20,12 @@
 
 #include "ch.h"
 #include "hal.h"
-
+#include <util/delay.h>
 #include "chprintf.h"
 
 void spicallback(SPIDriver *spip){
-  chprintf(&SD1,"spicallback\n");
-  
+  //chprintf(&SD1,"spicallback\n");
+  PORTD|=(1<<5);
 }
 /*
  * Application entry point.
@@ -51,7 +51,7 @@ int main(void) {
   
    
   DDRB=(1<<4)|(1<<5)|(1<<7);
-  PORTB=0b00010000;
+  PORTB=(1<<5)|(1<<6);
   spiStart(&SPID1,&spicfg);
   sdStart(&SD1, NULL);
 
@@ -60,15 +60,21 @@ int main(void) {
   pwmcnt_t val = 0;
   while(1){
       uint8_t temp;
-      spi_lld_select(&SPID1);
-      temp = spiPolledExchange(&SPID1, 'a');
-      spi_lld_unselect(&SPID1);
-      spi_lld_select(&SPID1);
-      chprintf(&SD1,"temp1: %x SPCR: %x, SPSR: %x, SPDR: %c, PORTB %x, DDRB: %x\n",temp,SPCR,SPSR,SPDR,PORTB, DDRB);
-      
-      temp = spiPolledExchange(&SPID1, 'd');
-      spi_lld_unselect(&SPID1);
-      chprintf(&SD1,"temp1: %x SPCR: %x, SPSR: %x, SPDR: %c\n",temp,SPCR,SPSR,SPDR);
-      chThdSleepMilliseconds(500);
+      //spi_lld_select(&SPID1);
+      //temp = spiPolledExchange(&SPID1, 'a');
+      //spi_lld_unselect(&SPID1);
+      //spi_lld_select(&SPID1);
+      //chprintf(&SD1,"temp1: %x SPCR: %x, SPSR: %x, SPDR: %c, PORTB %x, DDRB: %x\n",temp,SPCR,SPSR,SPDR,PORTB, DDRB);
+      PORTB&=~_BV(PORTB4);
+      temp = spiPolledExchange(&SPID1, 0b10101010);
+      spiSend(&SPID1,5,"ciao");
+	//
+	_delay_ms(2);
+      PORTB|=_BV(PORTB4);
+      //spi_lld_unselect(&SPID1);
+      chprintf(&SD1,"temp1: %x SPCR: %x, SPSR: %x, SPDR: %x\n",temp,SPCR,SPSR,PRR);
+      PORTD^=(1<<5);
+      _delay_ms(4);
+      //chThdSleepMilliseconds(500);
   }
 }
