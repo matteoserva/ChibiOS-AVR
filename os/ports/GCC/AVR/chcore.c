@@ -28,6 +28,22 @@
 
 #include "ch.h"
 
+
+/**
+ * @brief   Timer0 interrupt handler.
+ */
+CH_IRQ_HANDLER(TIMER0_COMPA_vect) {
+
+  CH_IRQ_PROLOGUE();
+
+  chSysLockFromIsr();
+  chSysTimerHandlerI();
+  chSysUnlockFromIsr();
+
+  CH_IRQ_EPILOGUE();
+}
+
+
 /**
  * @brief   Performs a context switch between two threads.
  * @details This is the most critical code in any port, this function
