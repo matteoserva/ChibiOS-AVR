@@ -85,6 +85,7 @@ static void setClock()
   if(found)
     return;
   /* fallback */
+  TCCR0B &= ~((1 << CS02)  | (1 << CS01)  | (1 << CS00));
   TCCR0B |=(0 << CS02)  | (1 << CS01)  | (1 << CS00);
   OCR0A   = F_CPU / 64 /CH_FREQUENCY - 1;
 }
