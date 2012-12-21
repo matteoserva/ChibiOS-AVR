@@ -309,10 +309,8 @@ uint8_t spi_lld_polled_exchange(SPIDriver *spip, uint8_t frame) {
   #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
-      //chprintf(&SD1,"%d\n",SPCR);
       SPCR &= ~(1<<SPIE);
-      while(SPSR & (1<<SPIF))
-	;
+      
       SPDR = frame;
       
       while(!(SPSR & (1<<SPIF)))
