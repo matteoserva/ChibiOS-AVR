@@ -41,7 +41,7 @@
 /**
  * @brief   Platform name.
  */
-#define PLATFORM_NAME   "ATmega128"
+#define PLATFORM_NAME   "ATmega"
 
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
