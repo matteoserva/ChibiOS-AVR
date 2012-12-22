@@ -43,6 +43,12 @@
 #define ENABLE_WFI_IDLE                 0
 #endif
 
+#ifdef EIND
+#define THREE_BYTES_PC			TRUE
+#else
+#define THREE_BYTES_PC			FALSE
+#endif
+
 /**
  * @brief   Macro defining the AVR architecture.
  */
@@ -97,6 +103,9 @@ struct extctx {
   uint8_t       sr;
   uint8_t       r1;
   uint8_t       r0;
+#if THREE_BYTES_PC
+  uint8_t       pcx;
+#endif  // THREE_BYTES_PC
   uint16_t      pc;
 };
 
@@ -127,6 +136,9 @@ struct intctx {
   uint8_t       r4;
   uint8_t       r3;
   uint8_t       r2;
+#if THREE_BYTES_PC
+  uint8_t       pcx;
+#endif  // THREE_BYTE_PC
   uint8_t       pcl;
   uint8_t       pch;
 };
@@ -146,6 +158,8 @@ struct context {
  * @details This code usually setup the context switching frame represented
  *          by an @p intctx structure.
  */
+
+#if THREE_BYTES_PC
 #define SETUP_CONTEXT(workspace, wsize, pf, arg) {                          \
   tp->p_ctx.sp = (struct intctx*)((uint8_t *)workspace + wsize  -           \
                                   sizeof(struct intctx));                   \
@@ -153,10 +167,22 @@ struct context {
   tp->p_ctx.sp->r3  = (int)pf >> 8;                                         \
   tp->p_ctx.sp->r4  = (int)arg;                                             \
   tp->p_ctx.sp->r5  = (int)arg >> 8;                                        \
+  tp->p_ctx.sp->pcx = (uint32_t)_port_thread_start >> 16;\
   tp->p_ctx.sp->pcl = (int)_port_thread_start >> 8;                         \
   tp->p_ctx.sp->pch = (int)_port_thread_start;                              \
 }
-
+#else
+#define SETUP_CONTEXT(workspace, wsize, pf, arg) {                          \
+  tp->p_ctx.sp = (struct intctx*)((uint8_t *)workspace + wsize  -           \
+                                  sizeof(struct intctx));                   \
+  tp->p_ctx.sp->r2  = (int)pf;                                              \
+  tp->p_ctx.sp->r3  = (int)pf >> 8;                                         \
+  tp->p_ctx.sp->r4  = (int)arg;                                             \
+  tp->p_ctx.sp->r5  = (int)arg >> 8;  					    \
+  tp->p_ctx.sp->pcl = (int)_port_thread_start >> 8;                         \
+  tp->p_ctx.sp->pch = (int)_port_thread_start;  			    \
+}
+#endif
 /**
  * @brief   Stack size for the system idle thread.
  * @details This size depends on the idle thread implementation, usually
