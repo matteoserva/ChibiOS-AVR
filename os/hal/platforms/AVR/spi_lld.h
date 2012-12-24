@@ -29,6 +29,8 @@
 #ifndef _SPI_LLD_H_
 #define _SPI_LLD_H_
 
+#include "atmega_pins.h"
+
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 
 /*===========================================================================*/
