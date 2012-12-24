@@ -97,7 +97,7 @@ struct GPTDriver {
   /**
    * @brief Driver state.
    */
-  gptstate_t                state;
+  volatile gptstate_t                state;
   /**
    * @brief Current configuration data.
    */
@@ -110,6 +110,7 @@ struct GPTDriver {
   uint8_t top;
   gptcnt_t period;
   gptcnt_t counter;
+  gptcallback_t callback;
 };
 
 /*===========================================================================*/

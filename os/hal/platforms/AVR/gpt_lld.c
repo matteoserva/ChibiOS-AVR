@@ -61,12 +61,15 @@ static void gpt_lld_serve_interrupt(GPTDriver *gptp) {
 	    gptp->state = GPT_READY;                /* Back in GPT_READY state.     */
 	    gpt_lld_stop_timer(gptp);               /* Timer automatically stopped. */
 	}
-	gptp->config->callback(gptp);
+	gptp->callback(gptp);
   }
 
   
 }
 
+static void gpt_lld_dummy_callback(GPTDriver *gptp)
+{
+}
 
 
 /*===========================================================================*/
@@ -165,7 +168,8 @@ void gpt_lld_stop(GPTDriver *gptp) {
 void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period) {
   #if USE_AVR_GPT1 || defined(__DOXYGEN__)
   if(gptp == &GPTD1)
-  {			 
+  {
+      gptp->callback = gptp->config->callback;
       TCNT1   = 0;                                           /* Reset counter.   */
       TIFR1   = (1 << OCF1A);                                /* Reset pending.   */
       OCR1A = gptp->top;
@@ -210,7 +214,11 @@ void gpt_lld_stop_timer(GPTDriver *gptp) {
  * @notapi
  */
 void gpt_lld_polled_delay(GPTDriver *gptp, gptcnt_t interval) {
-  //TODO
+  gptp->callback = gpt_lld_dummy_callback;
+  gpt_lld_start_timer(gptp,interval);
+  while(gptp->state != GPT_READY)
+     ;
+  return;
 }
 
 #endif /* HAL_USE_GPT */
