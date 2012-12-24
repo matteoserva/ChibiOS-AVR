@@ -128,9 +128,10 @@ CH_IRQ_HANDLER(SPI_STC_vect) { //SPI1 interrupt
  */
 void spi_lld_init(void) {
 
-/* Set MOSI and SCK output, all others input */
+
  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
 spiObjectInit(&SPID1);
+
 #endif
 
 
@@ -159,6 +160,10 @@ void spi_lld_start(SPIDriver *spip) {
 
   }
   /* Configuration.*/
+  /*mosi, sck and ss output*/
+  PORT_SPI1 = (1<<SPI1_SCK)|(1<<SPI1_MOSI)|(1<<SPI1_SS);
+  
+  
 }
 
 /**
@@ -190,8 +195,8 @@ void spi_lld_select(SPIDriver *spip) {
     if(spip == &SPID1)
     {
       
-      SPI1_PORT &= ~_BV(SPI1_SS);
-    SPI1_DDR |= _BV(SPI1_SS);
+      PORT_SPI1 &= ~_BV(SPI1_SS);
+      DDR_SPI1  |= _BV(SPI1_SS);
     
     }
 #endif
@@ -209,8 +214,8 @@ void spi_lld_unselect(SPIDriver *spip) {
   #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
-      SPI1_DDR &= ~_BV(SPI1_SS);
-      SPI1_PORT |= _BV(SPI1_SS);   
+      DDR_SPI1  &= ~_BV(SPI1_SS);
+      PORT_SPI1 |= _BV(SPI1_SS);   
       
       
     }

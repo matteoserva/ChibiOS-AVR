@@ -41,13 +41,6 @@
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/
 
-#define SPI1_DDR DDRB
-#define SPI1_PORT PORTB
-#define SPI1_MISO PB6
-#define SPI1_MOSI PB5
-#define SPI1_SCK PB7
-#define SPI1_SS PB4 
-
 /*===========================================================================*/
 /* Derived constants and error checks.                                       */
 /*===========================================================================*/
