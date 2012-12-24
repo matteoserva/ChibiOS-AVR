@@ -23,14 +23,6 @@
 #include "chprintf.h"
 
 
-  #if defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__)
-    #define IOPORTADC			((volatile avr_gpio_registers_t *)&PINA)
-  #elif defined(__AVR_ATmega328P__)
-    #define IOPORTADC			((volatile avr_gpio_registers_t *)&PINC)
-  #elif defined(__AVR_ATmega2560__)
-    #define IOPORTADC			((volatile avr_gpio_registers_t *)&PINF)
-  #endif
-
 
 /*
  * Application entry point.
@@ -80,7 +72,7 @@ int main(void) {
 
   adcStart(&ADCD1, &configurazioneBreadboard);
   
-  palSetGroupMode(IOPORTADC, 0b00000111, 0, PAL_MODE_INPUT_ANALOG);
+  palSetGroupMode(IOPORTADC, 0b00000111, 0, PAL_MODE_INPUT_PULLUP);
   
 
   while(1)
