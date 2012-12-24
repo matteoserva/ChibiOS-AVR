@@ -107,7 +107,6 @@ struct GPTDriver {
 #endif
   /* End of the mandatory fields.*/
   uint8_t clock_source;
-  uint8_t top;
   gptcnt_t period;
   gptcnt_t counter;
   gptcallback_t callback;

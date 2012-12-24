@@ -106,6 +106,9 @@ void gpt_lld_init(void) {
 #if USE_AVR_GPT1 || defined(__DOXYGEN__)
   gptObjectInit(&GPTD1);
 #endif
+  #if USE_AVR_GPT2 || defined(__DOXYGEN__)
+  gptObjectInit(&GPTD2);
+#endif
 }
 
 /**
@@ -128,12 +131,20 @@ void gpt_lld_start(GPTDriver *gptp) {
   if(gptp == &GPTD1)
   {
       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
+      gptp->clock_source = clock_source_base[psc] & 0x07;
       TCCR1A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
       TCCR1B  = (1 << WGM12);
-      gptp->clock_source = clock_source_base[psc] & 0x07;
-      gptp->top = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;
-
-      
+      OCR1A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
+  }
+#endif
+  #if USE_AVR_GPT2 || defined(__DOXYGEN__)
+  if(gptp == &GPTD2)
+  {
+      psc = findBestPrescaler(gptp->config->frequency,ratio_extended,clock_source_extended,PRESCALER_SIZE_EXTENDED);
+      gptp->clock_source = clock_source_extended[psc] & 0x07;
+      TCCR2A  = (1 << WGM21) | (0 << WGM20);
+      TCCR2B  = (0 << WGM22);
+      OCR2A = F_CPU / ratio_extended[psc] /gptp->config->frequency - 1;      
   }
 #endif
   
@@ -150,7 +161,7 @@ void gpt_lld_start(GPTDriver *gptp) {
  * @notapi
  */
 void gpt_lld_stop(GPTDriver *gptp) {
-
+  /*nothing to be done*/
   if (gptp->state == GPT_READY) {
     /* Clock de-activation.*/
 
@@ -166,19 +177,27 @@ void gpt_lld_stop(GPTDriver *gptp) {
  * @notapi
  */
 void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period) {
+      gptp->callback = gptp->config->callback;
+      gptp->period = period;
+      gptp->counter = 0;
   #if USE_AVR_GPT1 || defined(__DOXYGEN__)
   if(gptp == &GPTD1)
   {
-      gptp->callback = gptp->config->callback;
       TCNT1   = 0;                                           /* Reset counter.   */
       TIFR1   = (1 << OCF1A);                                /* Reset pending.   */
-      OCR1A = gptp->top;
-      gptp->period = period;
-      gptp->counter = 0;
       TIMSK1  = (1 << OCIE1A);
       TCCR1B  |= (gptp->clock_source <<CS10);
   }
-  
+#endif
+
+    #if USE_AVR_GPT2 || defined(__DOXYGEN__)
+  if(gptp == &GPTD2)
+  {
+      TCNT2   = 0;                                           /* Reset counter.   */
+      TIFR2   = (1 << OCF2A);                                /* Reset pending.   */
+      TIMSK2  = (1 << OCIE2A);
+      TCCR2B  |= (gptp->clock_source <<CS20);
+  }
 #endif
 }
 
@@ -196,6 +215,14 @@ void gpt_lld_stop_timer(GPTDriver *gptp) {
       TCCR1B  &= ~(0x07 <<CS10);
       TIMSK1  &= ~(1 << OCIE1A);
       TIFR1   = (1 << OCF1A); 
+  }
+#endif
+    #if USE_AVR_GPT2 || defined(__DOXYGEN__)
+  if(gptp == &GPTD2)
+  {
+      TCCR2B  &= ~(0x07 <<CS20);
+      TIMSK2  &= ~(1 << OCIE2A);
+      TIFR2   = (1 << OCF2A); 
   }
 #endif
   /*disable timer
