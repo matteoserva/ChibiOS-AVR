@@ -40,27 +40,20 @@
 /*===========================================================================*/
 /* Driver local functions.                                                   */
 /*===========================================================================*/
-/* 0 is failure, 1 is success  but probably there is a better choice,
- * 2 is success and best coice
- */
 
-
-static uint8_t tryClockPrescaler(uint32_t ratio, uint8_t clock_source)
+uint8_t findBestPrescaler(uint16_t frequency, uint16_t *ratio ,uint8_t *clock_source,uint8_t n)
 {
-  ratio *= CH_FREQUENCY;
-  if(F_CPU / ratio <= 256ULL)
+  uint8_t i;
+  for(i=0;i<n;i++)
   {
-     TCCR0B &= ~((1 << CS02)  | (1 << CS01)  | (1 << CS00));
-     TCCR0B |= ((clock_source &0x07) << CS00);
-     OCR0A   = F_CPU / ratio - 1;
-     if(F_CPU % ratio ==0)
-	  return 2;
-     return 1;
-  }
-  return 0;
+    uint32_t result = F_CPU/ratio[i]/frequency;
+    if(result > 256UL)
+       return (i-1);
+    if(result * ratio[i] * frequency == F_CPU)
+      return i;
+  };
   
 }
-
 /* This function chooses the best clock settings to match the requested CH_FREQUENCY
  * Since this is a 8 bit timer special care is needed when setting the values
  * It tries to reduce rounding errors
@@ -71,23 +64,11 @@ static void setClock()
 {
   uint16_t ratio[]={1024,256,64,8};
   uint8_t clock_source[]={5,4,3,2};
+  uint8_t prescaler_index = findBestPrescaler(CH_FREQUENCY,ratio,clock_source,4);
   
-  
-  uint8_t found = 0;
-  uint8_t i;
-  for(i=0;i<sizeof(clock_source)/sizeof(clock_source[0]);i++)
-  {
-    uint8_t result =tryClockPrescaler(ratio[i],clock_source[i]);
-    found += result;
-    if(result == 2)
-      return;
-  };
-  if(found)
-    return;
-  /* fallback */
   TCCR0B &= ~((1 << CS02)  | (1 << CS01)  | (1 << CS00));
-  TCCR0B |=(0 << CS02)  | (1 << CS01)  | (1 << CS00);
-  OCR0A   = F_CPU / 64 /CH_FREQUENCY - 1;
+  TCCR0B |=((clock_source[prescaler_index] & 0x07)<<CS00);
+  OCR0A   = F_CPU / ratio[prescaler_index] /CH_FREQUENCY - 1;
 }
 /*===========================================================================*/
 /* Driver interrupt handlers.                                                */
