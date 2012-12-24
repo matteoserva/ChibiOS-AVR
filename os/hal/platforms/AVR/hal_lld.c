@@ -46,7 +46,7 @@
 static void setClock()
 {
   
-  uint8_t prescaler_index = findBestPrescaler(CH_FREQUENCY,ratio_base,clock_source_base,4);
+  uint8_t prescaler_index = findBestPrescaler(CH_FREQUENCY,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
   
   TCCR0B &= ~((1 << CS02)  | (1 << CS01)  | (1 << CS00));
   TCCR0B |=((clock_source_base[prescaler_index] & 0x07)<<CS00);

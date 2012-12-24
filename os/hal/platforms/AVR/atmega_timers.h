@@ -11,4 +11,7 @@ extern uint8_t clock_source_base[];
 extern uint16_t ratio_base_extended[];
 extern uint8_t clock_source_extended[];
 
+#define PRESCALER_SIZE_BASE 5
+#define PRESCALER_SIZE_EXTENDED 7
+
 #endif
