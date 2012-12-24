@@ -45,13 +45,12 @@
 
 static void setClock()
 {
-  uint16_t ratio[]={1024,256,64,8};
-  uint8_t clock_source[]={5,4,3,2};
-  uint8_t prescaler_index = findBestPrescaler(CH_FREQUENCY,ratio,clock_source,4);
+  
+  uint8_t prescaler_index = findBestPrescaler(CH_FREQUENCY,ratio_base,clock_source_base,4);
   
   TCCR0B &= ~((1 << CS02)  | (1 << CS01)  | (1 << CS00));
-  TCCR0B |=((clock_source[prescaler_index] & 0x07)<<CS00);
-  OCR0A   = F_CPU / ratio[prescaler_index] /CH_FREQUENCY - 1;
+  TCCR0B |=((clock_source_base[prescaler_index] & 0x07)<<CS00);
+  OCR0A   = F_CPU / ratio_base[prescaler_index] /CH_FREQUENCY - 1;
 }
 /*===========================================================================*/
 /* Driver interrupt handlers.                                                */
