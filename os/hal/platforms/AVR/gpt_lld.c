@@ -38,7 +38,12 @@
 /*===========================================================================*/
 /* Driver exported variables.                                                */
 /*===========================================================================*/
-
+#if USE_AVR_GPT1 || defined(__DOXYGEN__)
+GPTDriver GPTD1;
+#endif
+#if USE_AVR_GPT2 || defined(__DOXYGEN__)
+GPTDriver GPTD2;
+#endif
 /*===========================================================================*/
 /* Driver local variables.                                                   */
 /*===========================================================================*/
@@ -46,12 +51,44 @@
 /*===========================================================================*/
 /* Driver local functions.                                                   */
 /*===========================================================================*/
+static void gpt_lld_serve_interrupt(GPTDriver *gptp) {
+
+  gptp->counter++;
+  if(gptp->counter == gptp->period)
+  {
+	gptp->counter = 0;
+	if (gptp->state == GPT_ONESHOT) {
+	    gptp->state = GPT_READY;                /* Back in GPT_READY state.     */
+	    gpt_lld_stop_timer(gptp);               /* Timer automatically stopped. */
+	}
+	gptp->config->callback(gptp);
+  }
+
+  
+}
 
 
 
 /*===========================================================================*/
 /* Driver interrupt handlers.                                                */
 /*===========================================================================*/
+
+#if USE_AVR_GPT1 || defined(__DOXYGEN__)
+CH_IRQ_HANDLER(TIMER1_COMPA_vect) {
+    CH_IRQ_PROLOGUE();
+      gpt_lld_serve_interrupt(&GPTD1);
+    CH_IRQ_EPILOGUE();
+}
+#endif
+
+#if USE_AVR_GPT2 || defined(__DOXYGEN__)
+CH_IRQ_HANDLER(TIMER2_COMPA_vect) {
+    CH_IRQ_PROLOGUE();
+      gpt_lld_serve_interrupt(&GPTD2);
+  
+    CH_IRQ_EPILOGUE();
+}
+#endif
 
 /*===========================================================================*/
 /* Driver exported functions.                                                */
@@ -63,7 +100,9 @@
  * @notapi
  */
 void gpt_lld_init(void) {
-
+#if USE_AVR_GPT1 || defined(__DOXYGEN__)
+  gptObjectInit(&GPTD1);
+#endif
 }
 
 /**
@@ -74,13 +113,30 @@ void gpt_lld_init(void) {
  * @notapi
  */
 void gpt_lld_start(GPTDriver *gptp) {
-  uint16_t psc;
+  uint8_t psc;
 
   if (gptp->state == GPT_STOP) {
     /* Clock activation.*/
 
   }
   /* Configuration.*/
+
+  #if USE_AVR_GPT1 || defined(__DOXYGEN__)
+  if(gptp == &GPTD1)
+  {
+      psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
+      TCCR1A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
+      TCCR1B  = (1 << WGM12);
+      gptp->clock_source = clock_source_base[psc] & 0x07;
+      gptp->top = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;
+
+      
+  }
+#endif
+  
+  
+  
+  
 }
 
 /**
@@ -107,7 +163,19 @@ void gpt_lld_stop(GPTDriver *gptp) {
  * @notapi
  */
 void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period) {
-
+  #if USE_AVR_GPT1 || defined(__DOXYGEN__)
+  if(gptp == &GPTD1)
+  {			 
+      TCNT1   = 0;                                           /* Reset counter.   */
+      TIFR1   = (1 << OCF1A);                                /* Reset pending.   */
+      OCR1A = gptp->top;
+      gptp->period = period;
+      gptp->counter = 0;
+      TIMSK1  = (1 << OCIE1A);
+      TCCR1B  |= (gptp->clock_source <<CS10);
+  }
+  
+#endif
 }
 
 /**
@@ -118,7 +186,16 @@ void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period) {
  * @notapi
  */
 void gpt_lld_stop_timer(GPTDriver *gptp) {
-
+    #if USE_AVR_GPT1 || defined(__DOXYGEN__)
+  if(gptp == &GPTD1)
+  {
+      TCCR1B  &= ~(0x07 <<CS10);
+      TIMSK1  &= ~(1 << OCIE1A);
+      TIFR1   = (1 << OCF1A); 
+  }
+#endif
+  /*disable timer
+   * clear interrupt*/
 }
 
 /**
@@ -133,7 +210,7 @@ void gpt_lld_stop_timer(GPTDriver *gptp) {
  * @notapi
  */
 void gpt_lld_polled_delay(GPTDriver *gptp, gptcnt_t interval) {
-
+  //TODO
 }
 
 #endif /* HAL_USE_GPT */

@@ -29,6 +29,8 @@
 #ifndef _GPT_LLD_H_
 #define _GPT_LLD_H_
 
+#include "atmega_timers.h"
+
 #if HAL_USE_GPT || defined(__DOXYGEN__)
 
 /*===========================================================================*/
@@ -104,6 +106,10 @@ struct GPTDriver {
   GPT_DRIVER_EXT_FIELDS
 #endif
   /* End of the mandatory fields.*/
+  uint8_t clock_source;
+  uint8_t top;
+  gptcnt_t period;
+  gptcnt_t counter;
 };
 
 /*===========================================================================*/
@@ -113,6 +119,13 @@ struct GPTDriver {
 /*===========================================================================*/
 /* External declarations.                                                    */
 /*===========================================================================*/
+
+#if USE_AVR_GPT1 || defined(__DOXYGEN__)
+extern GPTDriver GPTD1;
+#endif
+#if USE_AVR_GPT2 || defined(__DOXYGEN__)
+extern GPTDriver GPTD2;
+#endif
 
 #ifdef __cplusplus
 extern "C" {
