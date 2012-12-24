@@ -149,10 +149,10 @@ void spi_lld_start(SPIDriver *spip) {
 
   if (spip->state == SPI_STOP) {
     /* Clock activation.*/
-        #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+#if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
-      SPCR = (1<<SPE)|(1<<MSTR)|
+      SPCR = (1<<MSTR)|
 	    (1<<SPIE)| //enable interrupt
 	    (1<<SPR1)|(1<<SPR0); //Clk/128
     }
@@ -160,10 +160,15 @@ void spi_lld_start(SPIDriver *spip) {
 
   }
   /* Configuration.*/
+  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+    if(spip == &SPID1)
+    {
   /*mosi, sck and ss output*/
-  PORT_SPI1 = (1<<SPI1_SCK)|(1<<SPI1_MOSI)|(1<<SPI1_SS);
-  
-  
+  PORT_SPI1 |= (1<<SPI1_SCK)|(1<<SPI1_MOSI)|(1<<SPI1_SS);
+  PORT_SPI1 &= ~(1<<SPI1_MISO);
+  SPCR |= (1<<SPE);
+      }
+#endif
 }
 
 /**
@@ -177,6 +182,8 @@ void spi_lld_stop(SPIDriver *spip) {
   #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
+        /*all input*/
+	PORT_SPI1 &= ~((1<<SPI1_MISO)|(1<<SPI1_SCK)|(1<<SPI1_MOSI)|(1<<SPI1_SS));
 	SPCR &=~(1<<SPE);
     }
 #endif
