@@ -35,7 +35,24 @@
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
 /*===========================================================================*/
-
+typedef volatile uint8_t * timer_registers[12];
+timer_registers timer_registers_table[]={ 
+  #if USE_AVR_PWM1 || defined(__DOXYGEN__)
+  {&TCCR1A,  &TCCR1B, &OCR1AH,&OCR1AL,&OCR1BH,&OCR1BL,&OCR1CH,&OCR1CL,&TCNT1H,&TCNT1L,&TIFR1,&TIMSK1},
+  #endif
+  #if USE_AVR_PWM2 || defined(__DOXYGEN__)
+  {&TCCR2A,  &TCCR2B, &OCR2A, &OCR2A, &OCR2B, &OCR2B, NULL, NULL, &TCNT2, &TCNT2, &TIFR2,&TIMSK2},
+  #endif
+  #if USE_AVR_PWM3 || defined(__DOXYGEN__)
+  {&TCCR3A,  &TCCR3B, &OCR3AH,&OCR3AL,&OCR3BH,&OCR3BL,&OCR3CH,&OCR3CL,&TCNT3H,&TCNT3L,&TIFR3,&TIMSK3},
+  #endif
+  #if USE_AVR_PWM4 || defined(__DOXYGEN__)
+  {&TCCR4A,  &TCCR4B, &OCR4AH,&OCR4AL,&OCR4CH,&OCR4CL,&OCR4CH,&OCR4CL,&TCNT4H,&TCNT4L,&TIFR4,&TIMSK4},
+  #endif
+  #if USE_AVR_PWM5 || defined(__DOXYGEN__)
+  {&TCCR5A,  &TCCR5B, &OCR5AH,&OCR5AL,&OCR5BH,&OCR5BL,&OCR5CH,&OCR5CL,&TCNT5H,&TCNT5L,&TIFR5,&TIMSK5},
+#endif
+};
 /*===========================================================================*/
 /* Driver exported variables.                                                */
 /*===========================================================================*/
@@ -70,6 +87,27 @@ static void pwm_configure_hw_channel(volatile uint8_t * TCCRnA, uint8_t COMnx1,u
 	  if(PWM_OUTPUT_ACTIVE_LOW ==mode)
 	    *TCCRnA |= (1<<COMnx1) | (1<<COMnx0); //inverting mode 
 }
+
+uint8_t getTimerIndex(PWMDriver *gptp)
+{
+  uint8_t index = 0;
+    #if USE_AVR_PWM1 || defined(__DOXYGEN__)
+    if (gptp == &PWMD1) return index; else index++;
+      #endif  
+    #if USE_AVR_PWM2 || defined(__DOXYGEN__)
+    if (gptp == &PWMD1) return index; else index++;
+      #endif 
+    #if USE_AVR_PWM3 || defined(__DOXYGEN__)
+    if (gptp == &PWMD1) return index; else index++;
+      #endif 
+    #if USE_AVR_PWM4 || defined(__DOXYGEN__)
+    if (gptp == &PWMD1) return index; else index++;
+      #endif 
+    #if USE_AVR_PWM5 || defined(__DOXYGEN__)
+    if (gptp == &PWMD1) return index; else index++;
+      #endif
+}
+
 /*===========================================================================*/
 /* Driver interrupt handlers.                                                */
 /*===========================================================================*/
@@ -103,7 +141,6 @@ CH_IRQ_HANDLER(TIMER1_COMPC_vect) {
 }
  #endif
 #endif
-
 #if USE_AVR_PWM2 || defined(__DOXYGEN__)
 CH_IRQ_HANDLER(TIMER2_OVF_vect) {
     CH_IRQ_PROLOGUE();
@@ -211,7 +248,7 @@ void pwm_lld_init(void) {
 	TCCR2B = (0<<WGM22);  //fast pwm 8 bit
   #endif
 
-#if USE_AVR_PWM3 || defined(__DOXYGEN__)
+	#if USE_AVR_PWM3 || defined(__DOXYGEN__)
 	pwmObjectInit(&PWMD3);
 	TCCR3A = (0<<WGM11) | (1<<WGM10);   //fast pwm 8 bit  
 	TCCR3B = (1<<WGM12) | (0<<WGM13);  //fast pwm 8 bit
@@ -226,6 +263,7 @@ void pwm_lld_init(void) {
 	TCCR5A = (0<<WGM11) | (1<<WGM10);   //fast pwm 8 bit  
 	TCCR5B = (1<<WGM12) | (0<<WGM13);  //fast pwm 8 bit
 #endif
+
   
 }
 
@@ -240,16 +278,6 @@ void pwm_lld_start(PWMDriver *pwmp) {
   
   if ( pwmp->state == PWM_STOP) {
     /* Clock activation.*/
-    
-    
-#if USE_AVR_PWM1 || defined(__DOXYGEN__)
-      if(pwmp == &PWMD1)
-      {
-	  TCCR1B |= (1<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
-	  if(pwmp->config->callback != NULL)
-	    TIMSK1 = (1<<TOIE1);
-      }
-#endif
       
 #if USE_AVR_PWM2 || defined(__DOXYGEN__)
       if(pwmp == &PWMD2)
@@ -257,32 +285,14 @@ void pwm_lld_start(PWMDriver *pwmp) {
 	      TCCR2B |= (0<<CS22) |(0<<CS21) | (1<<CS20); //parti col no prescaling
 	      if(pwmp->config->callback != NULL)
 		TIMSK2 = (1<<TOIE2);
+	      return;
       }
 #endif
-#if USE_AVR_PWM3 || defined(__DOXYGEN__)
-      if(pwmp == &PWMD3)
-      {
-	  TCCR3B |= (1<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
-	  if(pwmp->config->callback != NULL)
-	    TIMSK3 = (1<<TOIE1);
-      }
-#endif
-#if USE_AVR_PWM4 || defined(__DOXYGEN__)
-      if(pwmp == &PWMD4)
-      {
-	  TCCR4B |= (1<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
-	  if(pwmp->config->callback != NULL)
-	    TIMSK4 = (1<<TOIE1);
-      }
-#endif
-#if USE_AVR_PWM5 || defined(__DOXYGEN__)
-      if(pwmp == &PWMD5)
-      {
-	  TCCR5B |= (1<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
-	  if(pwmp->config->callback != NULL)
-	    TIMSK5 = (1<<TOIE1);
-      }
-#endif
+//{&TCCR1A,  &TCCR1B, &OCR1AH,&OCR1AL,&OCR1BH,&OCR1BL,&OCR1CH,&OCR1CL,&TCNT1H,&TCNT1L,&TIFR1,&TIMSK1},
+	uint8_t index = getTimerIndex(pwmp);
+	*timer_registers_table[index][1] |= (1<<CS12) |(0<<CS11) | (1<<CS10);
+	*timer_registers_table[index][10] = (1<<TOIE1);
+
   }
   /* Configuration.*/
 
@@ -299,41 +309,10 @@ void pwm_lld_start(PWMDriver *pwmp) {
  * @notapi
  */
 void pwm_lld_stop(PWMDriver *pwmp) {
-	#if USE_AVR_PWM1 || defined(__DOXYGEN__)
-	if(pwmp == &PWMD1)
-	{
-	  TCCR1B &= ~((1<<CS12) |(1<<CS11) | (1<<CS10)); //parti col no prescaling
-	  TIMSK1 = 0;
-	}
-#endif
-	#if USE_AVR_PWM2 || defined(__DOXYGEN__)
-	if(pwmp == &PWMD2)
-	{
-	    TCCR2B &= ~((1<<CS22) |(1<<CS21) | (1<<CS20)); //parti col no prescaling
-	    TIMSK2 = 0;
-	}
-#endif
-	#if USE_AVR_PWM3 || defined(__DOXYGEN__)
-	if(pwmp == &PWMD3)
-	{
-	  TCCR3B &= ~((1<<CS12) |(1<<CS11) | (1<<CS10)); //parti col no prescaling
-	  TIMSK3 = 0;
-	}
-#endif
-	#if USE_AVR_PWM4 || defined(__DOXYGEN__)
-	if(pwmp == &PWMD4)
-	{
-	  TCCR4B &= ~((1<<CS12) |(1<<CS11) | (1<<CS10)); //parti col no prescaling
-	  TIMSK4 = 0;
-	}
-#endif
-	#if USE_AVR_PWM5 || defined(__DOXYGEN__)
-	if(pwmp == &PWMD5)
-	{
-	  TCCR5B &= ~((1<<CS12) |(1<<CS11) | (1<<CS10)); //parti col no prescaling
-	  TIMSK5 = 0;
-	}
-#endif
+//{&TCCR1A,  &TCCR1B, &OCR1AH,&OCR1AL,&OCR1BH,&OCR1BL,&OCR1CH,&OCR1CL,&TCNT1H,&TCNT1L,&TIFR1,&TIMSK1},
+	uint8_t index = getTimerIndex(pwmp);
+	*timer_registers_table[index][1] &= ~((1<<CS12) |(1<<CS11) | (1<<CS10));
+	*timer_registers_table[index][11] = 0;
 }
 
 /**
@@ -374,86 +353,36 @@ void pwm_lld_enable_channel(PWMDriver *pwmp,
                             pwmchannel_t channel,
                             pwmcnt_t width) {
   uint32_t val = width;
-  
   val *= 256;
   val /= (uint32_t)pwmp->period;
   if(val > 0x00FF)
     val = 0xFF;
-  
-
-  #if USE_AVR_PWM1 || defined(__DOXYGEN__)
-  if(pwmp == &PWMD1)
-      {   
-	pwm_configure_hw_channel(&TCCR1A,7-2*channel,6-2*channel,pwmp->config->channels[channel].mode);
-	TIMSK1 |= (1<< (channel + 1));
-	if(pwmp->config->channels[channel].callback != NULL)
-	switch(channel){
-	      case 0: OCR1A = val;break;
-	      case 1: OCR1B = val;break;
-	    #if PWM_CHANNELS>2
-	      case 2: OCR1C = val;break;
-	    #endif	  
-	}
-      }
-  #endif
+ 
   #if USE_AVR_PWM2 || defined(__DOXYGEN__)
   if(pwmp == &PWMD2)
       {
 	pwm_configure_hw_channel(&TCCR2A,7-2*channel,6-2*channel,pwmp->config->channels[channel].mode);
 	TIMSK2 |= (1<< (channel + 1));
 	if(pwmp->config->channels[channel].callback != NULL)
-	switch(channel){
+	  switch(channel){
 	      case 0: OCR2A = val;break;
 	      case 1: OCR2B = val;break;	  
-	}
+	  }
+	return;
       }
 #endif
-  
-    #if USE_AVR_PWM3 || defined(__DOXYGEN__)
-  if(pwmp == &PWMD3)
-      {   
-	pwm_configure_hw_channel(&TCCR3A,7-2*channel,6-2*channel,pwmp->config->channels[channel].mode);
-	TIMSK3 |= (1<< (channel + 1));
+
+  //{&TCCR1A,  &TCCR1B, &OCR1AH,&OCR1AL,&OCR1BH,&OCR1BL,&OCR1CH,&OCR1CL,&TCNT1H,&TCNT1L,&TIFR1,&TIMSK1},
+	uint8_t index = getTimerIndex(pwmp);
+	pwm_configure_hw_channel(timer_registers_table[index][0],7-2*channel,6-2*channel,pwmp->config->channels[channel].mode);
+	*timer_registers_table[index][2*channel+2] = 0;
+	*timer_registers_table[index][2*channel+3] = val;
+	*timer_registers_table[index][10] |= (1<< (channel + 1));
 	if(pwmp->config->channels[channel].callback != NULL)
-	switch(channel){
-	      case 0: OCR3A = val;break;
-	      case 1: OCR3B = val;break;
-	    #if PWM_CHANNELS>2
-	      case 2: OCR3C = val;break;
-	    #endif	  
+	{
+	    *timer_registers_table[index][11] |= (1<< (channel + 1));
+	    
 	}
-      }
-  #endif
-    #if USE_AVR_PWM4|| defined(__DOXYGEN__)
-  if(pwmp == &PWMD4)
-      {   
-	pwm_configure_hw_channel(&TCCR4A,7-2*channel,6-2*channel,pwmp->config->channels[channel].mode);
-	TIMSK4 |= (1<< (channel + 1));
-	if(pwmp->config->channels[channel].callback != NULL)
-	switch(channel){
-	      case 0: OCR4A = val;break;
-	      case 1: OCR4B = val;break;
-	    #if PWM_CHANNELS>2
-	      case 2: OCR4C = val;break;
-	    #endif	  
-	}
-      }
-  #endif
-    #if USE_AVR_PWM5 || defined(__DOXYGEN__)
-  if(pwmp == &PWMD5)
-      {   
-	pwm_configure_hw_channel(&TCCR5A,7-2*channel,6-2*channel,pwmp->config->channels[channel].mode);
-	TIMSK5 |= (1<< (channel + 1));
-	if(pwmp->config->channels[channel].callback != NULL)
-	switch(channel){
-	      case 0: OCR5A = val;break;
-	      case 1: OCR5B = val;break;
-	    #if PWM_CHANNELS>2
-	      case 2: OCR5C = val;break;
-	    #endif	  
-	}
-      }
-  #endif
 
 }
 
@@ -472,41 +401,9 @@ void pwm_lld_enable_channel(PWMDriver *pwmp,
  * @notapi
  */
 void pwm_lld_disable_channel(PWMDriver *pwmp, pwmchannel_t channel) {
-#if USE_AVR_PWM1 || defined(__DOXYGEN__)
-  if(pwmp == &PWMD1)
-      {   
-	pwm_configure_hw_channel(&TCCR1A,7-2*channel,6-2*channel,PWM_OUTPUT_DISABLED);
-	TIMSK1 &= ~(1<< (channel + 1));
-      }
-#endif
-#if USE_AVR_PWM2 || defined(__DOXYGEN__)
-  if(pwmp == &PWMD2)
-      {   
-	pwm_configure_hw_channel(&TCCR2A,7-2*channel,6-2*channel,PWM_OUTPUT_DISABLED);
-	TIMSK2 &= ~(1<< (channel + 1));
-      }
-#endif
-#if USE_AVR_PWM3 || defined(__DOXYGEN__)
-  if(pwmp == &PWMD3)
-      {   
-	pwm_configure_hw_channel(&TCCR3A,7-2*channel,6-2*channel,PWM_OUTPUT_DISABLED);
-	TIMSK3 &= ~(1<< (channel + 1));
-      }
-#endif
-#if USE_AVR_PWM4 || defined(__DOXYGEN__)
-  if(pwmp == &PWMD4)
-      {   
-	pwm_configure_hw_channel(&TCCR4A,7-2*channel,6-2*channel,PWM_OUTPUT_DISABLED);
-	TIMSK4 &= ~(1<< (channel + 1));
-      }
-#endif
-#if USE_AVR_PWM5 || defined(__DOXYGEN__)
-  if(pwmp == &PWMD5)
-      {   
-	pwm_configure_hw_channel(&TCCR5A,7-2*channel,6-2*channel,PWM_OUTPUT_DISABLED);
-	TIMSK5 &= ~(1<< (channel + 1));
-      }
-#endif
+  uint8_t index = getTimerIndex(pwmp);
+	pwm_configure_hw_channel(timer_registers_table[index][0],7-2*channel,6-2*channel,PWM_OUTPUT_DISABLED);
+	*timer_registers_table[index][11] &= ~(1<< (channel + 1));
 }
 
 #endif /* HAL_USE_PWM */
