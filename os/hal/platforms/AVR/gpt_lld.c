@@ -34,6 +34,26 @@
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
 /*===========================================================================*/
+typedef volatile uint8_t * timer_registers[8];
+timer_registers timer_registers_table[]={ 
+  #if USE_AVR_GPT1 || defined(__DOXYGEN__)
+  {&TCCR1A,  &TCCR1B, &OCR1AH,&OCR1AL,&TCNT1H,&TCNT1L,&TIFR1,&TIMSK1},
+  #endif
+  #if USE_AVR_GPT2 || defined(__DOXYGEN__)
+  {&TCCR2A,  &TCCR2B, &OCR2A,&OCR2A,&TCNT2,&TCNT2,&TIFR2,&TIMSK2},
+  #endif
+  #if USE_AVR_GPT3 || defined(__DOXYGEN__)
+  {&TCCR3A,  &TCCR3B, &OCR3AH,&OCR3AL,&TCNT3H,&TCNT3L,&TIFR3,&TIMSK3},
+  #endif
+  #if USE_AVR_GPT4 || defined(__DOXYGEN__)
+  {&TCCR4A,  &TCCR4B, &OCR4AH,&OCR4AL,&TCNT4H,&TCNT4L,&TIFR4,&TIMSK4},
+  #endif
+  #if USE_AVR_GPT5 || defined(__DOXYGEN__)
+  {&TCCR5A,  &TCCR5B, &OCR5AH,&OCR5AL,&TCNT5H,&TCNT5L,&TIFR5,&TIMSK5},
+#endif
+};
+
+
 
 /*===========================================================================*/
 /* Driver exported variables.                                                */
@@ -61,7 +81,6 @@ GPTDriver GPTD5;
 /* Driver local functions.                                                   */
 /*===========================================================================*/
 static void gpt_lld_serve_interrupt(GPTDriver *gptp) {
-
   gptp->counter++;
   if(gptp->counter == gptp->period)
   {
@@ -72,14 +91,31 @@ static void gpt_lld_serve_interrupt(GPTDriver *gptp) {
 	}
 	gptp->callback(gptp);
   }
-
-  
 }
 
 static void gpt_lld_dummy_callback(GPTDriver *gptp)
 {
 }
 
+uint8_t getTimerIndex(GPTDriver *gptp)
+{
+  uint8_t index = 0;
+    #if USE_AVR_GPT1 || defined(__DOXYGEN__)
+    if (gptp == &GPTD1) return index; else index++;
+      #endif  
+    #if USE_AVR_GPT2 || defined(__DOXYGEN__)
+    if (gptp == &GPTD1) return index; else index++;
+      #endif 
+    #if USE_AVR_GPT3 || defined(__DOXYGEN__)
+    if (gptp == &GPTD1) return index; else index++;
+      #endif 
+    #if USE_AVR_GPT4 || defined(__DOXYGEN__)
+    if (gptp == &GPTD1) return index; else index++;
+      #endif 
+    #if USE_AVR_GPT5 || defined(__DOXYGEN__)
+    if (gptp == &GPTD1) return index; else index++;
+      #endif
+}
 
 /*===========================================================================*/
 /* Driver interrupt handlers.                                                */
@@ -168,16 +204,6 @@ void gpt_lld_start(GPTDriver *gptp) {
   }
   /* Configuration.*/
 
-#if USE_AVR_GPT1 || defined(__DOXYGEN__)
-  if(gptp == &GPTD1)
-  {
-      psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
-      gptp->clock_source = clock_source_base[psc] & 0x07;
-      TCCR1A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
-      TCCR1B  = (1 << WGM12);
-      OCR1A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
-  }
-#endif
   #if USE_AVR_GPT2 || defined(__DOXYGEN__)
   if(gptp == &GPTD2)
   {
@@ -185,43 +211,18 @@ void gpt_lld_start(GPTDriver *gptp) {
       gptp->clock_source = clock_source_extended[psc] & 0x07;
       TCCR2A  = (1 << WGM21) | (0 << WGM20);
       TCCR2B  = (0 << WGM22);
-      OCR2A = F_CPU / ratio_extended[psc] /gptp->config->frequency - 1;      
+      OCR2A = F_CPU / ratio_extended[psc] /gptp->config->frequency - 1;   
+      return;
   }
 #endif
   
-#if USE_AVR_GPT3 || defined(__DOXYGEN__)
-  if(gptp == &GPTD3)
-  {
+  uint8_t index = getTimerIndex(gptp);
       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
       gptp->clock_source = clock_source_base[psc] & 0x07;
-      TCCR3A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
-      TCCR3B  = (1 << WGM12);
-      OCR3A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
-  }
-#endif
-#if USE_AVR_GPT4 || defined(__DOXYGEN__)
-  if(gptp == &GPTD4)
-  {
-      psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
-      gptp->clock_source = clock_source_base[psc] & 0x07;
-      TCCR4A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
-      TCCR4B  = (1 << WGM12);
-      OCR4A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
-  }
-#endif
-#if USE_AVR_GPT5 || defined(__DOXYGEN__)
-  if(gptp == &GPTD5)
-  {
-      psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
-      gptp->clock_source = clock_source_base[psc] & 0x07;
-      TCCR5A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
-      TCCR5B  = (1 << WGM12);
-      OCR5A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
-  }
-#endif
-  
-  
-  
+      *timer_registers_table[index][0]  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
+      *timer_registers_table[index][1]  = (1 << WGM12);
+      *timer_registers_table[index][2] = 0;
+      *timer_registers_table[index][3] = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;  
 }
 
 /**
