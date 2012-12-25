@@ -126,6 +126,15 @@ extern GPTDriver GPTD1;
 #if USE_AVR_GPT2 || defined(__DOXYGEN__)
 extern GPTDriver GPTD2;
 #endif
+#if USE_AVR_GPT3 || defined(__DOXYGEN__)
+extern GPTDriver GPTD3;
+#endif
+#if USE_AVR_GPT4 || defined(__DOXYGEN__)
+extern GPTDriver GPTD4;
+#endif
+#if USE_AVR_GPT5 || defined(__DOXYGEN__)
+extern GPTDriver GPTD5;
+#endif
 
 #ifdef __cplusplus
 extern "C" {

@@ -44,6 +44,15 @@ GPTDriver GPTD1;
 #if USE_AVR_GPT2 || defined(__DOXYGEN__)
 GPTDriver GPTD2;
 #endif
+#if USE_AVR_GPT3 || defined(__DOXYGEN__)
+GPTDriver GPTD3;
+#endif
+#if USE_AVR_GPT4 || defined(__DOXYGEN__)
+GPTDriver GPTD4;
+#endif
+#if USE_AVR_GPT5 || defined(__DOXYGEN__)
+GPTDriver GPTD5;
+#endif
 /*===========================================================================*/
 /* Driver local variables.                                                   */
 /*===========================================================================*/
@@ -88,7 +97,30 @@ CH_IRQ_HANDLER(TIMER1_COMPA_vect) {
 CH_IRQ_HANDLER(TIMER2_COMPA_vect) {
     CH_IRQ_PROLOGUE();
       gpt_lld_serve_interrupt(&GPTD2);
-  
+    CH_IRQ_EPILOGUE();
+}
+#endif
+
+#if USE_AVR_GPT3 || defined(__DOXYGEN__)
+CH_IRQ_HANDLER(TIMER3_COMPA_vect) {
+    CH_IRQ_PROLOGUE();
+      gpt_lld_serve_interrupt(&GPTD3);
+    CH_IRQ_EPILOGUE();
+}
+#endif
+
+#if USE_AVR_GPT4 || defined(__DOXYGEN__)
+CH_IRQ_HANDLER(TIMER4_COMPA_vect) {
+    CH_IRQ_PROLOGUE();
+      gpt_lld_serve_interrupt(&GPTD4);
+    CH_IRQ_EPILOGUE();
+}
+#endif
+
+#if USE_AVR_GPT5 || defined(__DOXYGEN__)
+CH_IRQ_HANDLER(TIMER5_COMPA_vect) {
+    CH_IRQ_PROLOGUE();
+      gpt_lld_serve_interrupt(&GPTD5);
     CH_IRQ_EPILOGUE();
 }
 #endif
@@ -109,6 +141,15 @@ void gpt_lld_init(void) {
   #if USE_AVR_GPT2 || defined(__DOXYGEN__)
   gptObjectInit(&GPTD2);
 #endif
+    #if USE_AVR_GPT3 || defined(__DOXYGEN__)
+  gptObjectInit(&GPTD3);
+#endif
+    #if USE_AVR_GPT4 || defined(__DOXYGEN__)
+  gptObjectInit(&GPTD4);
+#endif
+    #if USE_AVR_GPT5 || defined(__DOXYGEN__)
+  gptObjectInit(&GPTD5);
+#endif
 }
 
 /**
@@ -127,7 +168,7 @@ void gpt_lld_start(GPTDriver *gptp) {
   }
   /* Configuration.*/
 
-  #if USE_AVR_GPT1 || defined(__DOXYGEN__)
+#if USE_AVR_GPT1 || defined(__DOXYGEN__)
   if(gptp == &GPTD1)
   {
       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
@@ -148,6 +189,36 @@ void gpt_lld_start(GPTDriver *gptp) {
   }
 #endif
   
+#if USE_AVR_GPT3 || defined(__DOXYGEN__)
+  if(gptp == &GPTD3)
+  {
+      psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
+      gptp->clock_source = clock_source_base[psc] & 0x07;
+      TCCR3A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
+      TCCR3B  = (1 << WGM12);
+      OCR3A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
+  }
+#endif
+#if USE_AVR_GPT4 || defined(__DOXYGEN__)
+  if(gptp == &GPTD4)
+  {
+      psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
+      gptp->clock_source = clock_source_base[psc] & 0x07;
+      TCCR4A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
+      TCCR4B  = (1 << WGM12);
+      OCR4A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
+  }
+#endif
+#if USE_AVR_GPT5 || defined(__DOXYGEN__)
+  if(gptp == &GPTD5)
+  {
+      psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
+      gptp->clock_source = clock_source_base[psc] & 0x07;
+      TCCR5A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
+      TCCR5B  = (1 << WGM12);
+      OCR5A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
+  }
+#endif
   
   
   
@@ -166,6 +237,7 @@ void gpt_lld_stop(GPTDriver *gptp) {
     /* Clock de-activation.*/
 
   }
+  gpt_lld_stop_timer(gptp);
 }
 
 /**
@@ -199,6 +271,34 @@ void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period) {
       TCCR2B  |= (gptp->clock_source <<CS20);
   }
 #endif
+
+  #if USE_AVR_GPT3 || defined(__DOXYGEN__)
+  if(gptp == &GPTD3)
+  {
+      TCNT3   = 0;                                           /* Reset counter.   */
+      TIFR3   = (1 << OCF1A);                                /* Reset pending.   */
+      TIMSK3  = (1 << OCIE1A);
+      TCCR3B  |= (gptp->clock_source <<CS30);
+  }
+#endif
+  #if USE_AVR_GPT4 || defined(__DOXYGEN__)
+  if(gptp == &GPTD4)
+  {
+      TCNT4   = 0;                                           /* Reset counter.   */
+      TIFR4   = (1 << OCF1A);                                /* Reset pending.   */
+      TIMSK4  = (1 << OCIE1A);
+      TCCR4B  |= (gptp->clock_source <<CS40);
+  }
+#endif
+  #if USE_AVR_GPT5 || defined(__DOXYGEN__)
+  if(gptp == &GPTD5)
+  {
+      TCNT5   = 0;                                           /* Reset counter.   */
+      TIFR5   = (1 << OCF1A);                                /* Reset pending.   */
+      TIMSK5  = (1 << OCIE1A);
+      TCCR5B  |= (gptp->clock_source <<CS50);
+  }
+#endif
 }
 
 /**
@@ -223,6 +323,30 @@ void gpt_lld_stop_timer(GPTDriver *gptp) {
       TCCR2B  &= ~(0x07 <<CS20);
       TIMSK2  &= ~(1 << OCIE2A);
       TIFR2   = (1 << OCF2A); 
+  }
+#endif
+    #if USE_AVR_GPT3 || defined(__DOXYGEN__)
+  if(gptp == &GPTD3)
+  {
+      TCCR3B  &= ~(0x07 <<CS10);
+      TIMSK3  &= ~(1 << OCIE1A);
+      TIFR3   = (1 << OCF1A); 
+  }
+#endif
+    #if USE_AVR_GPT4 || defined(__DOXYGEN__)
+  if(gptp == &GPTD4)
+  {
+      TCCR4B  &= ~(0x07 <<CS10);
+      TIMSK4  &= ~(1 << OCIE1A);
+      TIFR4   = (1 << OCF1A); 
+  }
+#endif
+    #if USE_AVR_GPT5 || defined(__DOXYGEN__)
+  if(gptp == &GPTD5)
+  {
+      TCCR5B  &= ~(0x07 <<CS10);
+      TIMSK5  &= ~(1 << OCIE1A);
+      TIFR5   = (1 << OCF1A); 
   }
 #endif
   /*disable timer
