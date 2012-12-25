@@ -253,53 +253,13 @@ void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period) {
       gptp->callback = gptp->config->callback;
       gptp->period = period;
       gptp->counter = 0;
-  #if USE_AVR_GPT1 || defined(__DOXYGEN__)
-  if(gptp == &GPTD1)
-  {
-      TCNT1   = 0;                                           /* Reset counter.   */
-      TIFR1   = (1 << OCF1A);                                /* Reset pending.   */
-      TIMSK1  = (1 << OCIE1A);
-      TCCR1B  |= (gptp->clock_source <<CS10);
-  }
-#endif
-
-    #if USE_AVR_GPT2 || defined(__DOXYGEN__)
-  if(gptp == &GPTD2)
-  {
-      TCNT2   = 0;                                           /* Reset counter.   */
-      TIFR2   = (1 << OCF2A);                                /* Reset pending.   */
-      TIMSK2  = (1 << OCIE2A);
-      TCCR2B  |= (gptp->clock_source <<CS20);
-  }
-#endif
-
-  #if USE_AVR_GPT3 || defined(__DOXYGEN__)
-  if(gptp == &GPTD3)
-  {
-      TCNT3   = 0;                                           /* Reset counter.   */
-      TIFR3   = (1 << OCF1A);                                /* Reset pending.   */
-      TIMSK3  = (1 << OCIE1A);
-      TCCR3B  |= (gptp->clock_source <<CS30);
-  }
-#endif
-  #if USE_AVR_GPT4 || defined(__DOXYGEN__)
-  if(gptp == &GPTD4)
-  {
-      TCNT4   = 0;                                           /* Reset counter.   */
-      TIFR4   = (1 << OCF1A);                                /* Reset pending.   */
-      TIMSK4  = (1 << OCIE1A);
-      TCCR4B  |= (gptp->clock_source <<CS40);
-  }
-#endif
-  #if USE_AVR_GPT5 || defined(__DOXYGEN__)
-  if(gptp == &GPTD5)
-  {
-      TCNT5   = 0;                                           /* Reset counter.   */
-      TIFR5   = (1 << OCF1A);                                /* Reset pending.   */
-      TIMSK5  = (1 << OCIE1A);
-      TCCR5B  |= (gptp->clock_source <<CS50);
-  }
-#endif
+      
+  uint8_t index = getTimerIndex(gptp);
+  *timer_registers_table[index][4]=0;
+  *timer_registers_table[index][5]=0;
+  *timer_registers_table[index][6]=(1 << OCF1A);
+  *timer_registers_table[index][7]=(1 << OCIE1A);
+  *timer_registers_table[index][1]|=(gptp->clock_source <<CS10);
 }
 
 /**
@@ -310,48 +270,10 @@ void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period) {
  * @notapi
  */
 void gpt_lld_stop_timer(GPTDriver *gptp) {
-    #if USE_AVR_GPT1 || defined(__DOXYGEN__)
-  if(gptp == &GPTD1)
-  {
-      TCCR1B  &= ~(0x07 <<CS10);
-      TIMSK1  &= ~(1 << OCIE1A);
-      TIFR1   = (1 << OCF1A); 
-  }
-#endif
-    #if USE_AVR_GPT2 || defined(__DOXYGEN__)
-  if(gptp == &GPTD2)
-  {
-      TCCR2B  &= ~(0x07 <<CS20);
-      TIMSK2  &= ~(1 << OCIE2A);
-      TIFR2   = (1 << OCF2A); 
-  }
-#endif
-    #if USE_AVR_GPT3 || defined(__DOXYGEN__)
-  if(gptp == &GPTD3)
-  {
-      TCCR3B  &= ~(0x07 <<CS10);
-      TIMSK3  &= ~(1 << OCIE1A);
-      TIFR3   = (1 << OCF1A); 
-  }
-#endif
-    #if USE_AVR_GPT4 || defined(__DOXYGEN__)
-  if(gptp == &GPTD4)
-  {
-      TCCR4B  &= ~(0x07 <<CS10);
-      TIMSK4  &= ~(1 << OCIE1A);
-      TIFR4   = (1 << OCF1A); 
-  }
-#endif
-    #if USE_AVR_GPT5 || defined(__DOXYGEN__)
-  if(gptp == &GPTD5)
-  {
-      TCCR5B  &= ~(0x07 <<CS10);
-      TIMSK5  &= ~(1 << OCIE1A);
-      TIFR5   = (1 << OCF1A); 
-  }
-#endif
-  /*disable timer
-   * clear interrupt*/
+  uint8_t index = getTimerIndex(gptp);
+  *timer_registers_table[index][1]&= ~(0x07 <<CS10);
+  *timer_registers_table[index][1]&= ~(1 << OCIE1A);
+  *timer_registers_table[index][6] = (1 << OCF1A); 
 }
 
 /**
