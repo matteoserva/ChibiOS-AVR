@@ -71,48 +71,33 @@ static void pwm_configure_hw_channel(volatile uint8_t * TCCRnA, uint8_t COMnx1,u
  */
 
 CH_IRQ_HANDLER(TIMER1_OVF_vect) {
- 
     CH_IRQ_PROLOGUE();
       PWMD1.config->callback(&PWMD1);
-  
     CH_IRQ_EPILOGUE();
 }
 CH_IRQ_HANDLER(TIMER1_COMPA_vect) {
- 
     CH_IRQ_PROLOGUE();
       PWMD1.config->channels[0].callback(&PWMD1);
-  
     CH_IRQ_EPILOGUE();
 }
 CH_IRQ_HANDLER(TIMER1_COMPB_vect) {
- 
     CH_IRQ_PROLOGUE();
       PWMD1.config->channels[1].callback(&PWMD1);
-  
     CH_IRQ_EPILOGUE();
 }
-
-
 CH_IRQ_HANDLER(TIMER2_OVF_vect) {
- 
     CH_IRQ_PROLOGUE();
       PWMD2.config->callback(&PWMD2);
-  
     CH_IRQ_EPILOGUE();
 }
-
 CH_IRQ_HANDLER(TIMER2_COMPA_vect) {
- 
     CH_IRQ_PROLOGUE();
       PWMD2.config->channels[0].callback(&PWMD2);
-  
     CH_IRQ_EPILOGUE();
 }
 CH_IRQ_HANDLER(TIMER2_COMPB_vect) {
- 
     CH_IRQ_PROLOGUE();
       PWMD2.config->channels[1].callback(&PWMD2);
-  
     CH_IRQ_EPILOGUE();
 }
 
@@ -253,41 +238,28 @@ void pwm_lld_enable_channel(PWMDriver *pwmp,
   #if USE_AVR_PWM1 || defined(__DOXYGEN__)
   if(pwmp == &PWMD1)
       {   
-	if(channel == 0)
-	{
-	  pwm_configure_hw_channel(&TCCR1A,COM1A1,COM1A0,pwmp->config->channels[0].mode);
-	  if(pwmp->config->channels[0].callback != NULL)
-	    TIMSK1 |= (1<< OCIE1A);
-	    OCR1AH = 0;
-	    OCR1AL = val;
+	pwm_configure_hw_channel(&TCCR1A,7-2*channel,6-2*channel,pwmp->config->channels[channel].mode);
+	TIMSK1 |= (1<< (channel + 1));
+	if(pwmp->config->channels[channel].callback != NULL)
+	switch(channel){
+	      case 0: OCR1A = val;break;
+	      case 1: OCR1B = val;break;
+	    #if PWM_CHANNELS>2
+	      case 2: OCR1C = val;break;
+	    #endif	  
 	}
-	else
-	{ //channel == 1
-	  pwm_configure_hw_channel(&TCCR1A,COM1B1,COM1B0,pwmp->config->channels[1].mode);
-	  if(pwmp->config->channels[1].callback != NULL)
-	    TIMSK1 |= (1<<OCIE1B);
-	    OCR1BH = 0;
-	    OCR1BL = val;
-	}	  
       }
   
   #endif
   #if USE_AVR_PWM2 || defined(__DOXYGEN__)
   if(pwmp == &PWMD2)
       {
-	if(channel == 0)
-	{
-	  pwm_configure_hw_channel(&TCCR2A,COM2A1,COM2A0,pwmp->config->channels[0].mode);
-	  if(pwmp->config->channels[0].callback != NULL)
-	    TIMSK2 |= (1<<OCIE2A);
-	    OCR2A = val;
-	}
-	else
-	{ //channel == 1
-	  pwm_configure_hw_channel(&TCCR2A,COM2B1,COM2B0,pwmp->config->channels[1].mode);
-	  if(pwmp->config->channels[1].callback != NULL)
-	    TIMSK2 |= (1<<OCIE2B);
-	    OCR2B = val;
+	pwm_configure_hw_channel(&TCCR2A,7-2*channel,6-2*channel,pwmp->config->channels[channel].mode);
+	TIMSK2 |= (1<< (channel + 1));
+	if(pwmp->config->channels[channel].callback != NULL)
+	switch(channel){
+	      case 0: OCR2A = val;break;
+	      case 1: OCR2B = val;break;	  
 	}
       }
   
