@@ -64,7 +64,7 @@ int main(void) {
 	{
 	{PWM_OUTPUT_ACTIVE_HIGH, NULL},
 	{PWM_OUTPUT_ACTIVE_HIGH, NULL},
-
+	{PWM_OUTPUT_ACTIVE_HIGH, NULL},
 	},
 
     };
@@ -73,29 +73,28 @@ int main(void) {
     palSetGroupMode(IOPORT3, 0b00000111, 0, PAL_MODE_OUTPUT_PUSHPULL);
 
   pwmStart(&PWMD1,&pwmcfg);
-  pwmStart(&PWMD2,&pwmcfg);
+  //pwmStart(&PWMD2,&pwmcfg);
 
-  
+    sdStart(&SD1, NULL);
 
-  //pwmStart(&PWMD1,&pwmcfg);
-  sdStart(&SD1, NULL);
-
-  
+  DDRB|= _BV(DDB7);
   
 
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
-  pwmcnt_t val = 0;
+  uint16_t val = 0;
   while(1)
   {
-      pwmEnableChannel(&PWMD1, 0, val);
-      pwmEnableChannel(&PWMD2, 0, val); 
-      val = (val + 5000) % 10000;
-
+      //pwmEnableChannel(&PWMD1, 2, val);
+      //OCR1C=0x40;
+      //pwmEnableChannel(&PWMD2, 0, val); 
+      val = (val + 2000) % 10000;
+      
+      pwmEnableChannel(&PWMD1, 2, val+1);
       
       uint8_t oc = TCCR2A;
       uint8_t oc2 = TCCR2B;
-      chprintf(&SD1,"tca: %x, tcb: %x\n",oc,oc2);
-      chThdSleepMilliseconds(200);
+      //chprintf(&SD1,"TCCR1A: %x, TCCR1B: %x, val1: %d, val2 %d\n",TCCR1A,TCCR1B,OCR1CL,OCR1CH);
+      chThdSleepMilliseconds(500);
 
     
   }
