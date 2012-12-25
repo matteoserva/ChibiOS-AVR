@@ -159,6 +159,15 @@ extern PWMDriver PWMD1;
 #if USE_AVR_PWM2 || defined(__DOXYGEN__)
 extern PWMDriver PWMD2;
 #endif
+#if USE_AVR_PWM3 || defined(__DOXYGEN__)
+extern PWMDriver PWMD3;
+#endif
+#if USE_AVR_PWM4 || defined(__DOXYGEN__)
+extern PWMDriver PWMD4;
+#endif
+#if USE_AVR_PWM5 || defined(__DOXYGEN__)
+extern PWMDriver PWMD5;
+#endif
 
 #ifdef __cplusplus
 extern "C" {
