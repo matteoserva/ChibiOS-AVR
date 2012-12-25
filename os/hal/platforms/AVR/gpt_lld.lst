@@ -100,7 +100,7 @@
   21               	.LFE1:
   23               	.global	gpt_lld_init
   25               	gpt_lld_init:
-  26               	.LFB7:
+  26               	.LFB4:
   81:../../../os/hal/platforms/AVR/gpt_lld.c **** }
   82:../../../os/hal/platforms/AVR/gpt_lld.c **** 
   83:../../../os/hal/platforms/AVR/gpt_lld.c **** 
@@ -176,36 +176,21 @@
   37               		.loc 1 142 0
   38 000a 80E0      		ldi r24,lo8(GPTD2)
   39 000c 90E0      		ldi r25,hi8(GPTD2)
-  40 000e 0E94 0000 		call gptObjectInit
+  40 000e 0C94 0000 		jmp gptObjectInit
   41               	.LVL2:
+  42               	.LFE4:
+  44               	.global	gpt_lld_start
+  46               	gpt_lld_start:
+  47               	.LFB5:
  143:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  144:../../../os/hal/platforms/AVR/gpt_lld.c ****     #if USE_AVR_GPT3 || defined(__DOXYGEN__)
  145:../../../os/hal/platforms/AVR/gpt_lld.c ****   gptObjectInit(&GPTD3);
-  42               		.loc 1 145 0
-  43 0012 80E0      		ldi r24,lo8(GPTD3)
-  44 0014 90E0      		ldi r25,hi8(GPTD3)
-  45 0016 0E94 0000 		call gptObjectInit
-  46               	.LVL3:
  146:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  147:../../../os/hal/platforms/AVR/gpt_lld.c ****     #if USE_AVR_GPT4 || defined(__DOXYGEN__)
  148:../../../os/hal/platforms/AVR/gpt_lld.c ****   gptObjectInit(&GPTD4);
-  47               		.loc 1 148 0
-  48 001a 80E0      		ldi r24,lo8(GPTD4)
-  49 001c 90E0      		ldi r25,hi8(GPTD4)
-  50 001e 0E94 0000 		call gptObjectInit
-  51               	.LVL4:
  149:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  150:../../../os/hal/platforms/AVR/gpt_lld.c ****     #if USE_AVR_GPT5 || defined(__DOXYGEN__)
  151:../../../os/hal/platforms/AVR/gpt_lld.c ****   gptObjectInit(&GPTD5);
-  52               		.loc 1 151 0
-  53 0022 80E0      		ldi r24,lo8(GPTD5)
-  54 0024 90E0      		ldi r25,hi8(GPTD5)
-  55 0026 0C94 0000 		jmp gptObjectInit
-  56               	.LVL5:
-  57               	.LFE7:
-  59               	.global	gpt_lld_start
-  61               	gpt_lld_start:
-  62               	.LFB8:
  152:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  153:../../../os/hal/platforms/AVR/gpt_lld.c **** }
  154:../../../os/hal/platforms/AVR/gpt_lld.c **** 
@@ -217,26 +202,26 @@
  160:../../../os/hal/platforms/AVR/gpt_lld.c ****  * @notapi
  161:../../../os/hal/platforms/AVR/gpt_lld.c ****  */
  162:../../../os/hal/platforms/AVR/gpt_lld.c **** void gpt_lld_start(GPTDriver *gptp) {
-  63               		.loc 1 162 0
-  64               	.LVL6:
-  65 002a CF92      		push r12
-  66               	.LCFI0:
-  67 002c DF92      		push r13
-  68               	.LCFI1:
-  69 002e EF92      		push r14
-  70               	.LCFI2:
-  71 0030 FF92      		push r15
-  72               	.LCFI3:
-  73               	/* prologue: function */
-  74               	/* frame size = 0 */
-  75               	/* stack size = 4 */
-  76               	.L__stack_usage = 4
+  48               		.loc 1 162 0
+  49               	.LVL3:
+  50 0012 CF92      		push r12
+  51               	.LCFI0:
+  52 0014 DF92      		push r13
+  53               	.LCFI1:
+  54 0016 EF92      		push r14
+  55               	.LCFI2:
+  56 0018 FF92      		push r15
+  57               	.LCFI3:
+  58               	/* prologue: function */
+  59               	/* frame size = 0 */
+  60               	/* stack size = 4 */
+  61               	.L__stack_usage = 4
  163:../../../os/hal/platforms/AVR/gpt_lld.c ****   uint8_t psc;
  164:../../../os/hal/platforms/AVR/gpt_lld.c **** 
  165:../../../os/hal/platforms/AVR/gpt_lld.c ****   if (gptp->state == GPT_STOP) {
-  77               		.loc 1 165 0
-  78 0032 FC01      		movw r30,r24
-  79 0034 2081      		ld r18,Z
+  62               		.loc 1 165 0
+  63 001a FC01      		movw r30,r24
+  64 001c 2081      		ld r18,Z
  166:../../../os/hal/platforms/AVR/gpt_lld.c ****     /* Clock activation.*/
  167:../../../os/hal/platforms/AVR/gpt_lld.c **** 
  168:../../../os/hal/platforms/AVR/gpt_lld.c ****   }
@@ -244,12 +229,12 @@
  170:../../../os/hal/platforms/AVR/gpt_lld.c **** 
  171:../../../os/hal/platforms/AVR/gpt_lld.c **** #if USE_AVR_GPT1 || defined(__DOXYGEN__)
  172:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD1)
-  80               		.loc 1 172 0
-  81 0036 F0E0      		ldi r31,hi8(GPTD1)
-  82 0038 8030      		cpi r24,lo8(GPTD1)
-  83 003a 9F07      		cpc r25,r31
-  84 003c 01F4      		brne .+2
-  85 003e 00C0      		rjmp .L11
+  65               		.loc 1 172 0
+  66 001e F0E0      		ldi r31,hi8(GPTD1)
+  67 0020 8030      		cpi r24,lo8(GPTD1)
+  68 0022 9F07      		cpc r25,r31
+  69 0024 01F4      		brne .+2
+  70 0026 00C0      		rjmp .L7
  173:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  174:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_B
  175:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_base[psc] & 0x07;
@@ -260,12 +245,13 @@
  180:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  181:../../../os/hal/platforms/AVR/gpt_lld.c ****   #if USE_AVR_GPT2 || defined(__DOXYGEN__)
  182:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD2)
-  86               		.loc 1 182 0
-  87 0040 20E0      		ldi r18,hi8(GPTD2)
-  88 0042 8030      		cpi r24,lo8(GPTD2)
-  89 0044 9207      		cpc r25,r18
-  90 0046 01F4      		brne .+2
-  91 0048 00C0      		rjmp .L12
+  71               		.loc 1 182 0
+  72 0028 8050      		subi r24,lo8(GPTD2)
+  73 002a 9040      		sbci r25,hi8(GPTD2)
+  74 002c 01F0      		breq .L8
+  75               	.LVL4:
+  76               	.L3:
+  77               	/* epilogue start */
  183:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  184:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_extended,clock_source_extended,PRESCALE
  185:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_extended[psc] & 0x07;
@@ -277,12 +263,6 @@
  191:../../../os/hal/platforms/AVR/gpt_lld.c ****   
  192:../../../os/hal/platforms/AVR/gpt_lld.c **** #if USE_AVR_GPT3 || defined(__DOXYGEN__)
  193:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD3)
-  92               		.loc 1 193 0
-  93 004a E0E0      		ldi r30,hi8(GPTD3)
-  94 004c 8030      		cpi r24,lo8(GPTD3)
-  95 004e 9E07      		cpc r25,r30
-  96 0050 01F4      		brne .+2
-  97 0052 00C0      		rjmp .L13
  194:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  195:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_B
  196:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_base[psc] & 0x07;
@@ -293,12 +273,6 @@
  201:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  202:../../../os/hal/platforms/AVR/gpt_lld.c **** #if USE_AVR_GPT4 || defined(__DOXYGEN__)
  203:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD4)
-  98               		.loc 1 203 0
-  99 0054 F0E0      		ldi r31,hi8(GPTD4)
- 100 0056 8030      		cpi r24,lo8(GPTD4)
- 101 0058 9F07      		cpc r25,r31
- 102 005a 01F4      		brne .+2
- 103 005c 00C0      		rjmp .L14
  204:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  205:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_B
  206:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_base[psc] & 0x07;
@@ -309,13 +283,6 @@
  211:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  212:../../../os/hal/platforms/AVR/gpt_lld.c **** #if USE_AVR_GPT5 || defined(__DOXYGEN__)
  213:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD5)
- 104               		.loc 1 213 0
- 105 005e 8050      		subi r24,lo8(GPTD5)
- 106 0060 9040      		sbci r25,hi8(GPTD5)
- 107 0062 01F0      		breq .L15
- 108               	.LVL7:
- 109               	.L3:
- 110               	/* epilogue start */
  214:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  215:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_B
  216:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_base[psc] & 0x07;
@@ -328,350 +295,152 @@
  223:../../../os/hal/platforms/AVR/gpt_lld.c ****   
  224:../../../os/hal/platforms/AVR/gpt_lld.c ****   
  225:../../../os/hal/platforms/AVR/gpt_lld.c **** }
- 111               		.loc 1 225 0
- 112 0064 FF90      		pop r15
- 113 0066 EF90      		pop r14
- 114 0068 DF90      		pop r13
- 115 006a CF90      		pop r12
- 116 006c 0895      		ret
- 117               	.LVL8:
- 118               	.L15:
- 215:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_B
- 119               		.loc 1 215 0
- 120 006e E091 0000 		lds r30,GPTD5+1
- 121 0072 F091 0000 		lds r31,GPTD5+1+1
- 122 0076 25E0      		ldi r18,lo8(5)
- 123 0078 40E0      		ldi r20,lo8(clock_source_base)
- 124 007a 50E0      		ldi r21,hi8(clock_source_base)
- 125 007c 60E0      		ldi r22,lo8(ratio_base)
- 126 007e 70E0      		ldi r23,hi8(ratio_base)
- 127 0080 8081      		ld r24,Z
- 128 0082 9181      		ldd r25,Z+1
- 129               	.LVL9:
- 130 0084 0E94 0000 		call findBestPrescaler
- 131               	.LVL10:
- 216:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_base[psc] & 0x07;
- 132               		.loc 1 216 0
- 133 0088 E82F      		mov r30,r24
- 134 008a F0E0      		ldi r31,0
- 135 008c DF01      		movw r26,r30
- 136 008e A050      		subi r26,lo8(-(clock_source_base))
- 137 0090 B040      		sbci r27,hi8(-(clock_source_base))
- 138 0092 8C91      		ld r24,X
- 139               	.LVL11:
- 140 0094 8770      		andi r24,lo8(7)
- 141 0096 8093 0000 		sts GPTD5+3,r24
- 217:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR5A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << 
- 142               		.loc 1 217 0
- 143 009a 1092 2001 		sts 288,__zero_reg__
- 218:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR5B  = (1 << WGM12);
- 144               		.loc 1 218 0
- 145 009e 88E0      		ldi r24,lo8(8)
- 146 00a0 8093 2101 		sts 289,r24
- 219:../../../os/hal/platforms/AVR/gpt_lld.c ****       OCR5A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
- 147               		.loc 1 219 0
- 148 00a4 EE0F      		lsl r30
- 149 00a6 FF1F      		rol r31
- 150               	.LVL12:
- 151 00a8 E050      		subi r30,lo8(-(ratio_base))
- 152 00aa F040      		sbci r31,hi8(-(ratio_base))
- 153 00ac 2081      		ld r18,Z
- 154 00ae 3181      		ldd r19,Z+1
- 155 00b0 40E0      		ldi r20,0
- 156 00b2 50E0      		ldi r21,0
- 157 00b4 60E0      		ldi r22,0
- 158 00b6 74E2      		ldi r23,lo8(36)
- 159 00b8 84EF      		ldi r24,lo8(-12)
- 160 00ba 90E0      		ldi r25,0
- 161 00bc 0E94 0000 		call __udivmodsi4
- 162 00c0 6901      		movw r12,r18
- 163 00c2 7A01      		movw r14,r20
- 164 00c4 E091 0000 		lds r30,GPTD5+1
- 165 00c8 F091 0000 		lds r31,GPTD5+1+1
- 166 00cc 2081      		ld r18,Z
- 167 00ce 3181      		ldd r19,Z+1
- 168 00d0 4281      		ldd r20,Z+2
- 169 00d2 5381      		ldd r21,Z+3
- 170 00d4 C701      		movw r24,r14
- 171 00d6 B601      		movw r22,r12
- 172 00d8 0E94 0000 		call __udivmodsi4
- 173 00dc 2150      		subi r18,1
- 174 00de 3109      		sbc r19,__zero_reg__
- 175 00e0 3093 2901 		sts 296+1,r19
- 176 00e4 2093 2801 		sts 296,r18
- 177               	/* epilogue start */
- 178               		.loc 1 225 0
- 179 00e8 FF90      		pop r15
- 180 00ea EF90      		pop r14
- 181 00ec DF90      		pop r13
- 182 00ee CF90      		pop r12
- 183 00f0 0895      		ret
- 184               	.LVL13:
- 185               	.L11:
- 174:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_B
- 186               		.loc 1 174 0
- 187 00f2 E091 0000 		lds r30,GPTD1+1
- 188 00f6 F091 0000 		lds r31,GPTD1+1+1
- 189 00fa 25E0      		ldi r18,lo8(5)
- 190 00fc 40E0      		ldi r20,lo8(clock_source_base)
- 191 00fe 50E0      		ldi r21,hi8(clock_source_base)
- 192 0100 60E0      		ldi r22,lo8(ratio_base)
- 193 0102 70E0      		ldi r23,hi8(ratio_base)
- 194 0104 8081      		ld r24,Z
- 195 0106 9181      		ldd r25,Z+1
- 196               	.LVL14:
- 197 0108 0E94 0000 		call findBestPrescaler
- 198               	.LVL15:
- 175:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_base[psc] & 0x07;
- 199               		.loc 1 175 0
- 200 010c E82F      		mov r30,r24
- 201 010e F0E0      		ldi r31,0
- 202 0110 DF01      		movw r26,r30
- 203 0112 A050      		subi r26,lo8(-(clock_source_base))
- 204 0114 B040      		sbci r27,hi8(-(clock_source_base))
- 205 0116 8C91      		ld r24,X
- 206               	.LVL16:
- 207 0118 8770      		andi r24,lo8(7)
- 208 011a 8093 0000 		sts GPTD1+3,r24
- 176:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR1A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << 
- 209               		.loc 1 176 0
- 210 011e 1092 8000 		sts 128,__zero_reg__
- 177:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR1B  = (1 << WGM12);
- 211               		.loc 1 177 0
- 212 0122 88E0      		ldi r24,lo8(8)
- 213 0124 8093 8100 		sts 129,r24
- 178:../../../os/hal/platforms/AVR/gpt_lld.c ****       OCR1A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
- 214               		.loc 1 178 0
- 215 0128 EE0F      		lsl r30
- 216 012a FF1F      		rol r31
- 217               	.LVL17:
- 218 012c E050      		subi r30,lo8(-(ratio_base))
- 219 012e F040      		sbci r31,hi8(-(ratio_base))
- 220 0130 2081      		ld r18,Z
- 221 0132 3181      		ldd r19,Z+1
- 222 0134 40E0      		ldi r20,0
- 223 0136 50E0      		ldi r21,0
- 224 0138 60E0      		ldi r22,0
- 225 013a 74E2      		ldi r23,lo8(36)
- 226 013c 84EF      		ldi r24,lo8(-12)
- 227 013e 90E0      		ldi r25,0
- 228 0140 0E94 0000 		call __udivmodsi4
- 229 0144 6901      		movw r12,r18
- 230 0146 7A01      		movw r14,r20
- 231 0148 E091 0000 		lds r30,GPTD1+1
- 232 014c F091 0000 		lds r31,GPTD1+1+1
- 233 0150 2081      		ld r18,Z
- 234 0152 3181      		ldd r19,Z+1
- 235 0154 4281      		ldd r20,Z+2
- 236 0156 5381      		ldd r21,Z+3
- 237 0158 C701      		movw r24,r14
- 238 015a B601      		movw r22,r12
- 239 015c 0E94 0000 		call __udivmodsi4
- 240 0160 2150      		subi r18,1
- 241 0162 3109      		sbc r19,__zero_reg__
- 242 0164 3093 8900 		sts 136+1,r19
- 243 0168 2093 8800 		sts 136,r18
- 244 016c 00C0      		rjmp .L3
- 245               	.LVL18:
- 246               	.L12:
+  78               		.loc 1 225 0
+  79 002e FF90      		pop r15
+  80 0030 EF90      		pop r14
+  81 0032 DF90      		pop r13
+  82 0034 CF90      		pop r12
+  83 0036 0895      		ret
+  84               	.LVL5:
+  85               	.L8:
  184:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_extended,clock_source_extended,PRESCALE
- 247               		.loc 1 184 0
- 248 016e E091 0000 		lds r30,GPTD2+1
- 249 0172 F091 0000 		lds r31,GPTD2+1+1
- 250 0176 27E0      		ldi r18,lo8(7)
- 251 0178 40E0      		ldi r20,lo8(clock_source_extended)
- 252 017a 50E0      		ldi r21,hi8(clock_source_extended)
- 253 017c 60E0      		ldi r22,lo8(ratio_extended)
- 254 017e 70E0      		ldi r23,hi8(ratio_extended)
- 255 0180 8081      		ld r24,Z
- 256 0182 9181      		ldd r25,Z+1
- 257               	.LVL19:
- 258 0184 0E94 0000 		call findBestPrescaler
- 259               	.LVL20:
+  86               		.loc 1 184 0
+  87 0038 E091 0000 		lds r30,GPTD2+1
+  88 003c F091 0000 		lds r31,GPTD2+1+1
+  89 0040 27E0      		ldi r18,lo8(7)
+  90 0042 40E0      		ldi r20,lo8(clock_source_extended)
+  91 0044 50E0      		ldi r21,hi8(clock_source_extended)
+  92 0046 60E0      		ldi r22,lo8(ratio_extended)
+  93 0048 70E0      		ldi r23,hi8(ratio_extended)
+  94 004a 8081      		ld r24,Z
+  95 004c 9181      		ldd r25,Z+1
+  96               	.LVL6:
+  97 004e 0E94 0000 		call findBestPrescaler
+  98               	.LVL7:
  185:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_extended[psc] & 0x07;
- 260               		.loc 1 185 0
- 261 0188 E82F      		mov r30,r24
- 262 018a F0E0      		ldi r31,0
- 263 018c DF01      		movw r26,r30
- 264 018e A050      		subi r26,lo8(-(clock_source_extended))
- 265 0190 B040      		sbci r27,hi8(-(clock_source_extended))
- 266 0192 8C91      		ld r24,X
- 267               	.LVL21:
- 268 0194 8770      		andi r24,lo8(7)
- 269 0196 8093 0000 		sts GPTD2+3,r24
+  99               		.loc 1 185 0
+ 100 0052 E82F      		mov r30,r24
+ 101 0054 F0E0      		ldi r31,0
+ 102 0056 DF01      		movw r26,r30
+ 103 0058 A050      		subi r26,lo8(-(clock_source_extended))
+ 104 005a B040      		sbci r27,hi8(-(clock_source_extended))
+ 105 005c 8C91      		ld r24,X
+ 106               	.LVL8:
+ 107 005e 8770      		andi r24,lo8(7)
+ 108 0060 8093 0000 		sts GPTD2+3,r24
  186:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR2A  = (1 << WGM21) | (0 << WGM20);
- 270               		.loc 1 186 0
- 271 019a 82E0      		ldi r24,lo8(2)
- 272 019c 8093 B000 		sts 176,r24
+ 109               		.loc 1 186 0
+ 110 0064 82E0      		ldi r24,lo8(2)
+ 111 0066 8093 B000 		sts 176,r24
  187:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR2B  = (0 << WGM22);
- 273               		.loc 1 187 0
- 274 01a0 1092 B100 		sts 177,__zero_reg__
+ 112               		.loc 1 187 0
+ 113 006a 1092 B100 		sts 177,__zero_reg__
  188:../../../os/hal/platforms/AVR/gpt_lld.c ****       OCR2A = F_CPU / ratio_extended[psc] /gptp->config->frequency - 1;      
- 275               		.loc 1 188 0
- 276 01a4 EE0F      		lsl r30
- 277 01a6 FF1F      		rol r31
- 278               	.LVL22:
- 279 01a8 E050      		subi r30,lo8(-(ratio_extended))
- 280 01aa F040      		sbci r31,hi8(-(ratio_extended))
- 281 01ac 2081      		ld r18,Z
- 282 01ae 3181      		ldd r19,Z+1
- 283 01b0 40E0      		ldi r20,0
- 284 01b2 50E0      		ldi r21,0
- 285 01b4 60E0      		ldi r22,0
- 286 01b6 74E2      		ldi r23,lo8(36)
- 287 01b8 84EF      		ldi r24,lo8(-12)
- 288 01ba 90E0      		ldi r25,0
- 289 01bc 0E94 0000 		call __udivmodsi4
- 290 01c0 6901      		movw r12,r18
- 291 01c2 7A01      		movw r14,r20
- 292 01c4 E091 0000 		lds r30,GPTD2+1
- 293 01c8 F091 0000 		lds r31,GPTD2+1+1
- 294 01cc 2081      		ld r18,Z
- 295 01ce 3181      		ldd r19,Z+1
- 296 01d0 4281      		ldd r20,Z+2
- 297 01d2 5381      		ldd r21,Z+3
- 298 01d4 C701      		movw r24,r14
- 299 01d6 B601      		movw r22,r12
- 300 01d8 0E94 0000 		call __udivmodsi4
- 301 01dc 2150      		subi r18,lo8(-(-1))
- 302 01de 2093 B300 		sts 179,r18
- 303 01e2 00C0      		rjmp .L3
- 304               	.LVL23:
- 305               	.L13:
- 195:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_B
- 306               		.loc 1 195 0
- 307 01e4 E091 0000 		lds r30,GPTD3+1
- 308 01e8 F091 0000 		lds r31,GPTD3+1+1
- 309 01ec 25E0      		ldi r18,lo8(5)
- 310 01ee 40E0      		ldi r20,lo8(clock_source_base)
- 311 01f0 50E0      		ldi r21,hi8(clock_source_base)
- 312 01f2 60E0      		ldi r22,lo8(ratio_base)
- 313 01f4 70E0      		ldi r23,hi8(ratio_base)
- 314 01f6 8081      		ld r24,Z
- 315 01f8 9181      		ldd r25,Z+1
- 316               	.LVL24:
- 317 01fa 0E94 0000 		call findBestPrescaler
- 318               	.LVL25:
- 196:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_base[psc] & 0x07;
- 319               		.loc 1 196 0
- 320 01fe E82F      		mov r30,r24
- 321 0200 F0E0      		ldi r31,0
- 322 0202 DF01      		movw r26,r30
- 323 0204 A050      		subi r26,lo8(-(clock_source_base))
- 324 0206 B040      		sbci r27,hi8(-(clock_source_base))
- 325 0208 8C91      		ld r24,X
- 326               	.LVL26:
- 327 020a 8770      		andi r24,lo8(7)
- 328 020c 8093 0000 		sts GPTD3+3,r24
- 197:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR3A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << 
- 329               		.loc 1 197 0
- 330 0210 1092 9000 		sts 144,__zero_reg__
- 198:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR3B  = (1 << WGM12);
- 331               		.loc 1 198 0
- 332 0214 88E0      		ldi r24,lo8(8)
- 333 0216 8093 9100 		sts 145,r24
- 199:../../../os/hal/platforms/AVR/gpt_lld.c ****       OCR3A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
- 334               		.loc 1 199 0
- 335 021a EE0F      		lsl r30
- 336 021c FF1F      		rol r31
- 337               	.LVL27:
- 338 021e E050      		subi r30,lo8(-(ratio_base))
- 339 0220 F040      		sbci r31,hi8(-(ratio_base))
- 340 0222 2081      		ld r18,Z
- 341 0224 3181      		ldd r19,Z+1
- 342 0226 40E0      		ldi r20,0
- 343 0228 50E0      		ldi r21,0
- 344 022a 60E0      		ldi r22,0
- 345 022c 74E2      		ldi r23,lo8(36)
- 346 022e 84EF      		ldi r24,lo8(-12)
- 347 0230 90E0      		ldi r25,0
- 348 0232 0E94 0000 		call __udivmodsi4
- 349 0236 6901      		movw r12,r18
- 350 0238 7A01      		movw r14,r20
- 351 023a E091 0000 		lds r30,GPTD3+1
- 352 023e F091 0000 		lds r31,GPTD3+1+1
- 353 0242 2081      		ld r18,Z
- 354 0244 3181      		ldd r19,Z+1
- 355 0246 4281      		ldd r20,Z+2
- 356 0248 5381      		ldd r21,Z+3
- 357 024a C701      		movw r24,r14
- 358 024c B601      		movw r22,r12
- 359 024e 0E94 0000 		call __udivmodsi4
- 360 0252 2150      		subi r18,1
- 361 0254 3109      		sbc r19,__zero_reg__
- 362 0256 3093 9900 		sts 152+1,r19
- 363 025a 2093 9800 		sts 152,r18
- 364 025e 00C0      		rjmp .L3
- 365               	.LVL28:
- 366               	.L14:
- 205:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_B
- 367               		.loc 1 205 0
- 368 0260 E091 0000 		lds r30,GPTD4+1
- 369 0264 F091 0000 		lds r31,GPTD4+1+1
- 370 0268 25E0      		ldi r18,lo8(5)
- 371 026a 40E0      		ldi r20,lo8(clock_source_base)
- 372 026c 50E0      		ldi r21,hi8(clock_source_base)
- 373 026e 60E0      		ldi r22,lo8(ratio_base)
- 374 0270 70E0      		ldi r23,hi8(ratio_base)
- 375 0272 8081      		ld r24,Z
- 376 0274 9181      		ldd r25,Z+1
- 377               	.LVL29:
- 378 0276 0E94 0000 		call findBestPrescaler
- 379               	.LVL30:
- 206:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_base[psc] & 0x07;
- 380               		.loc 1 206 0
- 381 027a E82F      		mov r30,r24
- 382 027c F0E0      		ldi r31,0
- 383 027e DF01      		movw r26,r30
- 384 0280 A050      		subi r26,lo8(-(clock_source_base))
- 385 0282 B040      		sbci r27,hi8(-(clock_source_base))
- 386 0284 8C91      		ld r24,X
- 387               	.LVL31:
- 388 0286 8770      		andi r24,lo8(7)
- 389 0288 8093 0000 		sts GPTD4+3,r24
- 207:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR4A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << 
- 390               		.loc 1 207 0
- 391 028c 1092 A000 		sts 160,__zero_reg__
- 208:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR4B  = (1 << WGM12);
- 392               		.loc 1 208 0
- 393 0290 88E0      		ldi r24,lo8(8)
- 394 0292 8093 A100 		sts 161,r24
- 209:../../../os/hal/platforms/AVR/gpt_lld.c ****       OCR4A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
- 395               		.loc 1 209 0
- 396 0296 EE0F      		lsl r30
- 397 0298 FF1F      		rol r31
- 398               	.LVL32:
- 399 029a E050      		subi r30,lo8(-(ratio_base))
- 400 029c F040      		sbci r31,hi8(-(ratio_base))
- 401 029e 2081      		ld r18,Z
- 402 02a0 3181      		ldd r19,Z+1
- 403 02a2 40E0      		ldi r20,0
- 404 02a4 50E0      		ldi r21,0
- 405 02a6 60E0      		ldi r22,0
- 406 02a8 74E2      		ldi r23,lo8(36)
- 407 02aa 84EF      		ldi r24,lo8(-12)
- 408 02ac 90E0      		ldi r25,0
- 409 02ae 0E94 0000 		call __udivmodsi4
- 410 02b2 6901      		movw r12,r18
- 411 02b4 7A01      		movw r14,r20
- 412 02b6 E091 0000 		lds r30,GPTD4+1
- 413 02ba F091 0000 		lds r31,GPTD4+1+1
- 414 02be 2081      		ld r18,Z
- 415 02c0 3181      		ldd r19,Z+1
- 416 02c2 4281      		ldd r20,Z+2
- 417 02c4 5381      		ldd r21,Z+3
- 418 02c6 C701      		movw r24,r14
- 419 02c8 B601      		movw r22,r12
- 420 02ca 0E94 0000 		call __udivmodsi4
- 421 02ce 2150      		subi r18,1
- 422 02d0 3109      		sbc r19,__zero_reg__
- 423 02d2 3093 A900 		sts 168+1,r19
- 424 02d6 2093 A800 		sts 168,r18
- 425 02da 00C0      		rjmp .L3
- 426               	.LFE8:
- 428               	.global	gpt_lld_start_timer
- 430               	gpt_lld_start_timer:
- 431               	.LFB10:
+ 114               		.loc 1 188 0
+ 115 006e EE0F      		lsl r30
+ 116 0070 FF1F      		rol r31
+ 117               	.LVL9:
+ 118 0072 E050      		subi r30,lo8(-(ratio_extended))
+ 119 0074 F040      		sbci r31,hi8(-(ratio_extended))
+ 120 0076 2081      		ld r18,Z
+ 121 0078 3181      		ldd r19,Z+1
+ 122 007a 40E0      		ldi r20,0
+ 123 007c 50E0      		ldi r21,0
+ 124 007e 60E0      		ldi r22,0
+ 125 0080 74E2      		ldi r23,lo8(36)
+ 126 0082 84EF      		ldi r24,lo8(-12)
+ 127 0084 90E0      		ldi r25,0
+ 128 0086 0E94 0000 		call __udivmodsi4
+ 129 008a 6901      		movw r12,r18
+ 130 008c 7A01      		movw r14,r20
+ 131 008e E091 0000 		lds r30,GPTD2+1
+ 132 0092 F091 0000 		lds r31,GPTD2+1+1
+ 133 0096 2081      		ld r18,Z
+ 134 0098 3181      		ldd r19,Z+1
+ 135 009a 4281      		ldd r20,Z+2
+ 136 009c 5381      		ldd r21,Z+3
+ 137 009e C701      		movw r24,r14
+ 138 00a0 B601      		movw r22,r12
+ 139 00a2 0E94 0000 		call __udivmodsi4
+ 140 00a6 2150      		subi r18,lo8(-(-1))
+ 141 00a8 2093 B300 		sts 179,r18
+ 142               	/* epilogue start */
+ 143               		.loc 1 225 0
+ 144 00ac FF90      		pop r15
+ 145 00ae EF90      		pop r14
+ 146 00b0 DF90      		pop r13
+ 147 00b2 CF90      		pop r12
+ 148 00b4 0895      		ret
+ 149               	.LVL10:
+ 150               	.L7:
+ 174:../../../os/hal/platforms/AVR/gpt_lld.c ****       psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_B
+ 151               		.loc 1 174 0
+ 152 00b6 E091 0000 		lds r30,GPTD1+1
+ 153 00ba F091 0000 		lds r31,GPTD1+1+1
+ 154 00be 25E0      		ldi r18,lo8(5)
+ 155 00c0 40E0      		ldi r20,lo8(clock_source_base)
+ 156 00c2 50E0      		ldi r21,hi8(clock_source_base)
+ 157 00c4 60E0      		ldi r22,lo8(ratio_base)
+ 158 00c6 70E0      		ldi r23,hi8(ratio_base)
+ 159 00c8 8081      		ld r24,Z
+ 160 00ca 9181      		ldd r25,Z+1
+ 161               	.LVL11:
+ 162 00cc 0E94 0000 		call findBestPrescaler
+ 163               	.LVL12:
+ 175:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->clock_source = clock_source_base[psc] & 0x07;
+ 164               		.loc 1 175 0
+ 165 00d0 E82F      		mov r30,r24
+ 166 00d2 F0E0      		ldi r31,0
+ 167 00d4 DF01      		movw r26,r30
+ 168 00d6 A050      		subi r26,lo8(-(clock_source_base))
+ 169 00d8 B040      		sbci r27,hi8(-(clock_source_base))
+ 170 00da 8C91      		ld r24,X
+ 171               	.LVL13:
+ 172 00dc 8770      		andi r24,lo8(7)
+ 173 00de 8093 0000 		sts GPTD1+3,r24
+ 176:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR1A  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << 
+ 174               		.loc 1 176 0
+ 175 00e2 1092 8000 		sts 128,__zero_reg__
+ 177:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR1B  = (1 << WGM12);
+ 176               		.loc 1 177 0
+ 177 00e6 88E0      		ldi r24,lo8(8)
+ 178 00e8 8093 8100 		sts 129,r24
+ 178:../../../os/hal/platforms/AVR/gpt_lld.c ****       OCR1A = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;      
+ 179               		.loc 1 178 0
+ 180 00ec EE0F      		lsl r30
+ 181 00ee FF1F      		rol r31
+ 182               	.LVL14:
+ 183 00f0 E050      		subi r30,lo8(-(ratio_base))
+ 184 00f2 F040      		sbci r31,hi8(-(ratio_base))
+ 185 00f4 2081      		ld r18,Z
+ 186 00f6 3181      		ldd r19,Z+1
+ 187 00f8 40E0      		ldi r20,0
+ 188 00fa 50E0      		ldi r21,0
+ 189 00fc 60E0      		ldi r22,0
+ 190 00fe 74E2      		ldi r23,lo8(36)
+ 191 0100 84EF      		ldi r24,lo8(-12)
+ 192 0102 90E0      		ldi r25,0
+ 193 0104 0E94 0000 		call __udivmodsi4
+ 194 0108 6901      		movw r12,r18
+ 195 010a 7A01      		movw r14,r20
+ 196 010c E091 0000 		lds r30,GPTD1+1
+ 197 0110 F091 0000 		lds r31,GPTD1+1+1
+ 198 0114 2081      		ld r18,Z
+ 199 0116 3181      		ldd r19,Z+1
+ 200 0118 4281      		ldd r20,Z+2
+ 201 011a 5381      		ldd r21,Z+3
+ 202 011c C701      		movw r24,r14
+ 203 011e B601      		movw r22,r12
+ 204 0120 0E94 0000 		call __udivmodsi4
+ 205 0124 2150      		subi r18,1
+ 206 0126 3109      		sbc r19,__zero_reg__
+ 207 0128 3093 8900 		sts 136+1,r19
+ 208 012c 2093 8800 		sts 136,r18
+ 209 0130 00C0      		rjmp .L3
+ 210               	.LFE5:
+ 212               	.global	gpt_lld_start_timer
+ 214               	gpt_lld_start_timer:
+ 215               	.LFB7:
  226:../../../os/hal/platforms/AVR/gpt_lld.c **** 
  227:../../../os/hal/platforms/AVR/gpt_lld.c **** /**
  228:../../../os/hal/platforms/AVR/gpt_lld.c ****  * @brief   Deactivates the GPT peripheral.
@@ -698,39 +467,39 @@
  249:../../../os/hal/platforms/AVR/gpt_lld.c ****  * @notapi
  250:../../../os/hal/platforms/AVR/gpt_lld.c ****  */
  251:../../../os/hal/platforms/AVR/gpt_lld.c **** void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period) {
- 432               		.loc 1 251 0
- 433               	.LVL33:
- 434               	/* prologue: function */
- 435               	/* frame size = 0 */
- 436               	/* stack size = 0 */
- 437               	.L__stack_usage = 0
- 438 02dc FC01      		movw r30,r24
+ 216               		.loc 1 251 0
+ 217               	.LVL15:
+ 218               	/* prologue: function */
+ 219               	/* frame size = 0 */
+ 220               	/* stack size = 0 */
+ 221               	.L__stack_usage = 0
+ 222 0132 FC01      		movw r30,r24
  252:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->callback = gptp->config->callback;
- 439               		.loc 1 252 0
- 440 02de A181      		ldd r26,Z+1
- 441 02e0 B281      		ldd r27,Z+2
- 442 02e2 1496      		adiw r26,4
- 443 02e4 8D91      		ld r24,X+
- 444 02e6 9C91      		ld r25,X
- 445 02e8 1597      		sbiw r26,4+1
- 446               	.LVL34:
- 447 02ea 9187      		std Z+9,r25
- 448 02ec 8087      		std Z+8,r24
+ 223               		.loc 1 252 0
+ 224 0134 A181      		ldd r26,Z+1
+ 225 0136 B281      		ldd r27,Z+2
+ 226 0138 1496      		adiw r26,4
+ 227 013a 8D91      		ld r24,X+
+ 228 013c 9C91      		ld r25,X
+ 229 013e 1597      		sbiw r26,4+1
+ 230               	.LVL16:
+ 231 0140 9187      		std Z+9,r25
+ 232 0142 8087      		std Z+8,r24
  253:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->period = period;
- 449               		.loc 1 253 0
- 450 02ee 7583      		std Z+5,r23
- 451 02f0 6483      		std Z+4,r22
+ 233               		.loc 1 253 0
+ 234 0144 7583      		std Z+5,r23
+ 235 0146 6483      		std Z+4,r22
  254:../../../os/hal/platforms/AVR/gpt_lld.c ****       gptp->counter = 0;
- 452               		.loc 1 254 0
- 453 02f2 1782      		std Z+7,__zero_reg__
- 454 02f4 1682      		std Z+6,__zero_reg__
+ 236               		.loc 1 254 0
+ 237 0148 1782      		std Z+7,__zero_reg__
+ 238 014a 1682      		std Z+6,__zero_reg__
  255:../../../os/hal/platforms/AVR/gpt_lld.c ****   #if USE_AVR_GPT1 || defined(__DOXYGEN__)
  256:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD1)
- 455               		.loc 1 256 0
- 456 02f6 80E0      		ldi r24,hi8(GPTD1)
- 457 02f8 E030      		cpi r30,lo8(GPTD1)
- 458 02fa F807      		cpc r31,r24
- 459 02fc 01F0      		breq .L23
+ 239               		.loc 1 256 0
+ 240 014c 80E0      		ldi r24,hi8(GPTD1)
+ 241 014e E030      		cpi r30,lo8(GPTD1)
+ 242 0150 F807      		cpc r31,r24
+ 243 0152 01F0      		breq .L12
  257:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  258:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCNT1   = 0;                                           /* Reset counter.   */
  259:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR1   = (1 << OCF1A);                                /* Reset pending.   */
@@ -741,27 +510,58 @@
  264:../../../os/hal/platforms/AVR/gpt_lld.c **** 
  265:../../../os/hal/platforms/AVR/gpt_lld.c ****     #if USE_AVR_GPT2 || defined(__DOXYGEN__)
  266:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD2)
- 460               		.loc 1 266 0
- 461 02fe 80E0      		ldi r24,hi8(GPTD2)
- 462 0300 E030      		cpi r30,lo8(GPTD2)
- 463 0302 F807      		cpc r31,r24
- 464 0304 01F0      		breq .L24
+ 244               		.loc 1 266 0
+ 245 0154 E050      		subi r30,lo8(GPTD2)
+ 246 0156 F040      		sbci r31,hi8(GPTD2)
+ 247 0158 01F0      		breq .L13
+ 248 015a 0895      		ret
+ 249               	.L13:
  267:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  268:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCNT2   = 0;                                           /* Reset counter.   */
+ 250               		.loc 1 268 0
+ 251 015c 1092 B200 		sts 178,__zero_reg__
  269:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR2   = (1 << OCF2A);                                /* Reset pending.   */
+ 252               		.loc 1 269 0
+ 253 0160 82E0      		ldi r24,lo8(2)
+ 254 0162 87BB      		out 0x17,r24
  270:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK2  = (1 << OCIE2A);
+ 255               		.loc 1 270 0
+ 256 0164 8093 7000 		sts 112,r24
  271:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR2B  |= (gptp->clock_source <<CS20);
+ 257               		.loc 1 271 0
+ 258 0168 8091 B100 		lds r24,177
+ 259 016c 9091 0000 		lds r25,GPTD2+3
+ 260 0170 892B      		or r24,r25
+ 261 0172 8093 B100 		sts 177,r24
+ 262 0176 0895      		ret
+ 263               	.L12:
+ 258:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCNT1   = 0;                                           /* Reset counter.   */
+ 264               		.loc 1 258 0
+ 265 0178 1092 8500 		sts 132+1,__zero_reg__
+ 266 017c 1092 8400 		sts 132,__zero_reg__
+ 259:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR1   = (1 << OCF1A);                                /* Reset pending.   */
+ 267               		.loc 1 259 0
+ 268 0180 82E0      		ldi r24,lo8(2)
+ 269 0182 86BB      		out 0x16,r24
+ 260:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK1  = (1 << OCIE1A);
+ 270               		.loc 1 260 0
+ 271 0184 8093 6F00 		sts 111,r24
+ 261:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR1B  |= (gptp->clock_source <<CS10);
+ 272               		.loc 1 261 0
+ 273 0188 8091 8100 		lds r24,129
+ 274 018c 9091 0000 		lds r25,GPTD1+3
+ 275 0190 892B      		or r24,r25
+ 276 0192 8093 8100 		sts 129,r24
+ 277 0196 0895      		ret
+ 278               	.LFE7:
+ 280               	.global	gpt_lld_stop_timer
+ 282               	gpt_lld_stop_timer:
+ 283               	.LFB8:
  272:../../../os/hal/platforms/AVR/gpt_lld.c ****   }
  273:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  274:../../../os/hal/platforms/AVR/gpt_lld.c **** 
  275:../../../os/hal/platforms/AVR/gpt_lld.c ****   #if USE_AVR_GPT3 || defined(__DOXYGEN__)
  276:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD3)
- 465               		.loc 1 276 0
- 466 0306 80E0      		ldi r24,hi8(GPTD3)
- 467 0308 E030      		cpi r30,lo8(GPTD3)
- 468 030a F807      		cpc r31,r24
- 469 030c 01F4      		brne .+2
- 470 030e 00C0      		rjmp .L25
  277:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  278:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCNT3   = 0;                                           /* Reset counter.   */
  279:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR3   = (1 << OCF1A);                                /* Reset pending.   */
@@ -771,11 +571,6 @@
  283:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  284:../../../os/hal/platforms/AVR/gpt_lld.c ****   #if USE_AVR_GPT4 || defined(__DOXYGEN__)
  285:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD4)
- 471               		.loc 1 285 0
- 472 0310 80E0      		ldi r24,hi8(GPTD4)
- 473 0312 E030      		cpi r30,lo8(GPTD4)
- 474 0314 F807      		cpc r31,r24
- 475 0316 01F0      		breq .L26
  286:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  287:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCNT4   = 0;                                           /* Reset counter.   */
  288:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR4   = (1 << OCF1A);                                /* Reset pending.   */
@@ -785,109 +580,11 @@
  292:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  293:../../../os/hal/platforms/AVR/gpt_lld.c ****   #if USE_AVR_GPT5 || defined(__DOXYGEN__)
  294:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD5)
- 476               		.loc 1 294 0
- 477 0318 E050      		subi r30,lo8(GPTD5)
- 478 031a F040      		sbci r31,hi8(GPTD5)
- 479 031c 01F4      		brne .L16
  295:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  296:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCNT5   = 0;                                           /* Reset counter.   */
- 480               		.loc 1 296 0
- 481 031e 1092 2501 		sts 292+1,__zero_reg__
- 482 0322 1092 2401 		sts 292,__zero_reg__
  297:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR5   = (1 << OCF1A);                                /* Reset pending.   */
- 483               		.loc 1 297 0
- 484 0326 82E0      		ldi r24,lo8(2)
- 485 0328 8ABB      		out 0x1a,r24
  298:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK5  = (1 << OCIE1A);
- 486               		.loc 1 298 0
- 487 032a 8093 7300 		sts 115,r24
  299:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR5B  |= (gptp->clock_source <<CS50);
- 488               		.loc 1 299 0
- 489 032e 8091 2101 		lds r24,289
- 490 0332 9091 0000 		lds r25,GPTD5+3
- 491 0336 892B      		or r24,r25
- 492 0338 8093 2101 		sts 289,r24
- 493               	.L16:
- 494 033c 0895      		ret
- 495               	.L26:
- 287:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCNT4   = 0;                                           /* Reset counter.   */
- 496               		.loc 1 287 0
- 497 033e 1092 A500 		sts 164+1,__zero_reg__
- 498 0342 1092 A400 		sts 164,__zero_reg__
- 288:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR4   = (1 << OCF1A);                                /* Reset pending.   */
- 499               		.loc 1 288 0
- 500 0346 82E0      		ldi r24,lo8(2)
- 501 0348 89BB      		out 0x19,r24
- 289:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK4  = (1 << OCIE1A);
- 502               		.loc 1 289 0
- 503 034a 8093 7200 		sts 114,r24
- 290:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR4B  |= (gptp->clock_source <<CS40);
- 504               		.loc 1 290 0
- 505 034e 8091 A100 		lds r24,161
- 506 0352 9091 0000 		lds r25,GPTD4+3
- 507 0356 892B      		or r24,r25
- 508 0358 8093 A100 		sts 161,r24
- 509 035c 0895      		ret
- 510               	.L23:
- 258:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCNT1   = 0;                                           /* Reset counter.   */
- 511               		.loc 1 258 0
- 512 035e 1092 8500 		sts 132+1,__zero_reg__
- 513 0362 1092 8400 		sts 132,__zero_reg__
- 259:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR1   = (1 << OCF1A);                                /* Reset pending.   */
- 514               		.loc 1 259 0
- 515 0366 82E0      		ldi r24,lo8(2)
- 516 0368 86BB      		out 0x16,r24
- 260:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK1  = (1 << OCIE1A);
- 517               		.loc 1 260 0
- 518 036a 8093 6F00 		sts 111,r24
- 261:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR1B  |= (gptp->clock_source <<CS10);
- 519               		.loc 1 261 0
- 520 036e 8091 8100 		lds r24,129
- 521 0372 9091 0000 		lds r25,GPTD1+3
- 522 0376 892B      		or r24,r25
- 523 0378 8093 8100 		sts 129,r24
- 524 037c 0895      		ret
- 525               	.L24:
- 268:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCNT2   = 0;                                           /* Reset counter.   */
- 526               		.loc 1 268 0
- 527 037e 1092 B200 		sts 178,__zero_reg__
- 269:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR2   = (1 << OCF2A);                                /* Reset pending.   */
- 528               		.loc 1 269 0
- 529 0382 82E0      		ldi r24,lo8(2)
- 530 0384 87BB      		out 0x17,r24
- 270:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK2  = (1 << OCIE2A);
- 531               		.loc 1 270 0
- 532 0386 8093 7000 		sts 112,r24
- 271:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR2B  |= (gptp->clock_source <<CS20);
- 533               		.loc 1 271 0
- 534 038a 8091 B100 		lds r24,177
- 535 038e 9091 0000 		lds r25,GPTD2+3
- 536 0392 892B      		or r24,r25
- 537 0394 8093 B100 		sts 177,r24
- 538 0398 0895      		ret
- 539               	.L25:
- 278:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCNT3   = 0;                                           /* Reset counter.   */
- 540               		.loc 1 278 0
- 541 039a 1092 9500 		sts 148+1,__zero_reg__
- 542 039e 1092 9400 		sts 148,__zero_reg__
- 279:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR3   = (1 << OCF1A);                                /* Reset pending.   */
- 543               		.loc 1 279 0
- 544 03a2 82E0      		ldi r24,lo8(2)
- 545 03a4 88BB      		out 0x18,r24
- 280:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK3  = (1 << OCIE1A);
- 546               		.loc 1 280 0
- 547 03a6 8093 7100 		sts 113,r24
- 281:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR3B  |= (gptp->clock_source <<CS30);
- 548               		.loc 1 281 0
- 549 03aa 8091 9100 		lds r24,145
- 550 03ae 9091 0000 		lds r25,GPTD3+3
- 551 03b2 892B      		or r24,r25
- 552 03b4 8093 9100 		sts 145,r24
- 553 03b8 0895      		ret
- 554               	.LFE10:
- 556               	.global	gpt_lld_stop_timer
- 558               	gpt_lld_stop_timer:
- 559               	.LFB11:
  300:../../../os/hal/platforms/AVR/gpt_lld.c ****   }
  301:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  302:../../../os/hal/platforms/AVR/gpt_lld.c **** }
@@ -900,19 +597,19 @@
  309:../../../os/hal/platforms/AVR/gpt_lld.c ****  * @notapi
  310:../../../os/hal/platforms/AVR/gpt_lld.c ****  */
  311:../../../os/hal/platforms/AVR/gpt_lld.c **** void gpt_lld_stop_timer(GPTDriver *gptp) {
- 560               		.loc 1 311 0
- 561               	.LVL35:
- 562               	/* prologue: function */
- 563               	/* frame size = 0 */
- 564               	/* stack size = 0 */
- 565               	.L__stack_usage = 0
+ 284               		.loc 1 311 0
+ 285               	.LVL17:
+ 286               	/* prologue: function */
+ 287               	/* frame size = 0 */
+ 288               	/* stack size = 0 */
+ 289               	.L__stack_usage = 0
  312:../../../os/hal/platforms/AVR/gpt_lld.c ****     #if USE_AVR_GPT1 || defined(__DOXYGEN__)
  313:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD1)
- 566               		.loc 1 313 0
- 567 03ba 20E0      		ldi r18,hi8(GPTD1)
- 568 03bc 8030      		cpi r24,lo8(GPTD1)
- 569 03be 9207      		cpc r25,r18
- 570 03c0 01F0      		breq .L34
+ 290               		.loc 1 313 0
+ 291 0198 20E0      		ldi r18,hi8(GPTD1)
+ 292 019a 8030      		cpi r24,lo8(GPTD1)
+ 293 019c 9207      		cpc r25,r18
+ 294 019e 01F0      		breq .L17
  314:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  315:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR1B  &= ~(0x07 <<CS10);
  316:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK1  &= ~(1 << OCIE1A);
@@ -921,24 +618,365 @@
  319:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  320:../../../os/hal/platforms/AVR/gpt_lld.c ****     #if USE_AVR_GPT2 || defined(__DOXYGEN__)
  321:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD2)
- 571               		.loc 1 321 0
- 572 03c2 20E0      		ldi r18,hi8(GPTD2)
- 573 03c4 8030      		cpi r24,lo8(GPTD2)
- 574 03c6 9207      		cpc r25,r18
- 575 03c8 01F0      		breq .L35
+ 295               		.loc 1 321 0
+ 296 01a0 8050      		subi r24,lo8(GPTD2)
+ 297 01a2 9040      		sbci r25,hi8(GPTD2)
+ 298 01a4 01F0      		breq .L18
+ 299 01a6 0895      		ret
+ 300               	.L18:
+ 301               	.LBB4:
+ 302               	.LBB5:
  322:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  323:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR2B  &= ~(0x07 <<CS20);
+ 303               		.loc 1 323 0
+ 304 01a8 8091 B100 		lds r24,177
+ 305               	.LVL18:
+ 306 01ac 887F      		andi r24,lo8(-8)
+ 307 01ae 8093 B100 		sts 177,r24
  324:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK2  &= ~(1 << OCIE2A);
+ 308               		.loc 1 324 0
+ 309 01b2 8091 7000 		lds r24,112
+ 310 01b6 8D7F      		andi r24,lo8(-3)
+ 311 01b8 8093 7000 		sts 112,r24
  325:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR2   = (1 << OCF2A); 
+ 312               		.loc 1 325 0
+ 313 01bc 82E0      		ldi r24,lo8(2)
+ 314 01be 87BB      		out 0x17,r24
+ 315 01c0 0895      		ret
+ 316               	.LVL19:
+ 317               	.L17:
+ 318               	.LBE5:
+ 319               	.LBE4:
+ 315:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR1B  &= ~(0x07 <<CS10);
+ 320               		.loc 1 315 0
+ 321 01c2 8091 8100 		lds r24,129
+ 322               	.LVL20:
+ 323 01c6 887F      		andi r24,lo8(-8)
+ 324 01c8 8093 8100 		sts 129,r24
+ 316:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK1  &= ~(1 << OCIE1A);
+ 325               		.loc 1 316 0
+ 326 01cc 8091 6F00 		lds r24,111
+ 327 01d0 8D7F      		andi r24,lo8(-3)
+ 328 01d2 8093 6F00 		sts 111,r24
+ 317:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR1   = (1 << OCF1A); 
+ 329               		.loc 1 317 0
+ 330 01d6 82E0      		ldi r24,lo8(2)
+ 331 01d8 86BB      		out 0x16,r24
+ 332 01da 0895      		ret
+ 333               	.LFE8:
+ 335               	.global	gpt_lld_stop
+ 337               	gpt_lld_stop:
+ 338               	.LFB6:
+ 234:../../../os/hal/platforms/AVR/gpt_lld.c **** void gpt_lld_stop(GPTDriver *gptp) {
+ 339               		.loc 1 234 0
+ 340               	.LVL21:
+ 341               	/* prologue: function */
+ 342               	/* frame size = 0 */
+ 343               	/* stack size = 0 */
+ 344               	.L__stack_usage = 0
+ 236:../../../os/hal/platforms/AVR/gpt_lld.c ****   if (gptp->state == GPT_READY) {
+ 345               		.loc 1 236 0
+ 346 01dc FC01      		movw r30,r24
+ 347 01de 2081      		ld r18,Z
+ 240:../../../os/hal/platforms/AVR/gpt_lld.c ****   gpt_lld_stop_timer(gptp);
+ 348               		.loc 1 240 0
+ 349 01e0 0C94 0000 		jmp gpt_lld_stop_timer
+ 350               	.LVL22:
+ 351               	.LFE6:
+ 354               	gpt_lld_serve_interrupt.part.1:
+ 355               	.LFB11:
+  63:../../../os/hal/platforms/AVR/gpt_lld.c **** static void gpt_lld_serve_interrupt(GPTDriver *gptp) {
+ 356               		.loc 1 63 0
+ 357               	.LVL23:
+ 358 01e4 CF93      		push r28
+ 359               	.LCFI4:
+ 360 01e6 DF93      		push r29
+ 361               	.LCFI5:
+ 362               	/* prologue: function */
+ 363               	/* frame size = 0 */
+ 364               	/* stack size = 2 */
+ 365               	.L__stack_usage = 2
+ 366 01e8 EC01      		movw r28,r24
+  68:../../../os/hal/platforms/AVR/gpt_lld.c **** 	gptp->counter = 0;
+ 367               		.loc 1 68 0
+ 368 01ea 1F82      		std Y+7,__zero_reg__
+ 369 01ec 1E82      		std Y+6,__zero_reg__
+  69:../../../os/hal/platforms/AVR/gpt_lld.c **** 	if (gptp->state == GPT_ONESHOT) {
+ 370               		.loc 1 69 0
+ 371 01ee 8881      		ld r24,Y
+ 372               	.LVL24:
+ 373 01f0 8430      		cpi r24,lo8(4)
+ 374 01f2 01F0      		breq .L22
+  73:../../../os/hal/platforms/AVR/gpt_lld.c **** 	gptp->callback(gptp);
+ 375               		.loc 1 73 0
+ 376 01f4 E885      		ldd r30,Y+8
+ 377 01f6 F985      		ldd r31,Y+9
+ 378 01f8 CE01      		movw r24,r28
+ 379               	/* epilogue start */
+  77:../../../os/hal/platforms/AVR/gpt_lld.c **** }
+ 380               		.loc 1 77 0
+ 381 01fa DF91      		pop r29
+ 382 01fc CF91      		pop r28
+ 383               	.LVL25:
+  73:../../../os/hal/platforms/AVR/gpt_lld.c **** 	gptp->callback(gptp);
+ 384               		.loc 1 73 0
+ 385 01fe 1994      		eijmp
+ 386               	.LVL26:
+ 387               	.L22:
+  70:../../../os/hal/platforms/AVR/gpt_lld.c **** 	    gptp->state = GPT_READY;                /* Back in GPT_READY state.     */
+ 388               		.loc 1 70 0
+ 389 0200 82E0      		ldi r24,lo8(2)
+ 390 0202 8883      		st Y,r24
+  71:../../../os/hal/platforms/AVR/gpt_lld.c **** 	    gpt_lld_stop_timer(gptp);               /* Timer automatically stopped. */
+ 391               		.loc 1 71 0
+ 392 0204 CE01      		movw r24,r28
+ 393 0206 0E94 0000 		call gpt_lld_stop_timer
+ 394               	.LVL27:
+  73:../../../os/hal/platforms/AVR/gpt_lld.c **** 	gptp->callback(gptp);
+ 395               		.loc 1 73 0
+ 396 020a E885      		ldd r30,Y+8
+ 397 020c F985      		ldd r31,Y+9
+ 398 020e CE01      		movw r24,r28
+ 399               	/* epilogue start */
+  77:../../../os/hal/platforms/AVR/gpt_lld.c **** }
+ 400               		.loc 1 77 0
+ 401 0210 DF91      		pop r29
+ 402 0212 CF91      		pop r28
+ 403               	.LVL28:
+  73:../../../os/hal/platforms/AVR/gpt_lld.c **** 	gptp->callback(gptp);
+ 404               		.loc 1 73 0
+ 405 0214 1994      		eijmp
+ 406               	.LVL29:
+ 407               	.LFE11:
+ 409               	.global	__vector_13
+ 411               	__vector_13:
+ 412               	.LFB3:
+  97:../../../os/hal/platforms/AVR/gpt_lld.c **** CH_IRQ_HANDLER(TIMER2_COMPA_vect) {
+ 413               		.loc 1 97 0
+ 414 0216 1F92      		push r1
+ 415               	.LCFI6:
+ 416 0218 0F92      		push r0
+ 417               	.LCFI7:
+ 418 021a 0FB6      		in r0,__SREG__
+ 419 021c 0F92      		push r0
+ 420 021e 1124      		clr __zero_reg__
+ 421 0220 0BB6      		in r0,__RAMPZ__
+ 422 0222 0F92      		push r0
+ 423 0224 1BBE      		out __RAMPZ__,__zero_reg__
+ 424 0226 2F93      		push r18
+ 425               	.LCFI8:
+ 426 0228 3F93      		push r19
+ 427               	.LCFI9:
+ 428 022a 4F93      		push r20
+ 429               	.LCFI10:
+ 430 022c 5F93      		push r21
+ 431               	.LCFI11:
+ 432 022e 6F93      		push r22
+ 433               	.LCFI12:
+ 434 0230 7F93      		push r23
+ 435               	.LCFI13:
+ 436 0232 8F93      		push r24
+ 437               	.LCFI14:
+ 438 0234 9F93      		push r25
+ 439               	.LCFI15:
+ 440 0236 AF93      		push r26
+ 441               	.LCFI16:
+ 442 0238 BF93      		push r27
+ 443               	.LCFI17:
+ 444 023a EF93      		push r30
+ 445               	.LCFI18:
+ 446 023c FF93      		push r31
+ 447               	.LCFI19:
+ 448               	/* prologue: Signal */
+ 449               	/* frame size = 0 */
+ 450               	/* stack size = 16 */
+ 451               	.L__stack_usage = 16
+  98:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_PROLOGUE();
+ 452               		.loc 1 98 0
+ 453 023e 0E94 0000 		call dbg_check_enter_isr
+ 454               	.LVL30:
+ 455               	.LBB8:
+ 456               	.LBB9:
+  65:../../../os/hal/platforms/AVR/gpt_lld.c ****   gptp->counter++;
+ 457               		.loc 1 65 0
+ 458 0242 8091 0000 		lds r24,GPTD2+6
+ 459 0246 9091 0000 		lds r25,GPTD2+6+1
+ 460 024a 0196      		adiw r24,1
+ 461 024c 9093 0000 		sts GPTD2+6+1,r25
+ 462 0250 8093 0000 		sts GPTD2+6,r24
+  66:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp->counter == gptp->period)
+ 463               		.loc 1 66 0
+ 464 0254 2091 0000 		lds r18,GPTD2+4
+ 465 0258 3091 0000 		lds r19,GPTD2+4+1
+ 466 025c 8217      		cp r24,r18
+ 467 025e 9307      		cpc r25,r19
+ 468 0260 01F4      		brne .L24
+ 469 0262 80E0      		ldi r24,lo8(GPTD2)
+ 470 0264 90E0      		ldi r25,hi8(GPTD2)
+ 471 0266 0E94 0000 		call gpt_lld_serve_interrupt.part.1
+ 472               	.LVL31:
+ 473               	.L24:
+ 474               	.LBE9:
+ 475               	.LBE8:
+ 100:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
+ 476               		.loc 1 100 0
+ 477 026a 0E94 0000 		call dbg_check_leave_isr
+ 478               	.LVL32:
+ 479 026e 0E94 0000 		call dbg_check_lock
+ 480               	.LVL33:
+ 481 0272 0E94 0000 		call chSchIsPreemptionRequired
+ 482               	.LVL34:
+ 483 0276 8111      		cpse r24,__zero_reg__
+ 100:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
+ 484               		.loc 1 100 0 is_stmt 0 discriminator 1
+ 485 0278 0E94 0000 		call chSchDoReschedule
+ 486               	.LVL35:
+ 487               	.L25:
+ 100:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
+ 488               		.loc 1 100 0 discriminator 2
+ 489 027c 0E94 0000 		call dbg_check_unlock
+ 490               	.LVL36:
+ 491               	/* epilogue start */
+ 101:../../../os/hal/platforms/AVR/gpt_lld.c **** }
+ 492               		.loc 1 101 0 is_stmt 1 discriminator 2
+ 493 0280 FF91      		pop r31
+ 494 0282 EF91      		pop r30
+ 495 0284 BF91      		pop r27
+ 496 0286 AF91      		pop r26
+ 497 0288 9F91      		pop r25
+ 498 028a 8F91      		pop r24
+ 499 028c 7F91      		pop r23
+ 500 028e 6F91      		pop r22
+ 501 0290 5F91      		pop r21
+ 502 0292 4F91      		pop r20
+ 503 0294 3F91      		pop r19
+ 504 0296 2F91      		pop r18
+ 505 0298 0F90      		pop r0
+ 506 029a 0BBE      		out __RAMPZ__,r0
+ 507 029c 0F90      		pop r0
+ 508 029e 0FBE      		out __SREG__,r0
+ 509 02a0 0F90      		pop r0
+ 510 02a2 1F90      		pop r1
+ 511 02a4 1895      		reti
+ 512               	.LFE3:
+ 514               	.global	__vector_17
+ 516               	__vector_17:
+ 517               	.LFB2:
+  89:../../../os/hal/platforms/AVR/gpt_lld.c **** CH_IRQ_HANDLER(TIMER1_COMPA_vect) {
+ 518               		.loc 1 89 0
+ 519 02a6 1F92      		push r1
+ 520               	.LCFI20:
+ 521 02a8 0F92      		push r0
+ 522               	.LCFI21:
+ 523 02aa 0FB6      		in r0,__SREG__
+ 524 02ac 0F92      		push r0
+ 525 02ae 1124      		clr __zero_reg__
+ 526 02b0 0BB6      		in r0,__RAMPZ__
+ 527 02b2 0F92      		push r0
+ 528 02b4 1BBE      		out __RAMPZ__,__zero_reg__
+ 529 02b6 2F93      		push r18
+ 530               	.LCFI22:
+ 531 02b8 3F93      		push r19
+ 532               	.LCFI23:
+ 533 02ba 4F93      		push r20
+ 534               	.LCFI24:
+ 535 02bc 5F93      		push r21
+ 536               	.LCFI25:
+ 537 02be 6F93      		push r22
+ 538               	.LCFI26:
+ 539 02c0 7F93      		push r23
+ 540               	.LCFI27:
+ 541 02c2 8F93      		push r24
+ 542               	.LCFI28:
+ 543 02c4 9F93      		push r25
+ 544               	.LCFI29:
+ 545 02c6 AF93      		push r26
+ 546               	.LCFI30:
+ 547 02c8 BF93      		push r27
+ 548               	.LCFI31:
+ 549 02ca EF93      		push r30
+ 550               	.LCFI32:
+ 551 02cc FF93      		push r31
+ 552               	.LCFI33:
+ 553               	/* prologue: Signal */
+ 554               	/* frame size = 0 */
+ 555               	/* stack size = 16 */
+ 556               	.L__stack_usage = 16
+  90:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_PROLOGUE();
+ 557               		.loc 1 90 0
+ 558 02ce 0E94 0000 		call dbg_check_enter_isr
+ 559               	.LVL37:
+ 560               	.LBB12:
+ 561               	.LBB13:
+  65:../../../os/hal/platforms/AVR/gpt_lld.c ****   gptp->counter++;
+ 562               		.loc 1 65 0
+ 563 02d2 8091 0000 		lds r24,GPTD1+6
+ 564 02d6 9091 0000 		lds r25,GPTD1+6+1
+ 565 02da 0196      		adiw r24,1
+ 566 02dc 9093 0000 		sts GPTD1+6+1,r25
+ 567 02e0 8093 0000 		sts GPTD1+6,r24
+  66:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp->counter == gptp->period)
+ 568               		.loc 1 66 0
+ 569 02e4 2091 0000 		lds r18,GPTD1+4
+ 570 02e8 3091 0000 		lds r19,GPTD1+4+1
+ 571 02ec 8217      		cp r24,r18
+ 572 02ee 9307      		cpc r25,r19
+ 573 02f0 01F4      		brne .L30
+ 574 02f2 80E0      		ldi r24,lo8(GPTD1)
+ 575 02f4 90E0      		ldi r25,hi8(GPTD1)
+ 576 02f6 0E94 0000 		call gpt_lld_serve_interrupt.part.1
+ 577               	.LVL38:
+ 578               	.L30:
+ 579               	.LBE13:
+ 580               	.LBE12:
+  92:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
+ 581               		.loc 1 92 0
+ 582 02fa 0E94 0000 		call dbg_check_leave_isr
+ 583               	.LVL39:
+ 584 02fe 0E94 0000 		call dbg_check_lock
+ 585               	.LVL40:
+ 586 0302 0E94 0000 		call chSchIsPreemptionRequired
+ 587               	.LVL41:
+ 588 0306 8111      		cpse r24,__zero_reg__
+  92:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
+ 589               		.loc 1 92 0 is_stmt 0 discriminator 1
+ 590 0308 0E94 0000 		call chSchDoReschedule
+ 591               	.LVL42:
+ 592               	.L31:
+  92:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
+ 593               		.loc 1 92 0 discriminator 2
+ 594 030c 0E94 0000 		call dbg_check_unlock
+ 595               	.LVL43:
+ 596               	/* epilogue start */
+  93:../../../os/hal/platforms/AVR/gpt_lld.c **** }
+ 597               		.loc 1 93 0 is_stmt 1 discriminator 2
+ 598 0310 FF91      		pop r31
+ 599 0312 EF91      		pop r30
+ 600 0314 BF91      		pop r27
+ 601 0316 AF91      		pop r26
+ 602 0318 9F91      		pop r25
+ 603 031a 8F91      		pop r24
+ 604 031c 7F91      		pop r23
+ 605 031e 6F91      		pop r22
+ 606 0320 5F91      		pop r21
+ 607 0322 4F91      		pop r20
+ 608 0324 3F91      		pop r19
+ 609 0326 2F91      		pop r18
+ 610 0328 0F90      		pop r0
+ 611 032a 0BBE      		out __RAMPZ__,r0
+ 612 032c 0F90      		pop r0
+ 613 032e 0FBE      		out __SREG__,r0
+ 614 0330 0F90      		pop r0
+ 615 0332 1F90      		pop r1
+ 616 0334 1895      		reti
+ 617               	.LFE2:
+ 619               	.global	gpt_lld_polled_delay
+ 621               	gpt_lld_polled_delay:
+ 622               	.LFB9:
  326:../../../os/hal/platforms/AVR/gpt_lld.c ****   }
  327:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  328:../../../os/hal/platforms/AVR/gpt_lld.c ****     #if USE_AVR_GPT3 || defined(__DOXYGEN__)
  329:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD3)
- 576               		.loc 1 329 0
- 577 03ca 20E0      		ldi r18,hi8(GPTD3)
- 578 03cc 8030      		cpi r24,lo8(GPTD3)
- 579 03ce 9207      		cpc r25,r18
- 580 03d0 01F0      		breq .L36
  330:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  331:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR3B  &= ~(0x07 <<CS10);
  332:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK3  &= ~(1 << OCIE1A);
@@ -947,11 +985,6 @@
  335:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  336:../../../os/hal/platforms/AVR/gpt_lld.c ****     #if USE_AVR_GPT4 || defined(__DOXYGEN__)
  337:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD4)
- 581               		.loc 1 337 0
- 582 03d2 20E0      		ldi r18,hi8(GPTD4)
- 583 03d4 8030      		cpi r24,lo8(GPTD4)
- 584 03d6 9207      		cpc r25,r18
- 585 03d8 01F0      		breq .L37
  338:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  339:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR4B  &= ~(0x07 <<CS10);
  340:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK4  &= ~(1 << OCIE1A);
@@ -960,676 +993,10 @@
  343:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  344:../../../os/hal/platforms/AVR/gpt_lld.c ****     #if USE_AVR_GPT5 || defined(__DOXYGEN__)
  345:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp == &GPTD5)
- 586               		.loc 1 345 0
- 587 03da 8050      		subi r24,lo8(GPTD5)
- 588 03dc 9040      		sbci r25,hi8(GPTD5)
- 589 03de 01F4      		brne .L27
  346:../../../os/hal/platforms/AVR/gpt_lld.c ****   {
  347:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR5B  &= ~(0x07 <<CS10);
- 590               		.loc 1 347 0
- 591 03e0 8091 2101 		lds r24,289
- 592               	.LVL36:
- 593 03e4 887F      		andi r24,lo8(-8)
- 594 03e6 8093 2101 		sts 289,r24
  348:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK5  &= ~(1 << OCIE1A);
- 595               		.loc 1 348 0
- 596 03ea 8091 7300 		lds r24,115
- 597 03ee 8D7F      		andi r24,lo8(-3)
- 598 03f0 8093 7300 		sts 115,r24
  349:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR5   = (1 << OCF1A); 
- 599               		.loc 1 349 0
- 600 03f4 82E0      		ldi r24,lo8(2)
- 601 03f6 8ABB      		out 0x1a,r24
- 602               	.L27:
- 603 03f8 0895      		ret
- 604               	.LVL37:
- 605               	.L37:
- 339:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR4B  &= ~(0x07 <<CS10);
- 606               		.loc 1 339 0
- 607 03fa 8091 A100 		lds r24,161
- 608               	.LVL38:
- 609 03fe 887F      		andi r24,lo8(-8)
- 610 0400 8093 A100 		sts 161,r24
- 340:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK4  &= ~(1 << OCIE1A);
- 611               		.loc 1 340 0
- 612 0404 8091 7200 		lds r24,114
- 613 0408 8D7F      		andi r24,lo8(-3)
- 614 040a 8093 7200 		sts 114,r24
- 341:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR4   = (1 << OCF1A); 
- 615               		.loc 1 341 0
- 616 040e 82E0      		ldi r24,lo8(2)
- 617 0410 89BB      		out 0x19,r24
- 618 0412 0895      		ret
- 619               	.LVL39:
- 620               	.L34:
- 315:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR1B  &= ~(0x07 <<CS10);
- 621               		.loc 1 315 0
- 622 0414 8091 8100 		lds r24,129
- 623               	.LVL40:
- 624 0418 887F      		andi r24,lo8(-8)
- 625 041a 8093 8100 		sts 129,r24
- 316:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK1  &= ~(1 << OCIE1A);
- 626               		.loc 1 316 0
- 627 041e 8091 6F00 		lds r24,111
- 628 0422 8D7F      		andi r24,lo8(-3)
- 629 0424 8093 6F00 		sts 111,r24
- 317:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR1   = (1 << OCF1A); 
- 630               		.loc 1 317 0
- 631 0428 82E0      		ldi r24,lo8(2)
- 632 042a 86BB      		out 0x16,r24
- 633 042c 0895      		ret
- 634               	.LVL41:
- 635               	.L35:
- 323:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR2B  &= ~(0x07 <<CS20);
- 636               		.loc 1 323 0
- 637 042e 8091 B100 		lds r24,177
- 638               	.LVL42:
- 639 0432 887F      		andi r24,lo8(-8)
- 640 0434 8093 B100 		sts 177,r24
- 324:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK2  &= ~(1 << OCIE2A);
- 641               		.loc 1 324 0
- 642 0438 8091 7000 		lds r24,112
- 643 043c 8D7F      		andi r24,lo8(-3)
- 644 043e 8093 7000 		sts 112,r24
- 325:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR2   = (1 << OCF2A); 
- 645               		.loc 1 325 0
- 646 0442 82E0      		ldi r24,lo8(2)
- 647 0444 87BB      		out 0x17,r24
- 648 0446 0895      		ret
- 649               	.LVL43:
- 650               	.L36:
- 331:../../../os/hal/platforms/AVR/gpt_lld.c ****       TCCR3B  &= ~(0x07 <<CS10);
- 651               		.loc 1 331 0
- 652 0448 8091 9100 		lds r24,145
- 653               	.LVL44:
- 654 044c 887F      		andi r24,lo8(-8)
- 655 044e 8093 9100 		sts 145,r24
- 332:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIMSK3  &= ~(1 << OCIE1A);
- 656               		.loc 1 332 0
- 657 0452 8091 7100 		lds r24,113
- 658 0456 8D7F      		andi r24,lo8(-3)
- 659 0458 8093 7100 		sts 113,r24
- 333:../../../os/hal/platforms/AVR/gpt_lld.c ****       TIFR3   = (1 << OCF1A); 
- 660               		.loc 1 333 0
- 661 045c 82E0      		ldi r24,lo8(2)
- 662 045e 88BB      		out 0x18,r24
- 663 0460 0895      		ret
- 664               	.LFE11:
- 666               	.global	gpt_lld_stop
- 668               	gpt_lld_stop:
- 669               	.LFB9:
- 234:../../../os/hal/platforms/AVR/gpt_lld.c **** void gpt_lld_stop(GPTDriver *gptp) {
- 670               		.loc 1 234 0
- 671               	.LVL45:
- 672               	/* prologue: function */
- 673               	/* frame size = 0 */
- 674               	/* stack size = 0 */
- 675               	.L__stack_usage = 0
- 236:../../../os/hal/platforms/AVR/gpt_lld.c ****   if (gptp->state == GPT_READY) {
- 676               		.loc 1 236 0
- 677 0462 FC01      		movw r30,r24
- 678 0464 2081      		ld r18,Z
- 240:../../../os/hal/platforms/AVR/gpt_lld.c ****   gpt_lld_stop_timer(gptp);
- 679               		.loc 1 240 0
- 680 0466 0C94 0000 		jmp gpt_lld_stop_timer
- 681               	.LVL46:
- 682               	.LFE9:
- 685               	gpt_lld_serve_interrupt:
- 686               	.LFB0:
-  63:../../../os/hal/platforms/AVR/gpt_lld.c **** static void gpt_lld_serve_interrupt(GPTDriver *gptp) {
- 687               		.loc 1 63 0
- 688               	.LVL47:
- 689 046a CF93      		push r28
- 690               	.LCFI4:
- 691 046c DF93      		push r29
- 692               	.LCFI5:
- 693               	/* prologue: function */
- 694               	/* frame size = 0 */
- 695               	/* stack size = 2 */
- 696               	.L__stack_usage = 2
- 697 046e EC01      		movw r28,r24
-  65:../../../os/hal/platforms/AVR/gpt_lld.c ****   gptp->counter++;
- 698               		.loc 1 65 0
- 699 0470 8E81      		ldd r24,Y+6
- 700 0472 9F81      		ldd r25,Y+7
- 701               	.LVL48:
- 702 0474 0196      		adiw r24,1
- 703 0476 9F83      		std Y+7,r25
- 704 0478 8E83      		std Y+6,r24
-  66:../../../os/hal/platforms/AVR/gpt_lld.c ****   if(gptp->counter == gptp->period)
- 705               		.loc 1 66 0
- 706 047a 2C81      		ldd r18,Y+4
- 707 047c 3D81      		ldd r19,Y+5
- 708 047e 8217      		cp r24,r18
- 709 0480 9307      		cpc r25,r19
- 710 0482 01F0      		breq .L42
- 711               	/* epilogue start */
-  77:../../../os/hal/platforms/AVR/gpt_lld.c **** }
- 712               		.loc 1 77 0
- 713 0484 DF91      		pop r29
- 714 0486 CF91      		pop r28
- 715               	.LVL49:
- 716 0488 0895      		ret
- 717               	.LVL50:
- 718               	.L42:
- 719               	.LBB4:
- 720               	.LBB5:
-  68:../../../os/hal/platforms/AVR/gpt_lld.c **** 	gptp->counter = 0;
- 721               		.loc 1 68 0
- 722 048a 1F82      		std Y+7,__zero_reg__
- 723 048c 1E82      		std Y+6,__zero_reg__
-  69:../../../os/hal/platforms/AVR/gpt_lld.c **** 	if (gptp->state == GPT_ONESHOT) {
- 724               		.loc 1 69 0
- 725 048e 8881      		ld r24,Y
- 726 0490 8430      		cpi r24,lo8(4)
- 727 0492 01F0      		breq .L43
- 728               	.L41:
-  73:../../../os/hal/platforms/AVR/gpt_lld.c **** 	gptp->callback(gptp);
- 729               		.loc 1 73 0
- 730 0494 E885      		ldd r30,Y+8
- 731 0496 F985      		ldd r31,Y+9
- 732 0498 CE01      		movw r24,r28
- 733               	/* epilogue start */
- 734               	.LBE5:
- 735               	.LBE4:
-  77:../../../os/hal/platforms/AVR/gpt_lld.c **** }
- 736               		.loc 1 77 0
- 737 049a DF91      		pop r29
- 738 049c CF91      		pop r28
- 739               	.LVL51:
- 740               	.LBB7:
- 741               	.LBB6:
-  73:../../../os/hal/platforms/AVR/gpt_lld.c **** 	gptp->callback(gptp);
- 742               		.loc 1 73 0
- 743 049e 1994      		eijmp
- 744               	.LVL52:
- 745               	.L43:
-  70:../../../os/hal/platforms/AVR/gpt_lld.c **** 	    gptp->state = GPT_READY;                /* Back in GPT_READY state.     */
- 746               		.loc 1 70 0
- 747 04a0 82E0      		ldi r24,lo8(2)
- 748 04a2 8883      		st Y,r24
-  71:../../../os/hal/platforms/AVR/gpt_lld.c **** 	    gpt_lld_stop_timer(gptp);               /* Timer automatically stopped. */
- 749               		.loc 1 71 0
- 750 04a4 CE01      		movw r24,r28
- 751 04a6 0E94 0000 		call gpt_lld_stop_timer
- 752               	.LVL53:
- 753 04aa 00C0      		rjmp .L41
- 754               	.LBE6:
- 755               	.LBE7:
- 756               	.LFE0:
- 758               	.global	__vector_47
- 760               	__vector_47:
- 761               	.LFB6:
- 121:../../../os/hal/platforms/AVR/gpt_lld.c **** CH_IRQ_HANDLER(TIMER5_COMPA_vect) {
- 762               		.loc 1 121 0
- 763 04ac 1F92      		push r1
- 764               	.LCFI6:
- 765 04ae 0F92      		push r0
- 766               	.LCFI7:
- 767 04b0 0FB6      		in r0,__SREG__
- 768 04b2 0F92      		push r0
- 769 04b4 1124      		clr __zero_reg__
- 770 04b6 0BB6      		in r0,__RAMPZ__
- 771 04b8 0F92      		push r0
- 772 04ba 1BBE      		out __RAMPZ__,__zero_reg__
- 773 04bc 2F93      		push r18
- 774               	.LCFI8:
- 775 04be 3F93      		push r19
- 776               	.LCFI9:
- 777 04c0 4F93      		push r20
- 778               	.LCFI10:
- 779 04c2 5F93      		push r21
- 780               	.LCFI11:
- 781 04c4 6F93      		push r22
- 782               	.LCFI12:
- 783 04c6 7F93      		push r23
- 784               	.LCFI13:
- 785 04c8 8F93      		push r24
- 786               	.LCFI14:
- 787 04ca 9F93      		push r25
- 788               	.LCFI15:
- 789 04cc AF93      		push r26
- 790               	.LCFI16:
- 791 04ce BF93      		push r27
- 792               	.LCFI17:
- 793 04d0 EF93      		push r30
- 794               	.LCFI18:
- 795 04d2 FF93      		push r31
- 796               	.LCFI19:
- 797               	/* prologue: Signal */
- 798               	/* frame size = 0 */
- 799               	/* stack size = 16 */
- 800               	.L__stack_usage = 16
- 122:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_PROLOGUE();
- 801               		.loc 1 122 0
- 802 04d4 0E94 0000 		call dbg_check_enter_isr
- 803               	.LVL54:
- 123:../../../os/hal/platforms/AVR/gpt_lld.c ****       gpt_lld_serve_interrupt(&GPTD5);
- 804               		.loc 1 123 0
- 805 04d8 80E0      		ldi r24,lo8(GPTD5)
- 806 04da 90E0      		ldi r25,hi8(GPTD5)
- 807 04dc 0E94 0000 		call gpt_lld_serve_interrupt
- 808               	.LVL55:
- 124:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 809               		.loc 1 124 0
- 810 04e0 0E94 0000 		call dbg_check_leave_isr
- 811               	.LVL56:
- 812 04e4 0E94 0000 		call dbg_check_lock
- 813               	.LVL57:
- 814 04e8 0E94 0000 		call chSchIsPreemptionRequired
- 815               	.LVL58:
- 816 04ec 8111      		cpse r24,__zero_reg__
- 124:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 817               		.loc 1 124 0 is_stmt 0 discriminator 1
- 818 04ee 0E94 0000 		call chSchDoReschedule
- 819               	.LVL59:
- 820               	.L45:
- 124:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 821               		.loc 1 124 0 discriminator 2
- 822 04f2 0E94 0000 		call dbg_check_unlock
- 823               	.LVL60:
- 824               	/* epilogue start */
- 125:../../../os/hal/platforms/AVR/gpt_lld.c **** }
- 825               		.loc 1 125 0 is_stmt 1 discriminator 2
- 826 04f6 FF91      		pop r31
- 827 04f8 EF91      		pop r30
- 828 04fa BF91      		pop r27
- 829 04fc AF91      		pop r26
- 830 04fe 9F91      		pop r25
- 831 0500 8F91      		pop r24
- 832 0502 7F91      		pop r23
- 833 0504 6F91      		pop r22
- 834 0506 5F91      		pop r21
- 835 0508 4F91      		pop r20
- 836 050a 3F91      		pop r19
- 837 050c 2F91      		pop r18
- 838 050e 0F90      		pop r0
- 839 0510 0BBE      		out __RAMPZ__,r0
- 840 0512 0F90      		pop r0
- 841 0514 0FBE      		out __SREG__,r0
- 842 0516 0F90      		pop r0
- 843 0518 1F90      		pop r1
- 844 051a 1895      		reti
- 845               	.LFE6:
- 847               	.global	__vector_42
- 849               	__vector_42:
- 850               	.LFB5:
- 113:../../../os/hal/platforms/AVR/gpt_lld.c **** CH_IRQ_HANDLER(TIMER4_COMPA_vect) {
- 851               		.loc 1 113 0
- 852 051c 1F92      		push r1
- 853               	.LCFI20:
- 854 051e 0F92      		push r0
- 855               	.LCFI21:
- 856 0520 0FB6      		in r0,__SREG__
- 857 0522 0F92      		push r0
- 858 0524 1124      		clr __zero_reg__
- 859 0526 0BB6      		in r0,__RAMPZ__
- 860 0528 0F92      		push r0
- 861 052a 1BBE      		out __RAMPZ__,__zero_reg__
- 862 052c 2F93      		push r18
- 863               	.LCFI22:
- 864 052e 3F93      		push r19
- 865               	.LCFI23:
- 866 0530 4F93      		push r20
- 867               	.LCFI24:
- 868 0532 5F93      		push r21
- 869               	.LCFI25:
- 870 0534 6F93      		push r22
- 871               	.LCFI26:
- 872 0536 7F93      		push r23
- 873               	.LCFI27:
- 874 0538 8F93      		push r24
- 875               	.LCFI28:
- 876 053a 9F93      		push r25
- 877               	.LCFI29:
- 878 053c AF93      		push r26
- 879               	.LCFI30:
- 880 053e BF93      		push r27
- 881               	.LCFI31:
- 882 0540 EF93      		push r30
- 883               	.LCFI32:
- 884 0542 FF93      		push r31
- 885               	.LCFI33:
- 886               	/* prologue: Signal */
- 887               	/* frame size = 0 */
- 888               	/* stack size = 16 */
- 889               	.L__stack_usage = 16
- 114:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_PROLOGUE();
- 890               		.loc 1 114 0
- 891 0544 0E94 0000 		call dbg_check_enter_isr
- 892               	.LVL61:
- 115:../../../os/hal/platforms/AVR/gpt_lld.c ****       gpt_lld_serve_interrupt(&GPTD4);
- 893               		.loc 1 115 0
- 894 0548 80E0      		ldi r24,lo8(GPTD4)
- 895 054a 90E0      		ldi r25,hi8(GPTD4)
- 896 054c 0E94 0000 		call gpt_lld_serve_interrupt
- 897               	.LVL62:
- 116:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 898               		.loc 1 116 0
- 899 0550 0E94 0000 		call dbg_check_leave_isr
- 900               	.LVL63:
- 901 0554 0E94 0000 		call dbg_check_lock
- 902               	.LVL64:
- 903 0558 0E94 0000 		call chSchIsPreemptionRequired
- 904               	.LVL65:
- 905 055c 8111      		cpse r24,__zero_reg__
- 116:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 906               		.loc 1 116 0 is_stmt 0 discriminator 1
- 907 055e 0E94 0000 		call chSchDoReschedule
- 908               	.LVL66:
- 909               	.L50:
- 116:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 910               		.loc 1 116 0 discriminator 2
- 911 0562 0E94 0000 		call dbg_check_unlock
- 912               	.LVL67:
- 913               	/* epilogue start */
- 117:../../../os/hal/platforms/AVR/gpt_lld.c **** }
- 914               		.loc 1 117 0 is_stmt 1 discriminator 2
- 915 0566 FF91      		pop r31
- 916 0568 EF91      		pop r30
- 917 056a BF91      		pop r27
- 918 056c AF91      		pop r26
- 919 056e 9F91      		pop r25
- 920 0570 8F91      		pop r24
- 921 0572 7F91      		pop r23
- 922 0574 6F91      		pop r22
- 923 0576 5F91      		pop r21
- 924 0578 4F91      		pop r20
- 925 057a 3F91      		pop r19
- 926 057c 2F91      		pop r18
- 927 057e 0F90      		pop r0
- 928 0580 0BBE      		out __RAMPZ__,r0
- 929 0582 0F90      		pop r0
- 930 0584 0FBE      		out __SREG__,r0
- 931 0586 0F90      		pop r0
- 932 0588 1F90      		pop r1
- 933 058a 1895      		reti
- 934               	.LFE5:
- 936               	.global	__vector_32
- 938               	__vector_32:
- 939               	.LFB4:
- 105:../../../os/hal/platforms/AVR/gpt_lld.c **** CH_IRQ_HANDLER(TIMER3_COMPA_vect) {
- 940               		.loc 1 105 0
- 941 058c 1F92      		push r1
- 942               	.LCFI34:
- 943 058e 0F92      		push r0
- 944               	.LCFI35:
- 945 0590 0FB6      		in r0,__SREG__
- 946 0592 0F92      		push r0
- 947 0594 1124      		clr __zero_reg__
- 948 0596 0BB6      		in r0,__RAMPZ__
- 949 0598 0F92      		push r0
- 950 059a 1BBE      		out __RAMPZ__,__zero_reg__
- 951 059c 2F93      		push r18
- 952               	.LCFI36:
- 953 059e 3F93      		push r19
- 954               	.LCFI37:
- 955 05a0 4F93      		push r20
- 956               	.LCFI38:
- 957 05a2 5F93      		push r21
- 958               	.LCFI39:
- 959 05a4 6F93      		push r22
- 960               	.LCFI40:
- 961 05a6 7F93      		push r23
- 962               	.LCFI41:
- 963 05a8 8F93      		push r24
- 964               	.LCFI42:
- 965 05aa 9F93      		push r25
- 966               	.LCFI43:
- 967 05ac AF93      		push r26
- 968               	.LCFI44:
- 969 05ae BF93      		push r27
- 970               	.LCFI45:
- 971 05b0 EF93      		push r30
- 972               	.LCFI46:
- 973 05b2 FF93      		push r31
- 974               	.LCFI47:
- 975               	/* prologue: Signal */
- 976               	/* frame size = 0 */
- 977               	/* stack size = 16 */
- 978               	.L__stack_usage = 16
- 106:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_PROLOGUE();
- 979               		.loc 1 106 0
- 980 05b4 0E94 0000 		call dbg_check_enter_isr
- 981               	.LVL68:
- 107:../../../os/hal/platforms/AVR/gpt_lld.c ****       gpt_lld_serve_interrupt(&GPTD3);
- 982               		.loc 1 107 0
- 983 05b8 80E0      		ldi r24,lo8(GPTD3)
- 984 05ba 90E0      		ldi r25,hi8(GPTD3)
- 985 05bc 0E94 0000 		call gpt_lld_serve_interrupt
- 986               	.LVL69:
- 108:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 987               		.loc 1 108 0
- 988 05c0 0E94 0000 		call dbg_check_leave_isr
- 989               	.LVL70:
- 990 05c4 0E94 0000 		call dbg_check_lock
- 991               	.LVL71:
- 992 05c8 0E94 0000 		call chSchIsPreemptionRequired
- 993               	.LVL72:
- 994 05cc 8111      		cpse r24,__zero_reg__
- 108:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 995               		.loc 1 108 0 is_stmt 0 discriminator 1
- 996 05ce 0E94 0000 		call chSchDoReschedule
- 997               	.LVL73:
- 998               	.L55:
- 108:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 999               		.loc 1 108 0 discriminator 2
- 1000 05d2 0E94 0000 		call dbg_check_unlock
- 1001               	.LVL74:
- 1002               	/* epilogue start */
- 109:../../../os/hal/platforms/AVR/gpt_lld.c **** }
- 1003               		.loc 1 109 0 is_stmt 1 discriminator 2
- 1004 05d6 FF91      		pop r31
- 1005 05d8 EF91      		pop r30
- 1006 05da BF91      		pop r27
- 1007 05dc AF91      		pop r26
- 1008 05de 9F91      		pop r25
- 1009 05e0 8F91      		pop r24
- 1010 05e2 7F91      		pop r23
- 1011 05e4 6F91      		pop r22
- 1012 05e6 5F91      		pop r21
- 1013 05e8 4F91      		pop r20
- 1014 05ea 3F91      		pop r19
- 1015 05ec 2F91      		pop r18
- 1016 05ee 0F90      		pop r0
- 1017 05f0 0BBE      		out __RAMPZ__,r0
- 1018 05f2 0F90      		pop r0
- 1019 05f4 0FBE      		out __SREG__,r0
- 1020 05f6 0F90      		pop r0
- 1021 05f8 1F90      		pop r1
- 1022 05fa 1895      		reti
- 1023               	.LFE4:
- 1025               	.global	__vector_13
- 1027               	__vector_13:
- 1028               	.LFB3:
-  97:../../../os/hal/platforms/AVR/gpt_lld.c **** CH_IRQ_HANDLER(TIMER2_COMPA_vect) {
- 1029               		.loc 1 97 0
- 1030 05fc 1F92      		push r1
- 1031               	.LCFI48:
- 1032 05fe 0F92      		push r0
- 1033               	.LCFI49:
- 1034 0600 0FB6      		in r0,__SREG__
- 1035 0602 0F92      		push r0
- 1036 0604 1124      		clr __zero_reg__
- 1037 0606 0BB6      		in r0,__RAMPZ__
- 1038 0608 0F92      		push r0
- 1039 060a 1BBE      		out __RAMPZ__,__zero_reg__
- 1040 060c 2F93      		push r18
- 1041               	.LCFI50:
- 1042 060e 3F93      		push r19
- 1043               	.LCFI51:
- 1044 0610 4F93      		push r20
- 1045               	.LCFI52:
- 1046 0612 5F93      		push r21
- 1047               	.LCFI53:
- 1048 0614 6F93      		push r22
- 1049               	.LCFI54:
- 1050 0616 7F93      		push r23
- 1051               	.LCFI55:
- 1052 0618 8F93      		push r24
- 1053               	.LCFI56:
- 1054 061a 9F93      		push r25
- 1055               	.LCFI57:
- 1056 061c AF93      		push r26
- 1057               	.LCFI58:
- 1058 061e BF93      		push r27
- 1059               	.LCFI59:
- 1060 0620 EF93      		push r30
- 1061               	.LCFI60:
- 1062 0622 FF93      		push r31
- 1063               	.LCFI61:
- 1064               	/* prologue: Signal */
- 1065               	/* frame size = 0 */
- 1066               	/* stack size = 16 */
- 1067               	.L__stack_usage = 16
-  98:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_PROLOGUE();
- 1068               		.loc 1 98 0
- 1069 0624 0E94 0000 		call dbg_check_enter_isr
- 1070               	.LVL75:
-  99:../../../os/hal/platforms/AVR/gpt_lld.c ****       gpt_lld_serve_interrupt(&GPTD2);
- 1071               		.loc 1 99 0
- 1072 0628 80E0      		ldi r24,lo8(GPTD2)
- 1073 062a 90E0      		ldi r25,hi8(GPTD2)
- 1074 062c 0E94 0000 		call gpt_lld_serve_interrupt
- 1075               	.LVL76:
- 100:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 1076               		.loc 1 100 0
- 1077 0630 0E94 0000 		call dbg_check_leave_isr
- 1078               	.LVL77:
- 1079 0634 0E94 0000 		call dbg_check_lock
- 1080               	.LVL78:
- 1081 0638 0E94 0000 		call chSchIsPreemptionRequired
- 1082               	.LVL79:
- 1083 063c 8111      		cpse r24,__zero_reg__
- 100:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 1084               		.loc 1 100 0 is_stmt 0 discriminator 1
- 1085 063e 0E94 0000 		call chSchDoReschedule
- 1086               	.LVL80:
- 1087               	.L60:
- 100:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 1088               		.loc 1 100 0 discriminator 2
- 1089 0642 0E94 0000 		call dbg_check_unlock
- 1090               	.LVL81:
- 1091               	/* epilogue start */
- 101:../../../os/hal/platforms/AVR/gpt_lld.c **** }
- 1092               		.loc 1 101 0 is_stmt 1 discriminator 2
- 1093 0646 FF91      		pop r31
- 1094 0648 EF91      		pop r30
- 1095 064a BF91      		pop r27
- 1096 064c AF91      		pop r26
- 1097 064e 9F91      		pop r25
- 1098 0650 8F91      		pop r24
- 1099 0652 7F91      		pop r23
- 1100 0654 6F91      		pop r22
- 1101 0656 5F91      		pop r21
- 1102 0658 4F91      		pop r20
- 1103 065a 3F91      		pop r19
- 1104 065c 2F91      		pop r18
- 1105 065e 0F90      		pop r0
- 1106 0660 0BBE      		out __RAMPZ__,r0
- 1107 0662 0F90      		pop r0
- 1108 0664 0FBE      		out __SREG__,r0
- 1109 0666 0F90      		pop r0
- 1110 0668 1F90      		pop r1
- 1111 066a 1895      		reti
- 1112               	.LFE3:
- 1114               	.global	__vector_17
- 1116               	__vector_17:
- 1117               	.LFB2:
-  89:../../../os/hal/platforms/AVR/gpt_lld.c **** CH_IRQ_HANDLER(TIMER1_COMPA_vect) {
- 1118               		.loc 1 89 0
- 1119 066c 1F92      		push r1
- 1120               	.LCFI62:
- 1121 066e 0F92      		push r0
- 1122               	.LCFI63:
- 1123 0670 0FB6      		in r0,__SREG__
- 1124 0672 0F92      		push r0
- 1125 0674 1124      		clr __zero_reg__
- 1126 0676 0BB6      		in r0,__RAMPZ__
- 1127 0678 0F92      		push r0
- 1128 067a 1BBE      		out __RAMPZ__,__zero_reg__
- 1129 067c 2F93      		push r18
- 1130               	.LCFI64:
- 1131 067e 3F93      		push r19
- 1132               	.LCFI65:
- 1133 0680 4F93      		push r20
- 1134               	.LCFI66:
- 1135 0682 5F93      		push r21
- 1136               	.LCFI67:
- 1137 0684 6F93      		push r22
- 1138               	.LCFI68:
- 1139 0686 7F93      		push r23
- 1140               	.LCFI69:
- 1141 0688 8F93      		push r24
- 1142               	.LCFI70:
- 1143 068a 9F93      		push r25
- 1144               	.LCFI71:
- 1145 068c AF93      		push r26
- 1146               	.LCFI72:
- 1147 068e BF93      		push r27
- 1148               	.LCFI73:
- 1149 0690 EF93      		push r30
- 1150               	.LCFI74:
- 1151 0692 FF93      		push r31
- 1152               	.LCFI75:
- 1153               	/* prologue: Signal */
- 1154               	/* frame size = 0 */
- 1155               	/* stack size = 16 */
- 1156               	.L__stack_usage = 16
-  90:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_PROLOGUE();
- 1157               		.loc 1 90 0
- 1158 0694 0E94 0000 		call dbg_check_enter_isr
- 1159               	.LVL82:
-  91:../../../os/hal/platforms/AVR/gpt_lld.c ****       gpt_lld_serve_interrupt(&GPTD1);
- 1160               		.loc 1 91 0
- 1161 0698 80E0      		ldi r24,lo8(GPTD1)
- 1162 069a 90E0      		ldi r25,hi8(GPTD1)
- 1163 069c 0E94 0000 		call gpt_lld_serve_interrupt
- 1164               	.LVL83:
-  92:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 1165               		.loc 1 92 0
- 1166 06a0 0E94 0000 		call dbg_check_leave_isr
- 1167               	.LVL84:
- 1168 06a4 0E94 0000 		call dbg_check_lock
- 1169               	.LVL85:
- 1170 06a8 0E94 0000 		call chSchIsPreemptionRequired
- 1171               	.LVL86:
- 1172 06ac 8111      		cpse r24,__zero_reg__
-  92:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 1173               		.loc 1 92 0 is_stmt 0 discriminator 1
- 1174 06ae 0E94 0000 		call chSchDoReschedule
- 1175               	.LVL87:
- 1176               	.L65:
-  92:../../../os/hal/platforms/AVR/gpt_lld.c ****     CH_IRQ_EPILOGUE();
- 1177               		.loc 1 92 0 discriminator 2
- 1178 06b2 0E94 0000 		call dbg_check_unlock
- 1179               	.LVL88:
- 1180               	/* epilogue start */
-  93:../../../os/hal/platforms/AVR/gpt_lld.c **** }
- 1181               		.loc 1 93 0 is_stmt 1 discriminator 2
- 1182 06b6 FF91      		pop r31
- 1183 06b8 EF91      		pop r30
- 1184 06ba BF91      		pop r27
- 1185 06bc AF91      		pop r26
- 1186 06be 9F91      		pop r25
- 1187 06c0 8F91      		pop r24
- 1188 06c2 7F91      		pop r23
- 1189 06c4 6F91      		pop r22
- 1190 06c6 5F91      		pop r21
- 1191 06c8 4F91      		pop r20
- 1192 06ca 3F91      		pop r19
- 1193 06cc 2F91      		pop r18
- 1194 06ce 0F90      		pop r0
- 1195 06d0 0BBE      		out __RAMPZ__,r0
- 1196 06d2 0F90      		pop r0
- 1197 06d4 0FBE      		out __SREG__,r0
- 1198 06d6 0F90      		pop r0
- 1199 06d8 1F90      		pop r1
- 1200 06da 1895      		reti
- 1201               	.LFE2:
- 1203               	.global	gpt_lld_polled_delay
- 1205               	gpt_lld_polled_delay:
- 1206               	.LFB12:
  350:../../../os/hal/platforms/AVR/gpt_lld.c ****   }
  351:../../../os/hal/platforms/AVR/gpt_lld.c **** #endif
  352:../../../os/hal/platforms/AVR/gpt_lld.c ****   /*disable timer
@@ -1648,93 +1015,84 @@
  365:../../../os/hal/platforms/AVR/gpt_lld.c ****  * @notapi
  366:../../../os/hal/platforms/AVR/gpt_lld.c ****  */
  367:../../../os/hal/platforms/AVR/gpt_lld.c **** void gpt_lld_polled_delay(GPTDriver *gptp, gptcnt_t interval) {
- 1207               		.loc 1 367 0
- 1208               	.LVL89:
- 1209 06dc CF93      		push r28
- 1210               	.LCFI76:
- 1211 06de DF93      		push r29
- 1212               	.LCFI77:
- 1213               	/* prologue: function */
- 1214               	/* frame size = 0 */
- 1215               	/* stack size = 2 */
- 1216               	.L__stack_usage = 2
- 1217 06e0 EC01      		movw r28,r24
+ 623               		.loc 1 367 0
+ 624               	.LVL44:
+ 625 0336 CF93      		push r28
+ 626               	.LCFI34:
+ 627 0338 DF93      		push r29
+ 628               	.LCFI35:
+ 629               	/* prologue: function */
+ 630               	/* frame size = 0 */
+ 631               	/* stack size = 2 */
+ 632               	.L__stack_usage = 2
+ 633 033a EC01      		movw r28,r24
  368:../../../os/hal/platforms/AVR/gpt_lld.c ****   gptp->callback = gpt_lld_dummy_callback;
- 1218               		.loc 1 368 0
- 1219 06e2 80E0      		ldi r24,lo8(gs(gpt_lld_dummy_callback))
- 1220 06e4 90E0      		ldi r25,hi8(gs(gpt_lld_dummy_callback))
- 1221               	.LVL90:
- 1222 06e6 9987      		std Y+9,r25
- 1223 06e8 8887      		std Y+8,r24
+ 634               		.loc 1 368 0
+ 635 033c 80E0      		ldi r24,lo8(gs(gpt_lld_dummy_callback))
+ 636 033e 90E0      		ldi r25,hi8(gs(gpt_lld_dummy_callback))
+ 637               	.LVL45:
+ 638 0340 9987      		std Y+9,r25
+ 639 0342 8887      		std Y+8,r24
  369:../../../os/hal/platforms/AVR/gpt_lld.c ****   gpt_lld_start_timer(gptp,interval);
- 1224               		.loc 1 369 0
- 1225 06ea CE01      		movw r24,r28
- 1226 06ec 0E94 0000 		call gpt_lld_start_timer
- 1227               	.LVL91:
- 1228               	.L70:
+ 640               		.loc 1 369 0
+ 641 0344 CE01      		movw r24,r28
+ 642 0346 0E94 0000 		call gpt_lld_start_timer
+ 643               	.LVL46:
+ 644               	.L36:
  370:../../../os/hal/platforms/AVR/gpt_lld.c ****   while(gptp->state != GPT_READY)
- 1229               		.loc 1 370 0 discriminator 1
- 1230 06f0 8881      		ld r24,Y
- 1231 06f2 8230      		cpi r24,lo8(2)
- 1232 06f4 01F4      		brne .L70
- 1233               	/* epilogue start */
+ 645               		.loc 1 370 0 discriminator 1
+ 646 034a 8881      		ld r24,Y
+ 647 034c 8230      		cpi r24,lo8(2)
+ 648 034e 01F4      		brne .L36
+ 649               	/* epilogue start */
  371:../../../os/hal/platforms/AVR/gpt_lld.c ****      ;
  372:../../../os/hal/platforms/AVR/gpt_lld.c ****   return;
  373:../../../os/hal/platforms/AVR/gpt_lld.c **** }
- 1234               		.loc 1 373 0
- 1235 06f6 DF91      		pop r29
- 1236 06f8 CF91      		pop r28
- 1237               	.LVL92:
- 1238 06fa 0895      		ret
- 1239               	.LFE12:
- 1241               		.comm	GPTD5,10,1
- 1242               		.comm	GPTD4,10,1
- 1243               		.comm	GPTD3,10,1
- 1244               		.comm	GPTD2,10,1
- 1245               		.comm	GPTD1,10,1
- 1836               	.Letext0:
- 1837               		.file 2 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdint.h"
- 1838               		.file 3 "../../../os/ports/GCC/AVR/chtypes.h"
- 1839               		.file 4 "../../../os/hal/include/gpt.h"
- 1840               		.file 5 "../../../os/hal/platforms/AVR/gpt_lld.h"
- 1841               		.file 6 "../../../os/hal/platforms/AVR/atmega_timers.h"
- 1842               		.file 7 "../../../os/kernel/include/chdebug.h"
- 1843               		.file 8 "../../../os/kernel/include/chschd.h"
+ 650               		.loc 1 373 0
+ 651 0350 DF91      		pop r29
+ 652 0352 CF91      		pop r28
+ 653               	.LVL47:
+ 654 0354 0895      		ret
+ 655               	.LFE9:
+ 657               		.comm	GPTD2,10,1
+ 658               		.comm	GPTD1,10,1
+ 973               	.Letext0:
+ 974               		.file 2 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdint.h"
+ 975               		.file 3 "../../../os/ports/GCC/AVR/chtypes.h"
+ 976               		.file 4 "../../../os/hal/include/gpt.h"
+ 977               		.file 5 "../../../os/hal/platforms/AVR/gpt_lld.h"
+ 978               		.file 6 "../../../os/hal/platforms/AVR/atmega_timers.h"
+ 979               		.file 7 "../../../os/kernel/include/chdebug.h"
+ 980               		.file 8 "../../../os/kernel/include/chschd.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 gpt_lld.c
-     /tmp/ccujmf3n.s:2      *ABS*:000000000000003e __SP_H__
-     /tmp/ccujmf3n.s:3      *ABS*:000000000000003d __SP_L__
-     /tmp/ccujmf3n.s:4      *ABS*:000000000000003f __SREG__
-     /tmp/ccujmf3n.s:5      *ABS*:000000000000003b __RAMPZ__
-     /tmp/ccujmf3n.s:6      *ABS*:0000000000000000 __tmp_reg__
-     /tmp/ccujmf3n.s:7      *ABS*:0000000000000001 __zero_reg__
-     /tmp/ccujmf3n.s:11     .text:0000000000000000 gpt_lld_dummy_callback
-     /tmp/ccujmf3n.s:25     .text:0000000000000002 gpt_lld_init
+     /tmp/ccjwcguA.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccjwcguA.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccjwcguA.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccjwcguA.s:5      *ABS*:000000000000003b __RAMPZ__
+     /tmp/ccjwcguA.s:6      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccjwcguA.s:7      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccjwcguA.s:11     .text:0000000000000000 gpt_lld_dummy_callback
+     /tmp/ccjwcguA.s:25     .text:0000000000000002 gpt_lld_init
                             *COM*:000000000000000a GPTD1
                             *COM*:000000000000000a GPTD2
-                            *COM*:000000000000000a GPTD3
-                            *COM*:000000000000000a GPTD4
-                            *COM*:000000000000000a GPTD5
-     /tmp/ccujmf3n.s:61     .text:000000000000002a gpt_lld_start
-     /tmp/ccujmf3n.s:430    .text:00000000000002dc gpt_lld_start_timer
-     /tmp/ccujmf3n.s:558    .text:00000000000003ba gpt_lld_stop_timer
-     /tmp/ccujmf3n.s:668    .text:0000000000000462 gpt_lld_stop
-     /tmp/ccujmf3n.s:685    .text:000000000000046a gpt_lld_serve_interrupt
-     /tmp/ccujmf3n.s:760    .text:00000000000004ac __vector_47
-     /tmp/ccujmf3n.s:849    .text:000000000000051c __vector_42
-     /tmp/ccujmf3n.s:938    .text:000000000000058c __vector_32
-     /tmp/ccujmf3n.s:1027   .text:00000000000005fc __vector_13
-     /tmp/ccujmf3n.s:1116   .text:000000000000066c __vector_17
-     /tmp/ccujmf3n.s:1205   .text:00000000000006dc gpt_lld_polled_delay
+     /tmp/ccjwcguA.s:46     .text:0000000000000012 gpt_lld_start
+     /tmp/ccjwcguA.s:214    .text:0000000000000132 gpt_lld_start_timer
+     /tmp/ccjwcguA.s:282    .text:0000000000000198 gpt_lld_stop_timer
+     /tmp/ccjwcguA.s:337    .text:00000000000001dc gpt_lld_stop
+     /tmp/ccjwcguA.s:354    .text:00000000000001e4 gpt_lld_serve_interrupt.part.1
+     /tmp/ccjwcguA.s:411    .text:0000000000000216 __vector_13
+     /tmp/ccjwcguA.s:516    .text:00000000000002a6 __vector_17
+     /tmp/ccjwcguA.s:621    .text:0000000000000336 gpt_lld_polled_delay
 
 UNDEFINED SYMBOLS
 gptObjectInit
-clock_source_base
-ratio_base
-findBestPrescaler
-__udivmodsi4
 clock_source_extended
 ratio_extended
+findBestPrescaler
+__udivmodsi4
+clock_source_base
+ratio_base
 dbg_check_enter_isr
 dbg_check_leave_isr
 dbg_check_lock

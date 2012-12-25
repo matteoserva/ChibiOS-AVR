@@ -36,7 +36,15 @@
 /*===========================================================================*/
 /* Driver constants.                                                         */
 /*===========================================================================*/
-
+#if !defined(USE_AVR_PWM3)
+#define USE_AVR_PWM3 FALSE
+#endif
+#if !defined(USE_AVR_PWM4)
+#define USE_AVR_PWM4 FALSE
+#endif
+#if !defined(USE_AVR_PWM5)
+#define USE_AVR_PWM5 FALSE
+#endif
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/
@@ -45,7 +53,11 @@
  * @brief   Number of PWM channels per PWM driver.
  */
 #if !defined(PWM_CHANNELS) || defined(__DOXYGEN__)
-#define PWM_CHANNELS        2
+#if  defined(TIMER1_COMPC_vect) 
+  #define PWM_CHANNELS        3
+#else
+  #define PWM_CHANNELS        2
+#endif
 #endif
 
 /*===========================================================================*/

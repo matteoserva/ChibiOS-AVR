@@ -36,7 +36,15 @@
 /*===========================================================================*/
 /* Driver constants.                                                         */
 /*===========================================================================*/
-
+#if !defined(USE_AVR_GPT3)
+#define USE_AVR_GPT3 FALSE
+#endif
+#if !defined(USE_AVR_GPT4)
+#define USE_AVR_GPT4 FALSE
+#endif
+#if !defined(USE_AVR_GPT5)
+#define USE_AVR_GPT5 FALSE
+#endif
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/
