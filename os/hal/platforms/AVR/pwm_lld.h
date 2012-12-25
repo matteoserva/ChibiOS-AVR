@@ -101,13 +101,13 @@ typedef struct {
    * @note    The low level can use assertions in order to catch invalid
    *          frequency specifications.
    */
-  uint32_t                  frequency;
+  uint32_t                  frequency;  //only value allowed F_CPU
   /**
    * @brief   PWM period in ticks.
    * @note    The low level can use assertions in order to catch invalid
    *          period specifications.
    */
-  pwmcnt_t                  period;
+  pwmcnt_t                  period;     //only value allowed 0xFF
   /**
    * @brief Periodic callback pointer.
    * @note  This callback is invoked on PWM counter reset. If set to

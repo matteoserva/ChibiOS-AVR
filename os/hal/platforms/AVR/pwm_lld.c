@@ -30,7 +30,8 @@
 #include "hal.h"
 
 #if HAL_USE_PWM || defined(__DOXYGEN__)
-
+/*TODO
+ * change period, set frequency
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
 /*===========================================================================*/
@@ -441,7 +442,7 @@ void pwm_lld_enable_channel(PWMDriver *pwmp,
     #if USE_AVR_PWM5 || defined(__DOXYGEN__)
   if(pwmp == &PWMD5)
       {   
-	pwm_configure_hw_channel(&TCCR1A,7-2*channel,6-2*channel,pwmp->config->channels[channel].mode);
+	pwm_configure_hw_channel(&TCCR5A,7-2*channel,6-2*channel,pwmp->config->channels[channel].mode);
 	TIMSK5 |= (1<< (channel + 1));
 	if(pwmp->config->channels[channel].callback != NULL)
 	switch(channel){
