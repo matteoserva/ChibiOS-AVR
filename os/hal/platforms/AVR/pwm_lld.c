@@ -115,14 +115,14 @@ CH_IRQ_HANDLER(TIMER2_COMPB_vect) {
 void pwm_lld_init(void) {
 
 #if USE_AVR_PWM1 || defined(__DOXYGEN__)
-  pwmObjectInit(&PWMD1);
-  TCCR1A = (0<<WGM11) | (1<<WGM10);   //fast pwm 8 bit  
-  TCCR1B = (1<<WGM12) | (0<<WGM13);  //fast pwm 8 bit
+	pwmObjectInit(&PWMD1);
+	TCCR1A = (0<<WGM11) | (1<<WGM10);   //fast pwm 8 bit  
+	TCCR1B = (1<<WGM12) | (0<<WGM13);  //fast pwm 8 bit
 #endif
   #if USE_AVR_PWM2 || defined(__DOXYGEN__)
-    pwmObjectInit(&PWMD2);
-    TCCR2A = (1<<WGM21) | (1<<WGM20);   //fast pwm 8 bit
-    TCCR2B = (0<<WGM22);  //fast pwm 8 bit
+	pwmObjectInit(&PWMD2);
+	TCCR2A = (1<<WGM21) | (1<<WGM20);   //fast pwm 8 bit
+	TCCR2B = (0<<WGM22);  //fast pwm 8 bit
   #endif
   
   
@@ -146,7 +146,7 @@ void pwm_lld_start(PWMDriver *pwmp) {
       {//TODO frequency
 	  TCCR1B |= (1<<CS12) |(0<<CS11) | (1<<CS10); //parti col no prescaling
 	  if(pwmp->config->callback != NULL)
-	    TIMSK1 |= (1<<TOIE1);
+	    TIMSK1 = (1<<TOIE1);
       }
 #endif
       
@@ -155,7 +155,7 @@ void pwm_lld_start(PWMDriver *pwmp) {
       {
 	      TCCR2B |= (0<<CS22) |(0<<CS21) | (1<<CS20); //parti col no prescaling
 	      if(pwmp->config->callback != NULL)
-		TIMSK2 |= (1<<TOIE2);
+		TIMSK2 = (1<<TOIE2);
       }
 #endif
   }
@@ -283,37 +283,18 @@ void pwm_lld_enable_channel(PWMDriver *pwmp,
  * @notapi
  */
 void pwm_lld_disable_channel(PWMDriver *pwmp, pwmchannel_t channel) {
-  //TODO disable interrupts
 #if USE_AVR_PWM1 || defined(__DOXYGEN__)
   if(pwmp == &PWMD1)
       {   
-	if(channel == 0)
-	{
-	  pwm_configure_hw_channel(&TCCR1A,COM1A1,COM1A0,PWM_OUTPUT_DISABLED);
-	  TIMSK1 &= ~(1<<OCIE1A);
-	}
-	else
-	{
-	  pwm_configure_hw_channel(&TCCR1A,COM1B1,COM1B0,PWM_OUTPUT_DISABLED);
-	  TIMSK1 &= ~(1<<OCIE1B);
-	  
-	}
+	pwm_configure_hw_channel(&TCCR1A,7-2*channel,6-2*channel,PWM_OUTPUT_DISABLED);
+	TIMSK1 &= ~(1<< (channel + 1));
       }
 #endif
 #if USE_AVR_PWM2 || defined(__DOXYGEN__)
   if(pwmp == &PWMD2)
       {   
-	if(channel == 0)
-	{
-	  pwm_configure_hw_channel(&TCCR2A,COM2A1,COM2A0,pwmp->config->channels[0].mode);
-	  TIMSK2 &= ~(1<<OCIE2A);
-	}
-	else
-	{
-	  pwm_configure_hw_channel(&TCCR2A,COM2B1,COM2B0,pwmp->config->channels[1].mode);
-	  TIMSK2 &= ~(1<<OCIE2B);
-	  
-	}
+	pwm_configure_hw_channel(&TCCR2A,7-2*channel,6-2*channel,PWM_OUTPUT_DISABLED);
+	TIMSK2 &= ~(1<< (channel + 1));
       }
 #endif
 }
