@@ -38,7 +38,12 @@
 typedef volatile uint8_t * timer_registers[12];
 timer_registers timer_registers_table[]={ 
   #if USE_AVR_PWM1 || defined(__DOXYGEN__)
+   #if defined(OCR1C)
   {&TCCR1A,  &TCCR1B, &OCR1AH,&OCR1AL,&OCR1BH,&OCR1BL,&OCR1CH,&OCR1CL,&TCNT1H,&TCNT1L,&TIFR1,&TIMSK1},
+   #else
+  {&TCCR1A,  &TCCR1B, &OCR1AH,&OCR1AL,&OCR1BH,&OCR1BL,NULL,NULL,&TCNT1H,&TCNT1L,&TIFR1,&TIMSK1},
+
+#endif
   #endif
   #if USE_AVR_PWM2 || defined(__DOXYGEN__)
   {&TCCR2A,  &TCCR2B, &OCR2A, &OCR2A, &OCR2B, &OCR2B, NULL, NULL, &TCNT2, &TCNT2, &TIFR2,&TIMSK2},
