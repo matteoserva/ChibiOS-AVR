@@ -34,8 +34,8 @@
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
 /*===========================================================================*/
-typedef volatile uint8_t * timer_registers[8];
-timer_registers timer_registers_table[]={ 
+typedef volatile uint8_t * const timer_registers[8];
+const timer_registers timer_registers_table[]={ 
   #if USE_AVR_GPT1 || defined(__DOXYGEN__)
   {&TCCR1A,  &TCCR1B, &OCR1AH,&OCR1AL,&TCNT1H,&TCNT1L,&TIFR1,&TIMSK1},
   #endif
