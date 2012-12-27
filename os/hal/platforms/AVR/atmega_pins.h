@@ -18,6 +18,14 @@
       #define PINADC			PINC
       #define PORTADC			PORTC
       #define DDRADC			DDRC
+      #define PIN_SPI1                  PINB
+      #define DDR_SPI1                  DDRB
+      #define PORT_SPI1                 PORTB
+      #define SPI1_SS                   2
+      #define SPI1_SCK                  5
+      #define SPI1_MOSI                 3
+      #define SPI1_MISO                 4
+
   #elif defined(__AVR_ATmega2560__)
       #define PINADC			PINF
       #define PORTADC			PORTF
