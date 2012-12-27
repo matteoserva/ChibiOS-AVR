@@ -53,68 +53,69 @@ SPIDriver SPID2;
 /*===========================================================================*/
 static void spi_start_transmission(SPIDriver *spip)
 {
-   #if USE_AVR_SPI1 || defined(__DOXYGEN__)
-   if(spip->untransmitted_bytes> 0)
-   {
-     if(spip->tx_buffer != NULL)
-     {
-      SPDR =  *spip->tx_buffer;
-      spip->tx_buffer++;
-     }
-     else
-     {
-       volatile uint8_t tempSPDR = SPDR;
-       SPDR = tempSPDR;
-     }
-     spip->untransmitted_bytes--;
-   }
-   
-  #endif
-  
-  
+#if USE_AVR_SPI1 || defined(__DOXYGEN__)
+    if(spip->untransmitted_bytes> 0)
+    {
+        if(spip->tx_buffer != NULL)
+        {
+            SPDR =  *spip->tx_buffer;
+            spip->tx_buffer++;
+        }
+        else
+        {
+            volatile uint8_t tempSPDR = SPDR;
+            SPDR = tempSPDR;
+        }
+        spip->untransmitted_bytes--;
+    }
+
+#endif
+
+
 }
 
 static void spi_setup_transmission(SPIDriver *spip,size_t n, const uint8_t *txbuf, uint8_t *rxbuf)
 {
-  spip->tx_buffer= txbuf;
-  spip->rx_buffer= rxbuf;
-  spip->untransmitted_bytes= n;
-  
+    spip->tx_buffer= txbuf;
+    spip->rx_buffer= rxbuf;
+    spip->untransmitted_bytes= n;
+
 }
 /*===========================================================================*/
 /* Driver interrupt handlers.                                                */
 /*===========================================================================*/
- #if USE_AVR_SPI1 || defined(__DOXYGEN_)
-CH_IRQ_HANDLER(SPI_STC_vect) { //SPI1 interrupt
- 
-  CH_IRQ_PROLOGUE();
-     
-     if(SPCR & (1<<MSTR))
-     {
-      if(SPID1.rx_buffer != NULL)
-      {
-	      *SPID1.rx_buffer=SPDR;
-	      SPID1.rx_buffer++;
-      }
-      if(SPID1.untransmitted_bytes> 0)
-      {
-	spi_start_transmission(&SPID1);
-      }
-      else
-      {
-	_spi_isr_code(&SPID1);
-	
-      }
-     }
-     else
-     {
-       if(SPID1.config->slave_cb == NULL)
-	 SPDR = SPID1.config->slave_cb(&SPID1,SPDR);
-       SPCR |=(1<<MSTR);
-       
-     }
-   
-  CH_IRQ_EPILOGUE();
+#if USE_AVR_SPI1 || defined(__DOXYGEN_)
+CH_IRQ_HANDLER(SPI_STC_vect)   //SPI1 interrupt
+{
+
+    CH_IRQ_PROLOGUE();
+
+    if(SPCR & (1<<MSTR))
+    {
+        if(SPID1.rx_buffer != NULL)
+        {
+            *SPID1.rx_buffer=SPDR;
+            SPID1.rx_buffer++;
+        }
+        if(SPID1.untransmitted_bytes> 0)
+        {
+            spi_start_transmission(&SPID1);
+        }
+        else
+        {
+            _spi_isr_code(&SPID1);
+
+        }
+    }
+    else
+    {
+        if(SPID1.config->slave_cb == NULL)
+            SPDR = SPID1.config->slave_cb(&SPID1,SPDR);
+        SPCR |=(1<<MSTR);
+
+    }
+
+    CH_IRQ_EPILOGUE();
 }
 #endif
 /*===========================================================================*/
@@ -126,11 +127,12 @@ CH_IRQ_HANDLER(SPI_STC_vect) { //SPI1 interrupt
  *
  * @notapi
  */
-void spi_lld_init(void) {
+void spi_lld_init(void)
+{
 
 
- #if USE_AVR_SPI1 || defined(__DOXYGEN__)
-spiObjectInit(&SPID1);
+#if USE_AVR_SPI1 || defined(__DOXYGEN__)
+    spiObjectInit(&SPID1);
 
 #endif
 
@@ -145,29 +147,31 @@ spiObjectInit(&SPID1);
  *
  * @notapi
  */
-void spi_lld_start(SPIDriver *spip) {
+void spi_lld_start(SPIDriver *spip)
+{
 
-  if (spip->state == SPI_STOP) {
-    /* Clock activation.*/
+    if (spip->state == SPI_STOP)
+    {
+        /* Clock activation.*/
+#if USE_AVR_SPI1 || defined(__DOXYGEN__)
+        if(spip == &SPID1)
+        {
+            SPCR = (1<<MSTR)|
+                   (1<<SPIE)| //enable interrupt
+                   (1<<SPR1)|(1<<SPR0); //Clk/128
+        }
+#endif
+
+    }
+    /* Configuration.*/
 #if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
-      SPCR = (1<<MSTR)|
-	    (1<<SPIE)| //enable interrupt
-	    (1<<SPR1)|(1<<SPR0); //Clk/128
+        /*mosi, sck and ss output*/
+        PORT_SPI1 |= (1<<SPI1_SCK)|(1<<SPI1_MOSI)|(1<<SPI1_SS);
+        PORT_SPI1 &= ~(1<<SPI1_MISO);
+        SPCR |= (1<<SPE);
     }
-#endif
-
-  }
-  /* Configuration.*/
-  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
-    if(spip == &SPID1)
-    {
-  /*mosi, sck and ss output*/
-  PORT_SPI1 |= (1<<SPI1_SCK)|(1<<SPI1_MOSI)|(1<<SPI1_SS);
-  PORT_SPI1 &= ~(1<<SPI1_MISO);
-  SPCR |= (1<<SPE);
-      }
 #endif
 }
 
@@ -178,13 +182,14 @@ void spi_lld_start(SPIDriver *spip) {
  *
  * @notapi
  */
-void spi_lld_stop(SPIDriver *spip) {
-  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+void spi_lld_stop(SPIDriver *spip)
+{
+#if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
         /*all input*/
-	PORT_SPI1 &= ~((1<<SPI1_MISO)|(1<<SPI1_SCK)|(1<<SPI1_MOSI)|(1<<SPI1_SS));
-	SPCR &=~(1<<SPE);
+        PORT_SPI1 &= ~((1<<SPI1_MISO)|(1<<SPI1_SCK)|(1<<SPI1_MOSI)|(1<<SPI1_SS));
+        SPCR &=~(1<<SPE);
     }
 #endif
 }
@@ -196,15 +201,16 @@ void spi_lld_stop(SPIDriver *spip) {
  *
  * @notapi
  */
-void spi_lld_select(SPIDriver *spip) {
-    
-    #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+void spi_lld_select(SPIDriver *spip)
+{
+
+#if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
-      
-      PORT_SPI1 &= ~_BV(SPI1_SS);
-      DDR_SPI1  |= _BV(SPI1_SS);
-    
+
+        PORT_SPI1 &= ~_BV(SPI1_SS);
+        DDR_SPI1  |= _BV(SPI1_SS);
+
     }
 #endif
 }
@@ -217,17 +223,18 @@ void spi_lld_select(SPIDriver *spip) {
  *
  * @notapi
  */
-void spi_lld_unselect(SPIDriver *spip) {
-  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+void spi_lld_unselect(SPIDriver *spip)
+{
+#if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
-      DDR_SPI1  &= ~_BV(SPI1_SS);
-      PORT_SPI1 |= _BV(SPI1_SS);   
-      
-      
+        DDR_SPI1  &= ~_BV(SPI1_SS);
+        PORT_SPI1 |= _BV(SPI1_SS);
+
+
     }
 #endif
-    
+
 }
 
 /**
@@ -241,9 +248,10 @@ void spi_lld_unselect(SPIDriver *spip) {
  *
  * @notapi
  */
-void spi_lld_ignore(SPIDriver *spip, size_t n) {
-     spi_setup_transmission(spip, n, NULL,NULL);
-  spi_start_transmission(spip);
+void spi_lld_ignore(SPIDriver *spip, size_t n)
+{
+    spi_setup_transmission(spip, n, NULL,NULL);
+    spi_start_transmission(spip);
 }
 
 /**
@@ -262,9 +270,10 @@ void spi_lld_ignore(SPIDriver *spip, size_t n) {
  * @notapi
  */
 void spi_lld_exchange(SPIDriver *spip, size_t n,
-                      const void *txbuf, void *rxbuf) {
-  spi_setup_transmission(spip, n, txbuf, rxbuf);
-  spi_start_transmission(spip);
+                      const void *txbuf, void *rxbuf)
+{
+    spi_setup_transmission(spip, n, txbuf, rxbuf);
+    spi_start_transmission(spip);
 }
 
 /**
@@ -280,7 +289,8 @@ void spi_lld_exchange(SPIDriver *spip, size_t n,
  *
  * @notapi
  */
-void spi_lld_send(SPIDriver *spip, size_t n, const void *txbuf) {
+void spi_lld_send(SPIDriver *spip, size_t n, const void *txbuf)
+{
     spi_setup_transmission(spip, n, txbuf, NULL);
     spi_start_transmission(spip);
 }
@@ -298,9 +308,10 @@ void spi_lld_send(SPIDriver *spip, size_t n, const void *txbuf) {
  *
  * @notapi
  */
-void spi_lld_receive(SPIDriver *spip, size_t n, void *rxbuf) {
-      spi_setup_transmission(spip, n, NULL, rxbuf);
-      spi_start_transmission(spip);
+void spi_lld_receive(SPIDriver *spip, size_t n, void *rxbuf)
+{
+    spi_setup_transmission(spip, n, NULL, rxbuf);
+    spi_start_transmission(spip);
 }
 
 /**
@@ -315,21 +326,22 @@ void spi_lld_receive(SPIDriver *spip, size_t n, void *rxbuf) {
  * @param[in] frame     the data frame to send over the SPI bus
  * @return              The received data frame from the SPI bus.
  */
-uint8_t spi_lld_polled_exchange(SPIDriver *spip, uint8_t frame) {
-  while(spip->state !=SPI_READY)
-    ;
-  #if USE_AVR_SPI1 || defined(__DOXYGEN__)
+uint8_t spi_lld_polled_exchange(SPIDriver *spip, uint8_t frame)
+{
+    while(spip->state !=SPI_READY)
+        ;
+#if USE_AVR_SPI1 || defined(__DOXYGEN__)
     if(spip == &SPID1)
     {
-      SPCR &= ~(1<<SPIE);
-      
-      SPDR = frame;
-      
-      while(!(SPSR & (1<<SPIF)))
-	;
-      uint8_t retval = SPDR; //this is needed to clear spif
-      SPCR |= (1<<SPIE);
-      return retval;
+        SPCR &= ~(1<<SPIE);
+
+        SPDR = frame;
+
+        while(!(SPSR & (1<<SPIF)))
+            ;
+        uint8_t retval = SPDR; //this is needed to clear spif
+        SPCR |= (1<<SPIE);
+        return retval;
 
     }
 #endif

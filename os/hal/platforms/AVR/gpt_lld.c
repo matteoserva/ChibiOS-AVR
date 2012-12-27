@@ -35,21 +35,22 @@
 /* Driver local definitions.                                                 */
 /*===========================================================================*/
 typedef volatile uint8_t * const timer_registers[8];
-const timer_registers timer_registers_table[]={ 
-  #if USE_AVR_GPT1 || defined(__DOXYGEN__)
-  {&TCCR1A,  &TCCR1B, &OCR1AH,&OCR1AL,&TCNT1H,&TCNT1L,&TIFR1,&TIMSK1},
-  #endif
-  #if USE_AVR_GPT2 || defined(__DOXYGEN__)
-  {&TCCR2A,  &TCCR2B, &OCR2A,&OCR2A,&TCNT2,&TCNT2,&TIFR2,&TIMSK2},
-  #endif
-  #if USE_AVR_GPT3 || defined(__DOXYGEN__)
-  {&TCCR3A,  &TCCR3B, &OCR3AH,&OCR3AL,&TCNT3H,&TCNT3L,&TIFR3,&TIMSK3},
-  #endif
-  #if USE_AVR_GPT4 || defined(__DOXYGEN__)
-  {&TCCR4A,  &TCCR4B, &OCR4AH,&OCR4AL,&TCNT4H,&TCNT4L,&TIFR4,&TIMSK4},
-  #endif
-  #if USE_AVR_GPT5 || defined(__DOXYGEN__)
-  {&TCCR5A,  &TCCR5B, &OCR5AH,&OCR5AL,&TCNT5H,&TCNT5L,&TIFR5,&TIMSK5},
+const timer_registers timer_registers_table[]=
+{
+#if USE_AVR_GPT1 || defined(__DOXYGEN__)
+    {&TCCR1A,  &TCCR1B, &OCR1AH,&OCR1AL,&TCNT1H,&TCNT1L,&TIFR1,&TIMSK1},
+#endif
+#if USE_AVR_GPT2 || defined(__DOXYGEN__)
+    {&TCCR2A,  &TCCR2B, &OCR2A,&OCR2A,&TCNT2,&TCNT2,&TIFR2,&TIMSK2},
+#endif
+#if USE_AVR_GPT3 || defined(__DOXYGEN__)
+    {&TCCR3A,  &TCCR3B, &OCR3AH,&OCR3AL,&TCNT3H,&TCNT3L,&TIFR3,&TIMSK3},
+#endif
+#if USE_AVR_GPT4 || defined(__DOXYGEN__)
+    {&TCCR4A,  &TCCR4B, &OCR4AH,&OCR4AL,&TCNT4H,&TCNT4L,&TIFR4,&TIMSK4},
+#endif
+#if USE_AVR_GPT5 || defined(__DOXYGEN__)
+    {&TCCR5A,  &TCCR5B, &OCR5AH,&OCR5AL,&TCNT5H,&TCNT5L,&TIFR5,&TIMSK5},
 #endif
 };
 
@@ -80,17 +81,19 @@ GPTDriver GPTD5;
 /*===========================================================================*/
 /* Driver local functions.                                                   */
 /*===========================================================================*/
-static void gpt_lld_serve_interrupt(GPTDriver *gptp) {
-  gptp->counter++;
-  if(gptp->counter == gptp->period)
-  {
-	gptp->counter = 0;
-	if (gptp->state == GPT_ONESHOT) {
-	    gptp->state = GPT_READY;                /* Back in GPT_READY state.     */
-	    gpt_lld_stop_timer(gptp);               /* Timer automatically stopped. */
-	}
-	gptp->callback(gptp);
-  }
+static void gpt_lld_serve_interrupt(GPTDriver *gptp)
+{
+    gptp->counter++;
+    if(gptp->counter == gptp->period)
+    {
+        gptp->counter = 0;
+        if (gptp->state == GPT_ONESHOT)
+        {
+            gptp->state = GPT_READY;                /* Back in GPT_READY state.     */
+            gpt_lld_stop_timer(gptp);               /* Timer automatically stopped. */
+        }
+        gptp->callback(gptp);
+    }
 }
 
 static void gpt_lld_dummy_callback(GPTDriver *gptp)
@@ -99,22 +102,27 @@ static void gpt_lld_dummy_callback(GPTDriver *gptp)
 
 uint8_t getTimerIndex(GPTDriver *gptp)
 {
-  uint8_t index = 0;
-    #if USE_AVR_GPT1 || defined(__DOXYGEN__)
-    if (gptp == &GPTD1) return index; else index++;
-      #endif  
-    #if USE_AVR_GPT2 || defined(__DOXYGEN__)
-    if (gptp == &GPTD1) return index; else index++;
-      #endif 
-    #if USE_AVR_GPT3 || defined(__DOXYGEN__)
-    if (gptp == &GPTD1) return index; else index++;
-      #endif 
-    #if USE_AVR_GPT4 || defined(__DOXYGEN__)
-    if (gptp == &GPTD1) return index; else index++;
-      #endif 
-    #if USE_AVR_GPT5 || defined(__DOXYGEN__)
-    if (gptp == &GPTD1) return index; else index++;
-      #endif
+    uint8_t index = 0;
+#if USE_AVR_GPT1 || defined(__DOXYGEN__)
+    if (gptp == &GPTD1) return index;
+    else index++;
+#endif
+#if USE_AVR_GPT2 || defined(__DOXYGEN__)
+    if (gptp == &GPTD1) return index;
+    else index++;
+#endif
+#if USE_AVR_GPT3 || defined(__DOXYGEN__)
+    if (gptp == &GPTD1) return index;
+    else index++;
+#endif
+#if USE_AVR_GPT4 || defined(__DOXYGEN__)
+    if (gptp == &GPTD1) return index;
+    else index++;
+#endif
+#if USE_AVR_GPT5 || defined(__DOXYGEN__)
+    if (gptp == &GPTD1) return index;
+    else index++;
+#endif
 }
 
 /*===========================================================================*/
@@ -122,41 +130,46 @@ uint8_t getTimerIndex(GPTDriver *gptp)
 /*===========================================================================*/
 
 #if USE_AVR_GPT1 || defined(__DOXYGEN__)
-CH_IRQ_HANDLER(TIMER1_COMPA_vect) {
+CH_IRQ_HANDLER(TIMER1_COMPA_vect)
+{
     CH_IRQ_PROLOGUE();
-      gpt_lld_serve_interrupt(&GPTD1);
+    gpt_lld_serve_interrupt(&GPTD1);
     CH_IRQ_EPILOGUE();
 }
 #endif
 
 #if USE_AVR_GPT2 || defined(__DOXYGEN__)
-CH_IRQ_HANDLER(TIMER2_COMPA_vect) {
+CH_IRQ_HANDLER(TIMER2_COMPA_vect)
+{
     CH_IRQ_PROLOGUE();
-      gpt_lld_serve_interrupt(&GPTD2);
+    gpt_lld_serve_interrupt(&GPTD2);
     CH_IRQ_EPILOGUE();
 }
 #endif
 
 #if USE_AVR_GPT3 || defined(__DOXYGEN__)
-CH_IRQ_HANDLER(TIMER3_COMPA_vect) {
+CH_IRQ_HANDLER(TIMER3_COMPA_vect)
+{
     CH_IRQ_PROLOGUE();
-      gpt_lld_serve_interrupt(&GPTD3);
+    gpt_lld_serve_interrupt(&GPTD3);
     CH_IRQ_EPILOGUE();
 }
 #endif
 
 #if USE_AVR_GPT4 || defined(__DOXYGEN__)
-CH_IRQ_HANDLER(TIMER4_COMPA_vect) {
+CH_IRQ_HANDLER(TIMER4_COMPA_vect)
+{
     CH_IRQ_PROLOGUE();
-      gpt_lld_serve_interrupt(&GPTD4);
+    gpt_lld_serve_interrupt(&GPTD4);
     CH_IRQ_EPILOGUE();
 }
 #endif
 
 #if USE_AVR_GPT5 || defined(__DOXYGEN__)
-CH_IRQ_HANDLER(TIMER5_COMPA_vect) {
+CH_IRQ_HANDLER(TIMER5_COMPA_vect)
+{
     CH_IRQ_PROLOGUE();
-      gpt_lld_serve_interrupt(&GPTD5);
+    gpt_lld_serve_interrupt(&GPTD5);
     CH_IRQ_EPILOGUE();
 }
 #endif
@@ -170,21 +183,22 @@ CH_IRQ_HANDLER(TIMER5_COMPA_vect) {
  *
  * @notapi
  */
-void gpt_lld_init(void) {
+void gpt_lld_init(void)
+{
 #if USE_AVR_GPT1 || defined(__DOXYGEN__)
-  gptObjectInit(&GPTD1);
+    gptObjectInit(&GPTD1);
 #endif
-  #if USE_AVR_GPT2 || defined(__DOXYGEN__)
-  gptObjectInit(&GPTD2);
+#if USE_AVR_GPT2 || defined(__DOXYGEN__)
+    gptObjectInit(&GPTD2);
 #endif
-    #if USE_AVR_GPT3 || defined(__DOXYGEN__)
-  gptObjectInit(&GPTD3);
+#if USE_AVR_GPT3 || defined(__DOXYGEN__)
+    gptObjectInit(&GPTD3);
 #endif
-    #if USE_AVR_GPT4 || defined(__DOXYGEN__)
-  gptObjectInit(&GPTD4);
+#if USE_AVR_GPT4 || defined(__DOXYGEN__)
+    gptObjectInit(&GPTD4);
 #endif
-    #if USE_AVR_GPT5 || defined(__DOXYGEN__)
-  gptObjectInit(&GPTD5);
+#if USE_AVR_GPT5 || defined(__DOXYGEN__)
+    gptObjectInit(&GPTD5);
 #endif
 }
 
@@ -195,34 +209,36 @@ void gpt_lld_init(void) {
  *
  * @notapi
  */
-void gpt_lld_start(GPTDriver *gptp) {
-  uint8_t psc;
+void gpt_lld_start(GPTDriver *gptp)
+{
+    uint8_t psc;
 
-  if (gptp->state == GPT_STOP) {
-    /* Clock activation.*/
+    if (gptp->state == GPT_STOP)
+    {
+        /* Clock activation.*/
 
-  }
-  /* Configuration.*/
+    }
+    /* Configuration.*/
 
-  #if USE_AVR_GPT2 || defined(__DOXYGEN__)
-  if(gptp == &GPTD2)
-  {
-      psc = findBestPrescaler(gptp->config->frequency,ratio_extended,clock_source_extended,PRESCALER_SIZE_EXTENDED);
-      gptp->clock_source = clock_source_extended[psc] & 0x07;
-      TCCR2A  = (1 << WGM21) | (0 << WGM20);
-      TCCR2B  = (0 << WGM22);
-      OCR2A = F_CPU / ratio_extended[psc] /gptp->config->frequency - 1;   
-      return;
-  }
+#if USE_AVR_GPT2 || defined(__DOXYGEN__)
+    if(gptp == &GPTD2)
+    {
+        psc = findBestPrescaler(gptp->config->frequency,ratio_extended,clock_source_extended,PRESCALER_SIZE_EXTENDED);
+        gptp->clock_source = clock_source_extended[psc] & 0x07;
+        TCCR2A  = (1 << WGM21) | (0 << WGM20);
+        TCCR2B  = (0 << WGM22);
+        OCR2A = F_CPU / ratio_extended[psc] /gptp->config->frequency - 1;
+        return;
+    }
 #endif
-  
-  uint8_t index = getTimerIndex(gptp);
-      psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
-      gptp->clock_source = clock_source_base[psc] & 0x07;
-      *timer_registers_table[index][0]  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
-      *timer_registers_table[index][1]  = (1 << WGM12);
-      *timer_registers_table[index][2] = 0;
-      *timer_registers_table[index][3] = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;  
+
+    uint8_t index = getTimerIndex(gptp);
+    psc = findBestPrescaler(gptp->config->frequency,ratio_base,clock_source_base,PRESCALER_SIZE_BASE);
+    gptp->clock_source = clock_source_base[psc] & 0x07;
+    *timer_registers_table[index][0]  = (0 << WGM11) | (0 << WGM10) | (0 << COM1A1) | (0 << COM1A0) |(0 << COM1B1) | (0 << COM1B0);
+    *timer_registers_table[index][1]  = (1 << WGM12);
+    *timer_registers_table[index][2] = 0;
+    *timer_registers_table[index][3] = F_CPU / ratio_base[psc] /gptp->config->frequency - 1;
 }
 
 /**
@@ -232,13 +248,15 @@ void gpt_lld_start(GPTDriver *gptp) {
  *
  * @notapi
  */
-void gpt_lld_stop(GPTDriver *gptp) {
-  /*nothing to be done*/
-  if (gptp->state == GPT_READY) {
-    /* Clock de-activation.*/
+void gpt_lld_stop(GPTDriver *gptp)
+{
+    /*nothing to be done*/
+    if (gptp->state == GPT_READY)
+    {
+        /* Clock de-activation.*/
 
-  }
-  gpt_lld_stop_timer(gptp);
+    }
+    gpt_lld_stop_timer(gptp);
 }
 
 /**
@@ -249,17 +267,18 @@ void gpt_lld_stop(GPTDriver *gptp) {
  *
  * @notapi
  */
-void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period) {
-      gptp->callback = gptp->config->callback;
-      gptp->period = period;
-      gptp->counter = 0;
-      
-  uint8_t index = getTimerIndex(gptp);
-  *timer_registers_table[index][4]=0;
-  *timer_registers_table[index][5]=0;
-  *timer_registers_table[index][6]=(1 << OCF1A);
-  *timer_registers_table[index][7]=(1 << OCIE1A);
-  *timer_registers_table[index][1]|=(gptp->clock_source <<CS10);
+void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period)
+{
+    gptp->callback = gptp->config->callback;
+    gptp->period = period;
+    gptp->counter = 0;
+
+    uint8_t index = getTimerIndex(gptp);
+    *timer_registers_table[index][4]=0;
+    *timer_registers_table[index][5]=0;
+    *timer_registers_table[index][6]=(1 << OCF1A);
+    *timer_registers_table[index][7]=(1 << OCIE1A);
+    *timer_registers_table[index][1]|=(gptp->clock_source <<CS10);
 }
 
 /**
@@ -269,11 +288,12 @@ void gpt_lld_start_timer(GPTDriver *gptp, gptcnt_t period) {
  *
  * @notapi
  */
-void gpt_lld_stop_timer(GPTDriver *gptp) {
-  uint8_t index = getTimerIndex(gptp);
-  *timer_registers_table[index][1]&= ~(0x07 <<CS10);
-  *timer_registers_table[index][1]&= ~(1 << OCIE1A);
-  *timer_registers_table[index][6] = (1 << OCF1A); 
+void gpt_lld_stop_timer(GPTDriver *gptp)
+{
+    uint8_t index = getTimerIndex(gptp);
+    *timer_registers_table[index][1]&= ~(0x07 <<CS10);
+    *timer_registers_table[index][1]&= ~(1 << OCIE1A);
+    *timer_registers_table[index][6] = (1 << OCF1A);
 }
 
 /**
@@ -287,12 +307,13 @@ void gpt_lld_stop_timer(GPTDriver *gptp) {
  *
  * @notapi
  */
-void gpt_lld_polled_delay(GPTDriver *gptp, gptcnt_t interval) {
-  gptp->callback = gpt_lld_dummy_callback;
-  gpt_lld_start_timer(gptp,interval);
-  while(gptp->state != GPT_READY)
-     ;
-  return;
+void gpt_lld_polled_delay(GPTDriver *gptp, gptcnt_t interval)
+{
+    gptp->callback = gpt_lld_dummy_callback;
+    gpt_lld_start_timer(gptp,interval);
+    while(gptp->state != GPT_READY)
+        ;
+    return;
 }
 
 #endif /* HAL_USE_GPT */
