@@ -158,7 +158,8 @@ void spi_lld_start(SPIDriver *spip)
         {
             SPCR = (1<<MSTR)|
                    (1<<SPIE)| //enable interrupt
-                   (1<<SPR1)|(1<<SPR0); //Clk/128
+                   (1<<SPR1)|(1<<SPR0)| //Clk/128
+                   ((spip->config->spi_mode & 0x3)<<CPHA);
         }
 #endif
 

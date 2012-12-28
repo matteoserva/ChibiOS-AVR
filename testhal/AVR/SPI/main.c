@@ -47,7 +47,7 @@ int main(void) {
 
    
 
-    static SPIConfig spicfg= {spicallback,NULL};
+    static SPIConfig spicfg= {spicallback,0,NULL};
   
    
   DDRB=(1<<4)|(1<<5)|(1<<7);

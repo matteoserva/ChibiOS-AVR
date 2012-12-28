@@ -77,7 +77,16 @@ typedef struct {
    */
   spicallback_t         end_cb;
   /* End of the mandatory fields.*/
-  spislavecallback_t         slave_cb;
+    /**
+   * @brief Clock polarity.
+   */
+  uint8_t		spi_mode;
+  /**
+   * @brief Callback to be called when the device receives data in multi-master mode
+   */
+  spislavecallback_t    slave_cb;
+		
+  
 } SPIConfig;
 
 /**
