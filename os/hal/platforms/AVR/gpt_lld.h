@@ -36,19 +36,34 @@
 /*===========================================================================*/
 /* Driver constants.                                                         */
 /*===========================================================================*/
-#if !defined(USE_AVR_GPT3)
-#define USE_AVR_GPT3 FALSE
-#endif
-#if !defined(USE_AVR_GPT4)
-#define USE_AVR_GPT4 FALSE
-#endif
-#if !defined(USE_AVR_GPT5)
-#define USE_AVR_GPT5 FALSE
-#endif
+
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/
-
+/**
+ * @brief   GPT3 driver enable switch.
+ * @details If set to @p TRUE the support for GPT3 is included.
+ * @note    The default is @p TRUE.
+ */
+#if !defined(USE_AVR_GPT3)
+#define USE_AVR_GPT3 FALSE
+#endif
+/**
+ * @brief   GPT4 driver enable switch.
+ * @details If set to @p TRUE the support for GPT4 is included.
+ * @note    The default is @p TRUE.
+ */
+#if !defined(USE_AVR_GPT4)
+#define USE_AVR_GPT4 FALSE
+#endif
+/**
+ * @brief   GPT5 driver enable switch.
+ * @details If set to @p TRUE the support for GPT5 is included.
+ * @note    The default is @p TRUE.
+ */
+#if !defined(USE_AVR_GPT5)
+#define USE_AVR_GPT5 FALSE
+#endif
 /*===========================================================================*/
 /* Derived constants and error checks.                                       */
 /*===========================================================================*/
@@ -114,9 +129,21 @@ struct GPTDriver {
   GPT_DRIVER_EXT_FIELDS
 #endif
   /* End of the mandatory fields.*/
+  /**
+   * @brief input clock from prescaler
+   */
   uint8_t clock_source;
+  /**
+   * @brief Lenght of the period in clock ticks
+   */
   gptcnt_t period;
+  /**
+   * @brief Current clock tick.
+   */
   gptcnt_t counter;
+  /**
+   * @brief Function called from the interrupt service routine
+   */
   gptcallback_t callback;
 };
 
