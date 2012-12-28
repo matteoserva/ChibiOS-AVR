@@ -165,6 +165,9 @@ struct ADCDriver {
   ADC_DRIVER_EXT_FIELDS
 #endif
   /* End of the mandatory fields.*/
+  /**
+   * @brief Current position in the buffer.
+   */
   size_t currentBufferPosition;
 };
 
